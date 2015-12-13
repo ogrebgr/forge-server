@@ -1,0 +1,22 @@
+group 'com.bolyartech'
+version '1.0-SNAPSHOT'
+
+apply plugin: 'java'
+
+sourceCompatibility = 1.8
+
+repositories {
+    mavenCentral()
+}
+
+configurations.all {
+    exclude module: 'slf4j-simple'
+}
+
+dependencies {
+    testCompile group: 'junit', name: 'junit', version: '4.11'
+    compile  group: 'com.mchange', name: 'c3p0', version: '0.9.5'
+    compile 'org.slf4j:slf4j-api:1.7.12'
+    compile 'ch.qos.logback:logback-classic:0.9.26'
+    compile 'com.google.code.gson:gson:2.4'
+}
