@@ -1,2 +1,2 @@
-# forge-server
-Forge server base
+# forge-server-spark
+Forge server (uses Java Spark)
