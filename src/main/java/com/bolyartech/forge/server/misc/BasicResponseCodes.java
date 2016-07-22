@@ -7,8 +7,6 @@ public class BasicResponseCodes {
     public enum Oks {
         OK(1); // used as general code that indicates success
 
-
-
         private final int code;
 
 
