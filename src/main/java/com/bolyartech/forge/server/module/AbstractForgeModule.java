@@ -38,12 +38,9 @@ abstract public class AbstractForgeModule implements ForgeModule {
 
 
     private boolean isValidModulePathPrefix(String prefix) {
+        //noinspection SimplifiableIfStatement
         if (prefix != null) {
-            if (prefix.equals("")) {
-                return true;
-            } else {
-                return prefix.endsWith("/");
-            }
+            return prefix.equals("") || prefix.endsWith("/");
         } else {
             return false;
         }

@@ -5,7 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ModuleRegisterImpl implements ModuleRegister {
-    private List<ForgeModule> mModules = new ArrayList<>();
+    private final List<ForgeModule> mModules = new ArrayList<>();
 
 
     @Override

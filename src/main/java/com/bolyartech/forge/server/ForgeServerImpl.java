@@ -29,7 +29,7 @@ abstract public class ForgeServerImpl implements ForgeServer {
 
     private ServerConfiguration mServerConfiguration;
 
-    private ModuleRegister mModuleRegister = new ModuleRegisterImpl();
+    private final ModuleRegister mModuleRegister = new ModuleRegisterImpl();
 
 
     @Override

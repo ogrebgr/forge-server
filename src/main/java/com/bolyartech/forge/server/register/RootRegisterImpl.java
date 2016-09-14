@@ -16,7 +16,7 @@ import java.util.*;
 public class RootRegisterImpl implements RootRegister {
     private final org.slf4j.Logger mLogger = LoggerFactory.getLogger(this.getClass().getSimpleName());
 
-    private Map<String, List<HttpMethod>> mEndpoints = new HashMap<>();
+    private final Map<String, List<HttpMethod>> mEndpoints = new HashMap<>();
 
 
     @Override

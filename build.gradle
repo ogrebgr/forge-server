@@ -4,12 +4,14 @@ version '1.0-SNAPSHOT'
 apply plugin: 'java'
 apply plugin: 'war'
 
+//noinspection GroovyUnusedAssignment
 sourceCompatibility = 1.8
 
 repositories {
     mavenCentral()
 }
 
+//noinspection GroovyAssignabilityCheck
 configurations.all {
     exclude module: 'slf4j-simple'
 }
