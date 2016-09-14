@@ -44,7 +44,7 @@ public class ServerTools {
                 );
             } catch (IOException e) {
                 mLogger.error("Problem loading configuration for " + filepath);
-                throw new RuntimeException("Unable to init.");
+                throw new RuntimeException("Unable to start.");
             }
         } else {
             return null;

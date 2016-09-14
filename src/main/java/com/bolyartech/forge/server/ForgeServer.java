@@ -10,7 +10,12 @@ public interface ForgeServer {
     /**
      * Initializes the server
      */
-    void init();
+    void start();
+
+    /**
+     * Stops the server
+     */
+    void stop();
 
     /**
      * @return Server configuration

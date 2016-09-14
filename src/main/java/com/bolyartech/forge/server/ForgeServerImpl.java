@@ -9,6 +9,7 @@ import com.bolyartech.forge.server.module.ForgeModule;
 import com.bolyartech.forge.server.module.ModuleRegister;
 import com.bolyartech.forge.server.module.ModuleRegisterImpl;
 import org.slf4j.LoggerFactory;
+import spark.Spark;
 
 import java.io.File;
 import java.io.IOException;
@@ -32,7 +33,9 @@ abstract public class ForgeServerImpl implements ForgeServer {
 
 
     @Override
-    public void init() {
+    public void start() {
+        Runtime.getRuntime().addShutdownHook(new ShutdownHookThread());
+
         mServerConfiguration = loadConfig();
         initLog(mServerConfiguration.getLogBackConfigFile(), mServerConfiguration.getServerNameSuffix());
 
@@ -77,7 +80,7 @@ abstract public class ForgeServerImpl implements ForgeServer {
             );
         } catch (IOException e) {
             mLogger.error("Problem loading configuration.");
-            throw new RuntimeException("Unable to init.");
+            throw new RuntimeException("Unable to start.");
         }
 
         return ret;
@@ -94,7 +97,7 @@ abstract public class ForgeServerImpl implements ForgeServer {
                     logbackConfigFilePath = new File(url.toURI()).getAbsolutePath();
                 } catch (URISyntaxException e) {
                     mLogger.error("Cannot get logbackConfigFilePath: {}", e);
-                    throw new RuntimeException("Unable to init.");
+                    throw new RuntimeException("Unable to start.");
                 }
 
                 LoggerContext context = (LoggerContext) LoggerFactory.getILoggerFactory();
@@ -114,12 +117,18 @@ abstract public class ForgeServerImpl implements ForgeServer {
                 }
             } else {
                 mLogger.error("Logback configuration file found! Exiting.");
-                throw new RuntimeException("Unable to init.");
+                throw new RuntimeException("Unable to start.");
             }
         } else {
             mLogger.error("Cannot load the configuration! Exiting.");
-            throw new RuntimeException("Unable to init.");
+            throw new RuntimeException("Unable to start.");
         }
+    }
+
+
+    @Override
+    public void stop() {
+        Spark.stop();
     }
 
 
@@ -127,4 +136,17 @@ abstract public class ForgeServerImpl implements ForgeServer {
     public ServerConfiguration getServerConfiguration() {
         return mServerConfiguration;
     }
+
+
+    private class ShutdownHookThread extends Thread {
+
+        /**
+         * <p>Logs the server shutdown.</p>
+         */
+        @Override
+        public void run() {
+            mLogger.info("Server halted");
+        }
+    }
+
 }
