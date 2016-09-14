@@ -8,12 +8,12 @@ import com.bolyartech.forge.server.config.ServerConfigurationImpl;
 import com.bolyartech.forge.server.module.ForgeModule;
 import com.bolyartech.forge.server.module.ModuleRegister;
 import com.bolyartech.forge.server.module.ModuleRegisterImpl;
+import com.google.common.base.Strings;
+import org.eclipse.jetty.util.StringUtil;
 import org.slf4j.LoggerFactory;
 import spark.Spark;
 
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
+import java.io.*;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.Properties;
@@ -23,6 +23,8 @@ import static spark.Spark.*;
 
 abstract public class ForgeServerImpl implements ForgeServer {
     private static final String LOG_FILE_PREFIX = "forge_server";
+    private static final String CONFIG_DIR_SYSTEM_PROPERY_NAME = "forgeServerConfigDir";
+    private static final String SERVER_CONFIG_FILE = "server.conf";
 
 
     private final org.slf4j.Logger mLogger = LoggerFactory.getLogger(this.getClass().getSimpleName());
@@ -30,6 +32,8 @@ abstract public class ForgeServerImpl implements ForgeServer {
     private ServerConfiguration mServerConfiguration;
 
     private final ModuleRegister mModuleRegister = new ModuleRegisterImpl();
+
+    private File mConfigDir;
 
 
     @Override
@@ -63,62 +67,99 @@ abstract public class ForgeServerImpl implements ForgeServer {
 
 
     private ServerConfiguration loadConfig() {
+        mConfigDir = findConfigDirectory();
+        if (mConfigDir != null) {
+            File serverConf = new File(mConfigDir, SERVER_CONFIG_FILE);
+            try {
+                try (FileInputStream is = new FileInputStream(serverConf)) {
+                    Properties prop = new Properties();
+                    prop.load(is);
+                    return new ServerConfigurationImpl(prop.getProperty("server_name_suffix"),
+                            prop.getProperty("logback_config_file"),
+                            Integer.parseInt(prop.getProperty("http_port")),
+                            Integer.parseInt(prop.getProperty("session_timeout")),
+                            prop.getProperty("keystore_path"),
+                            prop.getProperty("keystore_password")
+                    );
+                }
+            } catch (IOException e) {
+                mLogger.error("Cannot read " + serverConf.getAbsolutePath());
+                return null;
+            }
+        } else {
+            return null;
+        }
+    }
+
+
+    private File findConfigDirectory() {
+        // first we check if system property is defined
+        String configDirPath = System.getProperty(CONFIG_DIR_SYSTEM_PROPERY_NAME);
+
+        if (!Strings.isNullOrEmpty(configDirPath)) {
+            if (isConfigDir(configDirPath)) {
+                return new File(configDirPath);
+            }
+        }
+
+
+        if (isConfigDir("conf")) {
+            return new File("conf");
+        }
+
+
         ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
-        InputStream is = classLoader.getResourceAsStream("server.conf");
-
-        ServerConfiguration ret;
-
+        InputStream is = classLoader.getResourceAsStream("init.conf");
         Properties prop = new Properties();
         try {
             prop.load(is);
-            ret = new ServerConfigurationImpl(prop.getProperty("server_name_suffix"),
-                    prop.getProperty("logback_config_file"),
-                    Integer.parseInt(prop.getProperty("http_port")),
-                    Integer.parseInt(prop.getProperty("session_timeout")),
-                    prop.getProperty("keystore_path"),
-                    prop.getProperty("keystore_password")
-            );
+            if (isConfigDir(prop.getProperty("forgeServerConfigDir"))) {
+                return new File(prop.getProperty("forgeServerConfigDir"));
+            } else {
+                mLogger.error("Cannot resolve config dir. Use forgeServerConfigDir system " +
+                        "property or init.conf in class path to define it with " + CONFIG_DIR_SYSTEM_PROPERY_NAME);
+            }
         } catch (IOException e) {
             mLogger.error("Problem loading configuration.");
             throw new RuntimeException("Unable to start.");
         }
 
-        return ret;
+
+        return null;
+    }
+
+
+    private boolean isConfigDir(String dir) {
+        File serverConf = new File(dir, SERVER_CONFIG_FILE);
+        return serverConf.exists();
     }
 
 
     private void initLog(String logbackConfigFilename, String serverNameSuffix) {
-        ClassLoader classloader = Thread.currentThread().getContextClassLoader();
         if (logbackConfigFilename != null) {
-            URL url = classloader.getResource(logbackConfigFilename);
-            if (url != null) {
-                String logbackConfigFilePath;
-                try {
-                    logbackConfigFilePath = new File(url.toURI()).getAbsolutePath();
-                } catch (URISyntaxException e) {
-                    mLogger.error("Cannot get logbackConfigFilePath: {}", e);
-                    throw new RuntimeException("Unable to start.");
-                }
+
 
                 LoggerContext context = (LoggerContext) LoggerFactory.getILoggerFactory();
                 JoranConfigurator jc = new JoranConfigurator();
                 jc.setContext(context);
                 context.reset();
+
                 if (serverNameSuffix != null) {
                     context.putProperty("application-name", LOG_FILE_PREFIX + serverNameSuffix);
                 } else {
                     context.putProperty("application-name", LOG_FILE_PREFIX);
                 }
 
+                File f = new File(mConfigDir, logbackConfigFilename);
+
+                String logbackConfigFilePath = f.getAbsolutePath();
                 try {
                     jc.doConfigure(logbackConfigFilePath);
                 } catch (JoranException e) {
                     e.printStackTrace();
                 }
-            } else {
-                mLogger.error("Logback configuration file found! Exiting.");
-                throw new RuntimeException("Unable to start.");
-            }
+
+
         } else {
             mLogger.error("Cannot load the configuration! Exiting.");
             throw new RuntimeException("Unable to start.");
@@ -149,4 +190,9 @@ abstract public class ForgeServerImpl implements ForgeServer {
         }
     }
 
+
+    @Override
+    public File getConfigDirectory() {
+        return mConfigDir;
+    }
 }

@@ -7,6 +7,8 @@ import com.bolyartech.forge.server.db.DbPool;
 import com.mchange.v2.c3p0.ComboPooledDataSource;
 import org.slf4j.LoggerFactory;
 
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Properties;
@@ -23,12 +25,10 @@ public class ServerTools {
     }
 
 
-    public static DbConfiguration loadDbConf(String filepath) {
-        ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
-        InputStream is = classLoader.getResourceAsStream(filepath);
-        if (is != null) {
-            Properties prop = new Properties();
-            try {
+    public static DbConfiguration loadDbConf(File configDir, String filepath) {
+        try {
+            try (FileInputStream is = new FileInputStream(new File(configDir, filepath))) {
+                Properties prop = new Properties();
                 prop.load(is);
                 mLogger.info("Found DB config for {}", prop.getProperty("db_dsn"));
                 return new DbConfigurationImpl(prop.getProperty("db_dsn"),
@@ -42,12 +42,10 @@ public class ServerTools {
                         Boolean.valueOf(prop.getProperty("c3p0_test_connection_on_checkin")),
                         Boolean.valueOf(prop.getProperty("c3p0_test_connection_on_checkout"))
                 );
-            } catch (IOException e) {
-                mLogger.error("Problem loading configuration for " + filepath);
-                throw new RuntimeException("Unable to start.");
             }
-        } else {
-            return null;
+        } catch (IOException e) {
+            mLogger.error("Problem loading configuration for " + filepath);
+            throw new RuntimeException("Unable to start.");
         }
     }
 

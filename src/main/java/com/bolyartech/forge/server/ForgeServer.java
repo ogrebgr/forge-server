@@ -3,6 +3,8 @@ package com.bolyartech.forge.server;
 
 import com.bolyartech.forge.server.config.ServerConfiguration;
 
+import java.io.File;
+
 /**
  * ForgeServer base interface
  */
@@ -21,4 +23,6 @@ public interface ForgeServer {
      * @return Server configuration
      */
     ServerConfiguration getServerConfiguration();
+
+    File getConfigDirectory();
 }
