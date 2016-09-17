@@ -18,13 +18,13 @@ abstract public class ForgeSecureHandler implements Handler<String> {
     public String handle(Request request, Response response) throws HandlerException {
         String scheme = request.scheme().toLowerCase();
 
-        if (scheme.equals("https")) {
+//        if (scheme.equals("https")) {
             ForgeResponse resp = handleForgeSecure(request, response);
             response.header(ForgeHandler.FORGE_RESULT_CODE_HEADER, Integer.toString(resp.getCode()));
             return resp.getPayload();
-        } else {
-            mLogger.warn("Attempt to access secure page {} via http", request.servletPath());
-            return null;
-        }
+//        } else {
+//            mLogger.warn("Attempt to access secure page {} via http", request.servletPath());
+//            return null;
+//        }
     }
 }
