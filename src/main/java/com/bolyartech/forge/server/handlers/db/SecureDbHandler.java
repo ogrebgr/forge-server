@@ -24,12 +24,8 @@ abstract public class SecureDbHandler extends ForgeSecureHandler implements DbHa
 
     @Override
     protected ForgeResponse handleForgeSecure(Request request, Response response) throws HandlerException {
-        try {
-            Connection dbc = mDbPool.getConnection();
-            ForgeResponse ret = handleWithDb(request, response, dbc);
-            dbc.close();
-
-            return ret;
+        try (Connection dbc = mDbPool.getConnection()) {
+            return handleWithDb(request, response, dbc);
         } catch (SQLException e) {
             throw new HandlerException(MessageFormat.format("Error in handleSecure() with DB: {0}", e));
         }
