@@ -9,13 +9,10 @@ import com.bolyartech.forge.server.module.ForgeModule;
 import com.bolyartech.forge.server.module.ModuleRegister;
 import com.bolyartech.forge.server.module.ModuleRegisterImpl;
 import com.google.common.base.Strings;
-import org.eclipse.jetty.util.StringUtil;
 import org.slf4j.LoggerFactory;
 import spark.Spark;
 
 import java.io.*;
-import java.net.URISyntaxException;
-import java.net.URL;
 import java.util.Properties;
 
 import static spark.Spark.*;
@@ -36,11 +33,17 @@ abstract public class ForgeServerImpl implements ForgeServer {
     private File mConfigDir;
 
 
+    public ForgeServerImpl() {
+        mConfigDir = findConfigDirectory();
+        mServerConfiguration = loadConfig(mConfigDir);
+    }
+
+
     @Override
     public void start() {
         Runtime.getRuntime().addShutdownHook(new ShutdownHookThread());
 
-        mServerConfiguration = loadConfig();
+
         initLog(mServerConfiguration.getLogBackConfigFile(), mServerConfiguration.getServerNameSuffix());
 
         initHttpServer(mServerConfiguration);
@@ -66,10 +69,9 @@ abstract public class ForgeServerImpl implements ForgeServer {
     }
 
 
-    private ServerConfiguration loadConfig() {
-        mConfigDir = findConfigDirectory();
-        if (mConfigDir != null) {
-            File serverConf = new File(mConfigDir, SERVER_CONFIG_FILE);
+    private ServerConfiguration loadConfig(File configDir) {
+        if (configDir != null) {
+            File serverConf = new File(configDir, SERVER_CONFIG_FILE);
             try {
                 try (FileInputStream is = new FileInputStream(serverConf)) {
                     Properties prop = new Properties();
@@ -118,14 +120,12 @@ abstract public class ForgeServerImpl implements ForgeServer {
             } else {
                 mLogger.error("Cannot resolve config dir. Use forgeServerConfigDir system " +
                         "property or init.conf in class path to define it with " + CONFIG_DIR_SYSTEM_PROPERY_NAME);
+                throw new RuntimeException("Unable to start.");
             }
         } catch (IOException e) {
             mLogger.error("Problem loading configuration.");
             throw new RuntimeException("Unable to start.");
         }
-
-
-        return null;
     }
 
 
