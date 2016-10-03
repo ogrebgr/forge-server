@@ -8,7 +8,13 @@ public class TimeProviderImpl implements TimeProvider {
      * @return Time in millis
      */
     @Override
-    public long getTime() {
+    public long getVmTime() {
         return System.nanoTime() / 1000000;
+    }
+
+
+    @Override
+    public long getWallClockTime() {
+        return System.currentTimeMillis();
     }
 }
