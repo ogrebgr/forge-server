@@ -16,17 +16,17 @@ public class StringEndpointRegisterImpl implements StringEndpointRegister {
     private final org.slf4j.Logger mLogger = LoggerFactory.getLogger(this.getClass().getSimpleName());
 
     private final RootRegister mRootRegister;
-    private final int mSessionTimeout;
+    private final int mSessionTimeoutSeconds;
 
 
     /**
      *
      * @param rootRegister Singleton {@link RootRegister}
-     * @param sessionTimeout Session timeout, i.e. how long will be the session before seen as expired and cleared
+     * @param sessionTimeoutSeconds Session timeout, i.e. how long will be the session before seen as expired and cleared
      */
-    public StringEndpointRegisterImpl(RootRegister rootRegister, int sessionTimeout) {
+    public StringEndpointRegisterImpl(RootRegister rootRegister, int sessionTimeoutSeconds) {
         mRootRegister = rootRegister;
-        mSessionTimeout = sessionTimeout;
+        mSessionTimeoutSeconds = sessionTimeoutSeconds;
     }
 
 
@@ -110,7 +110,7 @@ public class StringEndpointRegisterImpl implements StringEndpointRegister {
      */
     protected void initSession(Session sess) {
         if (sess.isNew()) {
-            sess.maxInactiveInterval(mSessionTimeout);
+            sess.maxInactiveInterval(mSessionTimeoutSeconds);
         }
     }
 }
