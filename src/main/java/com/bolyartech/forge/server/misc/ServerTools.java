@@ -26,8 +26,13 @@ public class ServerTools {
 
 
     public static DbConfiguration loadDbConf(File configDir, String filepath) {
+        return loadDbConf(new File(configDir, filepath));
+    }
+
+
+    public static DbConfiguration loadDbConf(File dbConfFile) {
         try {
-            try (FileInputStream is = new FileInputStream(new File(configDir, filepath))) {
+            try (FileInputStream is = new FileInputStream(dbConfFile)) {
                 Properties prop = new Properties();
                 prop.load(is);
                 mLogger.info("Found DB config for {}", prop.getProperty("db_dsn"));
@@ -44,10 +49,11 @@ public class ServerTools {
                 );
             }
         } catch (IOException e) {
-            mLogger.error("Problem loading configuration for " + filepath);
+            mLogger.error("Problem loading configuration from " + dbConfFile.getAbsolutePath());
             throw new RuntimeException("Unable to start.");
         }
     }
+
 
 
     public static DbPool createComboPooledDataSource(DbConfiguration conf) {
