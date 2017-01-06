@@ -1,8 +1,7 @@
-group 'com.bolyartech.forge.server'
+group 'com.bolyartech.server'
 version '1.0-SNAPSHOT'
 
 apply plugin: 'java'
-apply plugin: 'war'
 
 sourceCompatibility = 1.8
 
@@ -10,25 +9,12 @@ repositories {
     mavenCentral()
 }
 
-//noinspection GroovyAssignabilityCheck
-configurations.all {
-    exclude module: 'slf4j-simple'
-}
-
 dependencies {
-    compile  group: 'com.mchange', name: 'c3p0', version: '0.9.5'
-    compile  group: 'com.sparkjava', name: 'spark-core', version: '2.5.3'
-    compile  group: 'com.sparkjava', name: 'spark-template-velocity', version: '2.3'
-
+    compile 'javax.servlet:javax.servlet-api:3.1.0'
     compile 'org.slf4j:slf4j-api:1.7.21'
     compile 'ch.qos.logback:logback-classic:0.9.26'
-    compile  group: 'com.mchange', name: 'c3p0', version: '0.9.5'
-    compile 'mysql:mysql-connector-java:5.1.37'
     compile 'com.google.guava:guava:19.0'
-    testCompile group: 'junit', name: 'junit', version: '4.11'
-}
+    compile  group: 'com.mchange', name: 'c3p0', version: '0.9.5'
 
-war {
-    webAppDirName = 'src/main/java'
-    archiveName 'sample.war'
+    testCompile group: 'junit', name: 'junit', version: '4.11'
 }

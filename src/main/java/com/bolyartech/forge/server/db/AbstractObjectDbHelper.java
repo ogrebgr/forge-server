@@ -6,6 +6,7 @@ import java.sql.Connection;
 abstract public class AbstractObjectDbHelper implements ObjectDbHelper {
     private Connection mDbc;
 
+
     @Override
     public void init(Connection dbc) {
         mDbc = dbc;

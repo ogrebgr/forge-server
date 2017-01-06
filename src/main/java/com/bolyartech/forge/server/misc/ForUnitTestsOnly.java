@@ -24,7 +24,8 @@ import java.lang.annotation.Target;
 /**
  * Marks methods that exist solely to be used in unit test and NOT in normal code
  */
-@Target(ElementType.METHOD)
+@SuppressWarnings("unused")
+@Target({ElementType.METHOD, ElementType.CONSTRUCTOR})
 @Retention(RetentionPolicy.CLASS)
 public @interface ForUnitTestsOnly {
 }

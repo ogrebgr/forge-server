@@ -5,6 +5,7 @@ import com.mchange.v2.c3p0.ComboPooledDataSource;
 import java.sql.Connection;
 import java.sql.SQLException;
 
+
 public final class C3p0DbPool implements DbPool {
     private final ComboPooledDataSource mDbPool;
 

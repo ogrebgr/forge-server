@@ -1,2 +1,1 @@
-# forge-server-spark
-Forge server (uses Java Spark)
+# forge-server-http
