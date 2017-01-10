@@ -3,14 +3,14 @@ package com.bolyartech.forge.server;
 import ch.qos.logback.classic.LoggerContext;
 import ch.qos.logback.classic.joran.JoranConfigurator;
 import ch.qos.logback.core.joran.spi.JoranException;
+import com.bolyartech.forge.server.config.FileForgeServerConfigurationLoader;
 import com.bolyartech.forge.server.config.ForgeConfigurationException;
 import com.bolyartech.forge.server.config.ForgeServerConfiguration;
 import com.bolyartech.forge.server.config.ForgeServerConfigurationLoader;
-import com.bolyartech.forge.server.config.ForgeServerConfigurationLoaderImpl;
-import com.bolyartech.forge.server.handler.Handler;
+import com.bolyartech.forge.server.handler.RouteHandler;
 import com.bolyartech.forge.server.module.HttpModule;
-import com.bolyartech.forge.server.module.ModuleRegister;
-import com.bolyartech.forge.server.module.ModuleRegisterImpl;
+import com.bolyartech.forge.server.module.HttpModuleRegister;
+import com.bolyartech.forge.server.module.HttpModuleRegisterImpl;
 import com.bolyartech.forge.server.response.ResponseException;
 import com.bolyartech.forge.server.route.Route;
 import com.bolyartech.forge.server.route.RouteImpl;
@@ -27,12 +27,17 @@ import java.io.PrintWriter;
 import java.util.List;
 
 
+/**
+ * Main (and only) servlet which is used to by the Forge server
+ * This class initializes all the modules (and respectively routes). Users must inherit it and implement
+ * {@link #getModules()} in order to define their sites
+ */
 abstract public class MainServlet extends HttpServlet {
     private static final String LOGBACK_CONFIG = "conf/logback.xml";
     private static final String DEFAULT_MODULE_NAME = "default_module";
     private final org.slf4j.Logger mLogger = LoggerFactory.getLogger(this.getClass());
     private final RouteRegister mRouteRegister = new RouteRegisterImpl();
-    private final ModuleRegister mModuleRegister = new ModuleRegisterImpl(mRouteRegister);
+    private final HttpModuleRegister mHttpModuleRegister = new HttpModuleRegisterImpl(mRouteRegister);
 
 
     ForgeServerConfigurationLoader mForgeServerConfigurationLoader;
@@ -42,15 +47,15 @@ abstract public class MainServlet extends HttpServlet {
     public void init() throws ServletException {
         super.init();
 
-        mForgeServerConfigurationLoader = new ForgeServerConfigurationLoaderImpl();
+        mForgeServerConfigurationLoader = new FileForgeServerConfigurationLoader();
         try {
-            ForgeServerConfiguration config = mForgeServerConfigurationLoader.load(this.getClass().getClassLoader());
+            ForgeServerConfiguration config = mForgeServerConfigurationLoader.load();
             if (initLog(config.getServerLogName())) {
                 List<HttpModule> modules = getModules();
 
                 if (modules != null && modules.size() > 0) {
                     for (HttpModule mod : getModules()) {
-                        mModuleRegister.registerModule(mod);
+                        mHttpModuleRegister.registerModule(mod);
                     }
                     mLogger.info("Forge server initialized and started.");
                 } else {
@@ -66,19 +71,34 @@ abstract public class MainServlet extends HttpServlet {
     }
 
 
+    /**
+     * Adds a route to the "default" module
+     * <p>
+     * If you are creating just a small site and don't want to bother with creating modules use this method.
+     *
+     * @param route Route to be added
+     */
     public void addRoute(Route route) {
         mRouteRegister.register(DEFAULT_MODULE_NAME, route);
     }
 
 
-    public void addRoute(HttpMethod httpMethod, String path, Handler handler) {
-        mRouteRegister.register(DEFAULT_MODULE_NAME, new RouteImpl(httpMethod, path, handler));
+    /**
+     * Adds a route
+     *
+     * @param httpMethod   HTTP method for the route
+     * @param path         Path of the route
+     * @param routeHandler RouteHandler of the route
+     * @see #addRoute(Route)
+     */
+    public void addRoute(HttpMethod httpMethod, String path, RouteHandler routeHandler) {
+        mRouteRegister.register(DEFAULT_MODULE_NAME, new RouteImpl(httpMethod, path, routeHandler));
     }
 
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        Route route = mModuleRegister.match(HttpMethod.GET, req.getPathInfo());
+        Route route = mHttpModuleRegister.match(HttpMethod.GET, req.getPathInfo());
 
         if (route != null) {
             handle(req, resp, route);
@@ -94,7 +114,7 @@ abstract public class MainServlet extends HttpServlet {
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        Route route = mModuleRegister.match(HttpMethod.POST, req.getPathInfo());
+        Route route = mHttpModuleRegister.match(HttpMethod.POST, req.getPathInfo());
 
         if (route != null) {
             handle(req, resp, route);
@@ -135,7 +155,7 @@ abstract public class MainServlet extends HttpServlet {
         JoranConfigurator jc = new JoranConfigurator();
         jc.setContext(context);
         context.reset();
-        context.putProperty("application-name", serverLogName);
+        context.putProperty("server-name", serverLogName);
 
         try {
             jc.doConfigure(this.getClass().getClassLoader().getResourceAsStream(LOGBACK_CONFIG));

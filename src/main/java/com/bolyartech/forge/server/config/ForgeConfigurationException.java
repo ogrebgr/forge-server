@@ -1,5 +1,9 @@
 package com.bolyartech.forge.server.config;
 
+/**
+ * Thrown when there is a problem with the configuration data
+ */
+@SuppressWarnings("JavaDoc")
 public class ForgeConfigurationException extends Exception {
     public ForgeConfigurationException() {
     }

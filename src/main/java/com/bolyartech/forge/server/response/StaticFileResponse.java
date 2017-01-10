@@ -11,6 +11,10 @@ import java.time.ZonedDateTime;
 import java.util.zip.GZIPOutputStream;
 
 
+/**
+ * Response which uses static file as a content
+ * Use this class for static HTML files, CSS or images (PNG, JPG, etc.)
+ */
 public class StaticFileResponse implements Response {
 
     private final MimeTypeResolver mMimeTypeResolver;
@@ -18,6 +22,13 @@ public class StaticFileResponse implements Response {
     private final boolean mEnableGzip;
 
 
+    /**
+     * Creates new StaticFileResponse
+     *
+     * @param mimeTypeResolver MIME type resolver (resolves the MIME type by the file extension)
+     * @param file             File to be used as content
+     * @param enableGzip       if true Gzip compression will be used if the client supports it
+     */
     public StaticFileResponse(MimeTypeResolver mimeTypeResolver, File file, boolean enableGzip) {
         mMimeTypeResolver = mimeTypeResolver;
         mFile = file;

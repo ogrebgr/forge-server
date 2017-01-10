@@ -1,14 +1,26 @@
 package com.bolyartech.forge.server.handler;
 
-import com.bolyartech.forge.server.response.Response;
 import com.bolyartech.forge.server.response.ResponseException;
+import com.bolyartech.forge.server.response.forge.ForgeResponse;
 import com.bolyartech.forge.server.route.RequestContext;
-import com.bolyartech.forge.server.session.Session;
 
 
-abstract public class ForgeEndpoint implements Handler, ForgeHandlerInterface {
+/**
+ * Specialized handler that produces {@link ForgeResponse} as response
+ */
+abstract public class ForgeEndpoint implements RouteHandler {
+    /**
+     * Handles HTTP request wrapped in {@link RequestContext} object and produces {@link ForgeResponse}
+     *
+     * @param ctx Request context
+     * @return Forge response
+     * @throws ResponseException if there is problem handling the request
+     */
+    abstract public ForgeResponse handleForge(RequestContext ctx) throws ResponseException;
+
+
     @Override
-    public Response handle(RequestContext ctx, Session session) throws ResponseException {
-        return handleForge(ctx, session);
+    public ForgeResponse handle(RequestContext ctx) throws ResponseException {
+        return handleForge(ctx);
     }
 }

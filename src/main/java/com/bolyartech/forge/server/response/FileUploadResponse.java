@@ -9,11 +9,20 @@ import java.text.MessageFormat;
 import java.util.zip.GZIPOutputStream;
 
 
+/**
+ * Response for uploading file (from server point of view)
+ */
 public class FileUploadResponse implements Response {
     private final File mFile;
     private final boolean mEnableGzip;
 
 
+    /**
+     * Creates new FileUploadResponse
+     *
+     * @param filePath   Path to the file which will be uploaded
+     * @param enableGzip if true Gzip compression will be used if supported by the client
+     */
     public FileUploadResponse(String filePath, boolean enableGzip) {
         if (Strings.isNullOrEmpty(filePath)) {
             throw new IllegalArgumentException("filePath null or empty");

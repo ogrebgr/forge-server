@@ -6,37 +6,60 @@ import com.bolyartech.forge.server.response.Response;
 import com.bolyartech.forge.server.response.ResponseException;
 import com.bolyartech.forge.server.response.StaticFileResponse;
 import com.bolyartech.forge.server.route.RequestContext;
-import com.bolyartech.forge.server.session.Session;
 
 import java.io.File;
 import java.net.URISyntaxException;
 import java.net.URL;
 
 
-public class StaticFileHandler implements Handler {
+/**
+ * Handler for static files like HTML and CSS files
+ * This class uses ClassLoader to find the static files
+ *
+ * @see AbsoluteStaticFileHandler
+ */
+public class StaticFileHandler implements RouteHandler {
 
     private final ClassLoader mClassLoader;
-    private final String mPath;
+    private final String mSourceDir;
     private final Response mNotFoundResponse;
     private final MimeTypeResolver mMimeTypeResolver;
     private final boolean mEnableGzip;
 
 
-    public StaticFileHandler(String path, Response notFoundResponse, MimeTypeResolver mimeTypeResolver, boolean enableGzip) {
-        this(path, notFoundResponse, mimeTypeResolver, enableGzip, null);
+    /**
+     * Creates StaticFileHandler
+     *
+     * @param sourceDir        Source directory relative to the class path
+     * @param notFoundResponse Not found response object which will be used if no static file matching the request is found
+     * @param mimeTypeResolver MIME type resolver
+     * @param enableGzip       if true Gzip compression will be used if the client supports it
+     */
+    public StaticFileHandler(String sourceDir, Response notFoundResponse, MimeTypeResolver mimeTypeResolver,
+                             boolean enableGzip) {
+        this(sourceDir, notFoundResponse, mimeTypeResolver, enableGzip, null);
     }
 
 
-    public StaticFileHandler(String path,
+    /**
+     * Creates StaticFileHandler
+     *
+     * @param sourceDir        Source directory relative to the class path
+     * @param notFoundResponse Not found response object which will be used if no static file matching the request is found
+     * @param mimeTypeResolver MIME type resolver
+     * @param enableGzip       if true Gzip compression will be used if the client supports it
+     * @param classLoader      Class loader to be used to find the static files on the class path
+     */
+    public StaticFileHandler(String sourceDir,
                              Response notFoundResponse,
                              MimeTypeResolver mimeTypeResolver,
                              boolean enableGzip,
                              ClassLoader classLoader) {
 
-        if (path.startsWith("/")) {
-            mPath = path.substring(1);
+        if (sourceDir.startsWith("/")) {
+            mSourceDir = sourceDir.substring(1);
         } else {
-            mPath = path;
+            mSourceDir = sourceDir;
         }
 
         if (classLoader != null) {
@@ -51,16 +74,16 @@ public class StaticFileHandler implements Handler {
 
 
     @Override
-    public Response handle(RequestContext ctx, Session session) throws ResponseException {
-        String filePath = mPath + ctx.getRoutePath() + ctx.getPathInfoString();
+    public Response handle(RequestContext ctx) throws ResponseException {
+        String filePath = mSourceDir + ctx.getPathInfoString();
 
         URL url = mClassLoader.getResource(filePath);
         if (url != null) {
             try {
-                File f = new File(url.toURI());
-                if (f.isFile()) {
+                File file = new File(url.toURI());
+                if (file.isFile()) {
                     boolean actualEnableGzip = mEnableGzip && GzipUtils.supportsGzip(ctx);
-                    return new StaticFileResponse(mMimeTypeResolver, f, actualEnableGzip);
+                    return new StaticFileResponse(mMimeTypeResolver, file, actualEnableGzip);
                 } else {
                     return mNotFoundResponse;
                 }

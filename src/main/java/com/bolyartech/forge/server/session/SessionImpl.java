@@ -3,10 +3,18 @@ package com.bolyartech.forge.server.session;
 import javax.servlet.http.HttpSession;
 
 
+/**
+ * Session
+ */
 public class SessionImpl implements Session {
     private final HttpSession mHttpSession;
 
 
+    /**
+     * Creates new SessionImpl
+     *
+     * @param httpSession HTTP session
+     */
     public SessionImpl(HttpSession httpSession) {
         mHttpSession = httpSession;
     }

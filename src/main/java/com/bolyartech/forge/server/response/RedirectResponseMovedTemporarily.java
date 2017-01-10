@@ -3,12 +3,20 @@ package com.bolyartech.forge.server.response;
 import javax.servlet.http.HttpServletResponse;
 
 
-public class RedirectResponseImpl implements RedirectResponse {
+/**
+ * Redirect response implementation that returns 302 Moved temporarily header
+ */
+public class RedirectResponseMovedTemporarily implements RedirectResponse {
     private static final String HEADER_LOCATION = "Location";
     private final String mLocation;
 
 
-    public RedirectResponseImpl(String location) {
+    /**
+     * Creates new RedirectResponseMovedTemporarily
+     *
+     * @param location Target location
+     */
+    public RedirectResponseMovedTemporarily(String location) {
         mLocation = location;
     }
 

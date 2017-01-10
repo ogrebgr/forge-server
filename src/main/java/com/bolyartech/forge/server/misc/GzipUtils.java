@@ -6,7 +6,22 @@ import com.bolyartech.forge.server.route.RequestContext;
 import java.util.List;
 
 
+/**
+ * Utility class for Gzip
+ */
 public class GzipUtils {
+    private GzipUtils() {
+        throw new AssertionError("Non-instantiable utility class");
+    }
+
+
+    /**
+     * Checks if the client supports Gzip compression
+     * Checks if the header 'Accept-Encoding' contains 'gzip'
+     *
+     * @param ctx Request context
+     * @return true if client supports Gzip encoding
+     */
     public static boolean supportsGzip(RequestContext ctx) {
         List<String> values = ctx.getHeaderValues(HttpHeaders.ACCEPT_ENCODING);
         if (values != null) {

@@ -8,6 +8,9 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 
+/**
+ * Route register
+ */
 public class RouteRegisterImpl implements RouteRegister {
     private final org.slf4j.Logger mLogger = LoggerFactory.getLogger(this.getClass());
 
@@ -52,16 +55,16 @@ public class RouteRegisterImpl implements RouteRegister {
 
 
     @Override
-    public boolean isRegistered(Route ep) {
-        switch (ep.getHttpMethod()) {
+    public boolean isRegistered(Route route) {
+        switch (route.getHttpMethod()) {
             case GET:
-                return mEndpointsGet.containsKey(ep.getPath());
+                return mEndpointsGet.containsKey(route.getPath());
             case POST:
-                return mEndpointsPost.containsKey(ep.getPath());
+                return mEndpointsPost.containsKey(route.getPath());
             case PUT:
-                return mEndpointsPut.containsKey(ep.getPath());
+                return mEndpointsPut.containsKey(route.getPath());
             case DELETE:
-                return mEndpointsDelete.containsKey(ep.getPath());
+                return mEndpointsDelete.containsKey(route.getPath());
             default:
                 return false;
         }
@@ -69,16 +72,16 @@ public class RouteRegisterImpl implements RouteRegister {
 
 
     @Override
-    public Registration getRegistration(Route ep) {
-        switch (ep.getHttpMethod()) {
+    public Registration getRegistration(Route route) {
+        switch (route.getHttpMethod()) {
             case GET:
-                return mEndpointsGet.get(ep.getPath());
+                return mEndpointsGet.get(route.getPath());
             case POST:
-                return mEndpointsPost.get(ep.getPath());
+                return mEndpointsPost.get(route.getPath());
             case PUT:
-                return mEndpointsPut.get(ep.getPath());
+                return mEndpointsPut.get(route.getPath());
             case DELETE:
-                return mEndpointsDelete.get(ep.getPath());
+                return mEndpointsDelete.get(route.getPath());
             default:
                 return null;
         }
@@ -86,11 +89,12 @@ public class RouteRegisterImpl implements RouteRegister {
 
 
     /**
+     * Matches Route against HTTP method and URL path
      * If the path contains more than 15 slashes it will not be matched
      *
-     * @param method
-     * @param path
-     * @return
+     * @param method HTTP method
+     * @param path   URL Path
+     * @return matched route or null if no route is matched
      */
     @Override
     public Route match(HttpMethod method, String path) {

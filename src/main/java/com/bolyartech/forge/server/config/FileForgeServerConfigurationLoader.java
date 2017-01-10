@@ -7,15 +7,38 @@ import java.io.InputStream;
 import java.util.Properties;
 
 
-public class ForgeServerConfigurationLoaderImpl implements ForgeServerConfigurationLoader {
+/**
+ * Implementation of {@link ForgeServerConfigurationLoader} that loads from property file
+ */
+public class FileForgeServerConfigurationLoader implements ForgeServerConfigurationLoader {
     private static final String FILENAME = "conf/forge.conf";
     private static final String PROP_SERVER_LOG_NAME = "server_log_name";
     private final org.slf4j.Logger mLogger = LoggerFactory.getLogger(this.getClass());
 
+    private final ClassLoader mClassLoader;
+
+
+    /**
+     * Creates new FileForgeServerConfigurationLoader
+     *
+     * @param classLoader Class loader to be used to find resources
+     */
+    public FileForgeServerConfigurationLoader(ClassLoader classLoader) {
+        mClassLoader = classLoader;
+    }
+
+
+    /**
+     * Creates new FileForgeServerConfigurationLoader
+     */
+    public FileForgeServerConfigurationLoader() {
+        mClassLoader = this.getClass().getClassLoader();
+    }
+
 
     @Override
-    public ForgeServerConfiguration load(ClassLoader cl) throws ForgeConfigurationException {
-        InputStream is = cl.getResourceAsStream(FILENAME);
+    public ForgeServerConfiguration load() throws ForgeConfigurationException {
+        InputStream is = mClassLoader.getResourceAsStream(FILENAME);
         if (is != null) {
             Properties prop = new Properties();
             try {

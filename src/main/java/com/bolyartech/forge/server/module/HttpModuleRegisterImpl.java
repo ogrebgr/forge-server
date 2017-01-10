@@ -9,13 +9,21 @@ import java.util.ArrayList;
 import java.util.List;
 
 
-public class ModuleRegisterImpl implements ModuleRegister {
+/**
+ * Modules register
+ */
+public class HttpModuleRegisterImpl implements HttpModuleRegister {
     private final RouteRegister mRouteRegister;
 
     private final List<HttpModule> mModules = new ArrayList<>();
 
 
-    public ModuleRegisterImpl(RouteRegister routeRegister) {
+    /**
+     * Creates new HttpModuleRegisterImpl
+     *
+     * @param routeRegister Route register
+     */
+    public HttpModuleRegisterImpl(RouteRegister routeRegister) {
         mRouteRegister = routeRegister;
     }
 

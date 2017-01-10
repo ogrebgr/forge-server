@@ -1,11 +1,20 @@
 package com.bolyartech.forge.server.route;
 
 import com.bolyartech.forge.server.HttpMethod;
-import com.bolyartech.forge.server.handler.Handler;
+import com.bolyartech.forge.server.handler.RouteHandler;
 
 
+/**
+ * Route that uses HTTP GET method
+ */
 public class GetRoute extends RouteImpl {
-    public GetRoute(String path, Handler handler) {
-        super(HttpMethod.GET, path, handler);
+    /**
+     * Creates new GetRoute
+     *
+     * @param path         URL path of the route
+     * @param routeHandler Route handler
+     */
+    public GetRoute(String path, RouteHandler routeHandler) {
+        super(HttpMethod.GET, path, routeHandler);
     }
 }

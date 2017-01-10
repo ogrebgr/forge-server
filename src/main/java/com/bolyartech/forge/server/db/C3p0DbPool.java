@@ -6,17 +6,25 @@ import java.sql.Connection;
 import java.sql.SQLException;
 
 
+/**
+ * C3p0 implementation od {@link DbPool}
+ */
 public final class C3p0DbPool implements DbPool {
-    private final ComboPooledDataSource mDbPool;
+    private final ComboPooledDataSource mDataSource;
 
 
-    public C3p0DbPool(ComboPooledDataSource dbPool) {
-        mDbPool = dbPool;
+    /**
+     * Creates new instance
+     *
+     * @param dataSource data source to be used
+     */
+    public C3p0DbPool(ComboPooledDataSource dataSource) {
+        mDataSource = dataSource;
     }
 
 
     @Override
     public Connection getConnection() throws SQLException {
-        return mDbPool.getConnection();
+        return mDataSource.getConnection();
     }
 }

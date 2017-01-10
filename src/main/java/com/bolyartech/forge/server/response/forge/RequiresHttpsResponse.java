@@ -1,17 +1,13 @@
 package com.bolyartech.forge.server.response.forge;
 
+/**
+ * Response with code <code>BasicResponseCodes.Errors.REQUIRES_HTTPS</code>
+ */
 public class RequiresHttpsResponse extends ForgeResponse {
+    /**
+     * Creates new RequiresHttpsResponse
+     */
     public RequiresHttpsResponse() {
-        super(BasicResponseCodes.Errors.REQUIRES_HTTPS, "");
-    }
-
-
-    public RequiresHttpsResponse(String string) {
-        super(BasicResponseCodes.Errors.REQUIRES_HTTPS, string);
-    }
-
-
-    public RequiresHttpsResponse(String string, boolean enableGzipSupport) {
-        super(BasicResponseCodes.Errors.REQUIRES_HTTPS, string, enableGzipSupport);
+        super(BasicResponseCodes.Errors.REQUIRES_HTTPS, "Requires HTTPS");
     }
 }

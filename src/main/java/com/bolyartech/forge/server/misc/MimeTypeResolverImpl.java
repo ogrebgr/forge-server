@@ -6,6 +6,9 @@ import java.util.HashMap;
 import java.util.Map;
 
 
+/**
+ * MIME type resolver
+ */
 public class MimeTypeResolverImpl implements MimeTypeResolver {
     private static final String FALLBACK_MIME = "application/octet-stream";
 

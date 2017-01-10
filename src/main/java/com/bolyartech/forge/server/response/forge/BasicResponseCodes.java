@@ -4,7 +4,13 @@ import java.util.HashMap;
 import java.util.Map;
 
 
+/**
+ * Class containing basic response codes for Forge endpoints
+ */
 public class BasicResponseCodes {
+    /**
+     * Codes for OK
+     */
     public enum Oks implements ForgeResponseCode {
         OK(1); // used as general code that indicates success
 
@@ -27,6 +33,9 @@ public class BasicResponseCodes {
     }
 
 
+    /**
+     * Codes for errors
+     */
     public enum Errors implements ForgeResponseCode {
         ERROR(-1), // used as general error when we cant/don't want to specify more details
         MISSING_PARAMETERS(-2), // missing required parameters
@@ -57,6 +66,12 @@ public class BasicResponseCodes {
         }
 
 
+        /**
+         * Resolves enum value from int value
+         *
+         * @param code Integer value of the code
+         * @return Enum value of the code
+         */
         public static Errors fromInt(int code) {
             Errors ret = mTypesByValue.get(code);
             if (ret != null) {

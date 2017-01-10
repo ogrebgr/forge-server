@@ -2,6 +2,8 @@ package com.bolyartech.forge.server.route;
 
 import com.bolyartech.forge.server.HttpMethod;
 import com.bolyartech.forge.server.response.HttpHeaders;
+import com.bolyartech.forge.server.session.Session;
+import com.bolyartech.forge.server.session.SessionImpl;
 import com.google.common.base.Strings;
 import com.google.common.io.CharStreams;
 
@@ -15,6 +17,11 @@ import java.net.URLDecoder;
 import java.util.*;
 
 
+/**
+ * Request context
+ *
+ * @see RequestContext
+ */
 public class RequestContextImpl implements RequestContext {
     private static final String HEADER_CONTENT_TYPE = "Content-Type";
     private static final String CONTENT_TYPE_FORM_ENCODED = "application/x-www-form-urlencoded";
@@ -28,13 +35,22 @@ public class RequestContextImpl implements RequestContext {
     private final List<String> mPathInfoParams = new ArrayList<>();
     private final String mRoutePath;
     private final String mPathInfoString;
+    private Session mSession;
     private boolean mCookiesInitialized = false;
     private boolean mIsMultipart;
     private ServerData mServerData;
 
 
+    /**
+     * Creates new RequestContextImpl
+     *
+     * @param httpReq   HTTP servlet request
+     * @param routePath route path
+     * @throws IOException if there is a problem creating the context
+     */
     public RequestContextImpl(HttpServletRequest httpReq, String routePath) throws IOException {
         mHttpReq = httpReq;
+
         extractParameters(httpReq.getQueryString(), mGetParams);
 
         if (httpReq.getMethod().equalsIgnoreCase(HttpMethod.POST.getLiteral())) {
@@ -47,7 +63,11 @@ public class RequestContextImpl implements RequestContext {
         }
 
         mRoutePath = routePath;
-        mPathInfoString = mHttpReq.getPathInfo().replace(routePath, "");
+        mPathInfoString = mHttpReq.getPathInfo().substring(routePath.length());
+        //protection against directory traversal. Jetty never sends '..' here but other containers may do so...
+        if (mPathInfoParams.contains("..")) {
+            throw new IllegalStateException("Path info contains '..'");
+        }
 
         String[] piRaw = mPathInfoString.split("/");
         for (String s : piRaw) {
@@ -76,6 +96,16 @@ public class RequestContextImpl implements RequestContext {
                 throw new RuntimeException(e);
             }
         }
+    }
+
+
+    @Override
+    public Session getSession() {
+        if (mSession == null) {
+            mSession = new SessionImpl(mHttpReq.getSession());
+        }
+
+        return mSession;
     }
 
 
@@ -143,25 +173,23 @@ public class RequestContextImpl implements RequestContext {
 
     @Override
     public String optFromGet(String parameterName, String defaultValue) {
-        return null;
+        String ret = getFromGet(parameterName);
+        if (ret == null) {
+            ret = defaultValue;
+        }
+
+        return ret;
     }
 
 
     @Override
     public String optFromPost(String parameterName, String defaultValue) {
-        return null;
-    }
+        String ret = getFromPost(parameterName);
+        if (ret == null) {
+            ret = defaultValue;
+        }
 
-
-    @Override
-    public String optFromPathInfo(String parameterName, String defaultValue) {
-        return null;
-    }
-
-
-    @Override
-    public String optCookie(String cookieName, String defaultValue) {
-        return null;
+        return ret;
     }
 
 

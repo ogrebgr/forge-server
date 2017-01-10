@@ -4,6 +4,9 @@ import java.util.HashMap;
 import java.util.Map;
 
 
+/**
+ * Fake session meant to be used in unit tests
+ */
 public class TestSession implements Session {
     private final Map<String, Object> mVars = new HashMap<>();
 

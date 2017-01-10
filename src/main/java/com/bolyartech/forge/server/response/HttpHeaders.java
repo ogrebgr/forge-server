@@ -1,5 +1,8 @@
 package com.bolyartech.forge.server.response;
 
+/**
+ * Common HTTP headers
+ */
 public class HttpHeaders {
     public static final String CONNECTION = "Connection";
     public static final String HOST = "Host";

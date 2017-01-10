@@ -8,7 +8,10 @@ import java.io.InputStream;
 import java.util.Properties;
 
 
-public class DbConfigurationLoaderImpl implements DbConfigurationLoader {
+/**
+ * Implementation of {@link DbConfigurationLoader} that loads from property file
+ */
+public class FileDbConfigurationLoader implements DbConfigurationLoader {
     private static final String FILENAME = "conf/db.conf";
     private static final String PROP_DB_DSN = "db_dsn";
     private static final String PROP_DB_USERNAME = "db_username";
@@ -23,9 +26,30 @@ public class DbConfigurationLoaderImpl implements DbConfigurationLoader {
     private final org.slf4j.Logger mLogger = LoggerFactory.getLogger(this.getClass());
 
 
+    private final ClassLoader mClassLoader;
+
+
+    /**
+     * Creates new FileDbConfigurationLoader
+     *
+     * @param classLoader Class loader to be used to find resources
+     */
+    public FileDbConfigurationLoader(ClassLoader classLoader) {
+        mClassLoader = classLoader;
+    }
+
+
+    /**
+     * Creates new FileDbConfigurationLoader
+     */
+    public FileDbConfigurationLoader() {
+        mClassLoader = this.getClass().getClassLoader();
+    }
+
+
     @Override
-    public DbConfiguration load(ClassLoader cl) throws ForgeConfigurationException {
-        InputStream is = cl.getResourceAsStream(FILENAME);
+    public DbConfiguration load() throws ForgeConfigurationException {
+        InputStream is = mClassLoader.getResourceAsStream(FILENAME);
         if (is != null) {
             Properties prop = new Properties();
             try {

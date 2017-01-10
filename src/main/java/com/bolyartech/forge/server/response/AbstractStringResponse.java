@@ -10,17 +10,31 @@ import java.io.OutputStream;
 import java.util.zip.GZIPOutputStream;
 
 
+/**
+ * Base class for specialized string responses
+ */
 abstract public class AbstractStringResponse implements StringResponse {
     private final String mString;
     private final boolean mEnableGzipSupport;
 
 
+    /**
+     * Creates new AbstractStringResponse
+     *
+     * @param string String of the response
+     */
     public AbstractStringResponse(String string) {
         mString = string;
         mEnableGzipSupport = false;
     }
 
 
+    /**
+     * Creates new AbstractStringResponse
+     *
+     * @param string            String of the response
+     * @param enableGzipSupport if true Gzip compression will be used if the client supports it
+     */
     public AbstractStringResponse(String string, boolean enableGzipSupport) {
         mString = string;
         mEnableGzipSupport = enableGzipSupport;

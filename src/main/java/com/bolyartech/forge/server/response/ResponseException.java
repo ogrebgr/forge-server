@@ -1,5 +1,13 @@
 package com.bolyartech.forge.server.response;
 
+import com.bolyartech.forge.server.handler.RouteHandler;
+
+
+/**
+ * Thrown if there is a problem during handling HTTP request in a {@link RouteHandler} or during converting to
+ * HttpServletResponse
+ */
+@SuppressWarnings("JavaDoc")
 public class ResponseException extends Exception {
     public ResponseException() {
     }
