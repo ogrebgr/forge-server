@@ -1,8 +1,9 @@
-group 'com.bolyartech.forge.server'
+group 'com.bolyartech.forge'
 version '2.0.0'
 
 apply plugin: 'java'
-
+apply plugin: 'maven-publish'
+apply plugin: 'com.jfrog.bintray'
 sourceCompatibility = 1.8
 
 repositories {
@@ -47,7 +48,7 @@ publishing {
         MyPublication(MavenPublication) {
             from components.java
             groupId 'com.bolyartech.forge'
-            artifactId 'server'
+            artifactId 'forge-server'
             version '2.0.0'
             artifact sourcesJar
         }
