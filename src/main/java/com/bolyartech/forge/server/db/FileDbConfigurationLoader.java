@@ -3,8 +3,8 @@ package com.bolyartech.forge.server.db;
 import com.bolyartech.forge.server.config.ForgeConfigurationException;
 import org.slf4j.LoggerFactory;
 
-import java.io.IOException;
-import java.io.InputStream;
+import java.io.*;
+import java.text.MessageFormat;
 import java.util.Properties;
 
 
@@ -12,7 +12,9 @@ import java.util.Properties;
  * Implementation of {@link DbConfigurationLoader} that loads from property file
  */
 public class FileDbConfigurationLoader implements DbConfigurationLoader {
-    private static final String FILENAME = "conf/db.conf";
+    private final org.slf4j.Logger mLogger = LoggerFactory.getLogger(this.getClass());
+    private static final String FILENAME = "db.conf";
+
     private static final String PROP_DB_DSN = "db_dsn";
     private static final String PROP_DB_USERNAME = "db_username";
     private static final String PROP_DB_PASSWORD = "db_password";
@@ -23,37 +25,28 @@ public class FileDbConfigurationLoader implements DbConfigurationLoader {
     private static final String PROP_C3P0_IDLE_CONNECTION_TEST_PERIOD = "c3p0_idle_connection_test_period";
     private static final String PROP_C3P0_TEST_CONNECTION_ON_CHECKIN = "c3p0_test_connection_on_checkin";
     private static final String PROP_C3P0_TEST_CONNECTION_ON_CHECKOUT = "c3p0_test_connection_on_checkout";
-    private final org.slf4j.Logger mLogger = LoggerFactory.getLogger(this.getClass());
 
-
-    private final ClassLoader mClassLoader;
-
-
-    /**
-     * Creates new FileDbConfigurationLoader
-     *
-     * @param classLoader Class loader to be used to find resources
-     */
-    public FileDbConfigurationLoader(ClassLoader classLoader) {
-        mClassLoader = classLoader;
-    }
+    private final String mConfigDir;
 
 
     /**
      * Creates new FileDbConfigurationLoader
+     * @param configDir Configuration directory
      */
-    public FileDbConfigurationLoader() {
-        mClassLoader = this.getClass().getClassLoader();
+    public FileDbConfigurationLoader(String configDir) {
+        mConfigDir = configDir;
     }
+
 
 
     @Override
     public DbConfiguration load() throws ForgeConfigurationException {
-        InputStream is = mClassLoader.getResourceAsStream(FILENAME);
-        if (is != null) {
+        File confFile = new File(mConfigDir, FILENAME);
+        if (confFile.exists()) {
+
             Properties prop = new Properties();
             try {
-                prop.load(is);
+                prop.load(new BufferedInputStream(new FileInputStream(confFile)));
 
             } catch (IOException e) {
                 mLogger.error("Cannot load config file");
@@ -77,8 +70,9 @@ public class FileDbConfigurationLoader implements DbConfigurationLoader {
                 throw new ForgeConfigurationException(e);
             }
         } else {
-            mLogger.error("Problem  finding/loading configuration file " + FILENAME);
-            throw new ForgeConfigurationException();
+            mLogger.error("Cannot find configuration file: {}", confFile.getAbsolutePath());
+            throw new IllegalStateException(MessageFormat.format("Cannot find configuration file: {1}",
+                    confFile.getAbsolutePath()));
         }
     }
 }

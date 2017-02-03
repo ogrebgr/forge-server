@@ -1,10 +1,5 @@
 package com.bolyartech.forge.server;
 
-import ch.qos.logback.classic.LoggerContext;
-import ch.qos.logback.classic.joran.JoranConfigurator;
-import ch.qos.logback.core.joran.spi.JoranException;
-import com.bolyartech.forge.server.config.FileForgeServerConfigurationLoader;
-import com.bolyartech.forge.server.config.ForgeConfigurationException;
 import com.bolyartech.forge.server.config.ForgeServerConfiguration;
 import com.bolyartech.forge.server.config.ForgeServerConfigurationLoader;
 import com.bolyartech.forge.server.handler.RouteHandler;
@@ -33,7 +28,7 @@ import java.util.List;
  * {@link #getModules()} in order to define their sites
  */
 abstract public class MainServlet extends HttpServlet {
-    private static final String LOGBACK_CONFIG = "conf/logback.xml";
+    private static final String LOGBACK_CONFIG_FILE = "logback.xml";
     private static final String DEFAULT_MODULE_NAME = "default_module";
     private final org.slf4j.Logger mLogger = LoggerFactory.getLogger(this.getClass());
     private final RouteRegister mRouteRegister = new RouteRegisterImpl();
@@ -41,32 +36,27 @@ abstract public class MainServlet extends HttpServlet {
 
 
     ForgeServerConfigurationLoader mForgeServerConfigurationLoader;
+    private final ForgeServerConfiguration mForgeServerConfig;
+
+
+    public MainServlet(ForgeServerConfiguration forgeServerConfig) {
+        mForgeServerConfig = forgeServerConfig;
+    }
 
 
     @Override
     public void init() throws ServletException {
         super.init();
 
-        mForgeServerConfigurationLoader = new FileForgeServerConfigurationLoader();
-        try {
-            ForgeServerConfiguration config = mForgeServerConfigurationLoader.load();
-            if (initLog(config.getServerLogName())) {
-                List<HttpModule> modules = getModules();
+        List<HttpModule> modules = getModules();
 
-                if (modules != null && modules.size() > 0) {
-                    for (HttpModule mod : getModules()) {
-                        mHttpModuleRegister.registerModule(mod);
-                    }
-                    mLogger.info("Forge server initialized and started.");
-                } else {
-                    mLogger.error("getModules() returned empty list of modules, so no endpoints are registered.");
-                }
-            } else {
-                mLogger.error("Server not initialized properly and it is not functional.");
+        if (modules != null && modules.size() > 0) {
+            for (HttpModule mod : getModules()) {
+                mHttpModuleRegister.registerModule(mod);
             }
-
-        } catch (ForgeConfigurationException e) {
-            mLogger.error("Server not initialized properly and it is not functional.");
+            mLogger.info("Forge server initialized and started.");
+        } else {
+            mLogger.error("getModules() returned empty list of modules, so no endpoints are registered.");
         }
     }
 
@@ -150,19 +140,25 @@ abstract public class MainServlet extends HttpServlet {
     }
 
 
-    private boolean initLog(String serverLogName) {
-        LoggerContext context = (LoggerContext) LoggerFactory.getILoggerFactory();
-        JoranConfigurator jc = new JoranConfigurator();
-        jc.setContext(context);
-        context.reset();
-        context.putProperty("server-name", serverLogName);
+//    private boolean initLog(String serverLogFileName) {
+//        LoggerContext context = (LoggerContext) LoggerFactory.getILoggerFactory();
+//        JoranConfigurator jc = new JoranConfigurator();
+//        jc.setContext(context);
+//        context.reset();
+//        context.putProperty("server-name", serverLogFileName);
+//
+//        try {
+//            File configFile = new File(getConfigDir(), LOGBACK_CONFIG_FILE);
+//            jc.doConfigure(configFile);
+//            return true;
+//        } catch (JoranException e) {
+//            mLogger.error("Cannot load logback configuration!", e);
+//            return false;
+//        }
+//    }
 
-        try {
-            jc.doConfigure(this.getClass().getClassLoader().getResourceAsStream(LOGBACK_CONFIG));
-            return true;
-        } catch (JoranException e) {
-            mLogger.error("Cannot load logback configuration!", e);
-            return false;
-        }
+
+    protected ForgeServerConfiguration getForgeServerConfig() {
+        return mForgeServerConfig;
     }
 }

@@ -13,4 +13,10 @@ public interface ForgeServerConfiguration {
      * @return server's log name
      */
     String getServerLogName();
+
+    /**
+     * Returns directory for static files as js, css, images, etc.
+     * @return path to the static files directory
+     */
+    String getStaticFilesDir();
 }

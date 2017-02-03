@@ -8,8 +8,6 @@ import com.bolyartech.forge.server.response.StaticFileResponse;
 import com.bolyartech.forge.server.route.RequestContext;
 
 import java.io.File;
-import java.net.URISyntaxException;
-import java.net.URL;
 
 
 /**
@@ -56,11 +54,7 @@ public class StaticFileHandler implements RouteHandler {
                              boolean enableGzip,
                              ClassLoader classLoader) {
 
-        if (sourceDir.startsWith("/")) {
-            mSourceDir = sourceDir.substring(1);
-        } else {
-            mSourceDir = sourceDir;
-        }
+        mSourceDir = sourceDir;
 
         if (classLoader != null) {
             mClassLoader = classLoader;
@@ -75,21 +69,10 @@ public class StaticFileHandler implements RouteHandler {
 
     @Override
     public Response handle(RequestContext ctx) throws ResponseException {
-        String filePath = mSourceDir + ctx.getPathInfoString();
-
-        URL url = mClassLoader.getResource(filePath);
-        if (url != null) {
-            try {
-                File file = new File(url.toURI());
-                if (file.isFile()) {
-                    boolean actualEnableGzip = mEnableGzip && GzipUtils.supportsGzip(ctx);
-                    return new StaticFileResponse(mMimeTypeResolver, file, actualEnableGzip);
-                } else {
-                    return mNotFoundResponse;
-                }
-            } catch (URISyntaxException e) {
-                throw new ResponseException(e);
-            }
+        File file = new File(mSourceDir + ctx.getPathInfoString());
+        if (file.isFile()) {
+            boolean actualEnableGzip = mEnableGzip && GzipUtils.supportsGzip(ctx);
+            return new StaticFileResponse(mMimeTypeResolver, file, actualEnableGzip);
         } else {
             return mNotFoundResponse;
         }
