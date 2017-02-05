@@ -1,7 +1,6 @@
 package com.bolyartech.forge.server.response.forge;
 
 import com.bolyartech.forge.server.response.JsonResponse;
-import com.bolyartech.forge.server.response.ResponseException;
 
 import javax.servlet.http.HttpServletResponse;
 
@@ -96,7 +95,7 @@ public class ForgeResponse extends JsonResponse {
 
 
     @Override
-    public void toServletResponse(HttpServletResponse resp) throws ResponseException {
+    public void toServletResponse(HttpServletResponse resp) {
         resp.setHeader(FORGE_RESULT_CODE_HEADER, Integer.toString(mResultCode));
         super.toServletResponse(resp);
     }

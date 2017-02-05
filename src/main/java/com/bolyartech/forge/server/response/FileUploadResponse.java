@@ -38,7 +38,7 @@ public class FileUploadResponse implements Response {
 
 
     @Override
-    public void toServletResponse(HttpServletResponse resp) throws ResponseException {
+    public void toServletResponse(HttpServletResponse resp) {
         resp.setContentType(HttpHeaders.CONTENT_TYPE_OCTET);
         resp.setHeader(HttpHeaders.CONTENT_DISPOSITION,
                 MessageFormat.format(HttpHeaders.CONTENT_DISPOSITION_ATTACHMENT, mFile.getName()));

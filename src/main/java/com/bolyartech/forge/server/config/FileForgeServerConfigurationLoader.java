@@ -2,7 +2,10 @@ package com.bolyartech.forge.server.config;
 
 import org.slf4j.LoggerFactory;
 
-import java.io.*;
+import java.io.BufferedInputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
 import java.text.MessageFormat;
 import java.util.Properties;
 
@@ -21,6 +24,7 @@ public class FileForgeServerConfigurationLoader implements ForgeServerConfigurat
 
     /**
      * Creates new FileForgeServerConfigurationLoader
+     *
      * @param configDir Path to the directory that contains the configuration files
      */
     public FileForgeServerConfigurationLoader(String configDir) {

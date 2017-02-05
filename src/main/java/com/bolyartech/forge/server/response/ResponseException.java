@@ -8,7 +8,7 @@ import com.bolyartech.forge.server.handler.RouteHandler;
  * HttpServletResponse
  */
 @SuppressWarnings("JavaDoc")
-public class ResponseException extends Exception {
+public class ResponseException extends RuntimeException {
     public ResponseException() {
     }
 

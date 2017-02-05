@@ -8,7 +8,7 @@ public class InvalidParameterValueResponse extends ForgeResponse {
      * Creates new InvalidParameterValueResponse
      */
     public InvalidParameterValueResponse() {
-        super(BasicResponseCodes.Errors.INVALID_PARAMETER_VALUE, "");
+        super(BasicResponseCodes.Errors.INVALID_PARAMETER_VALUE, "INVALID_PARAMETER_VALUE");
     }
 
 

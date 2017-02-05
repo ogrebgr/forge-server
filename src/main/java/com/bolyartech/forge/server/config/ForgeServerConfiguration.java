@@ -16,6 +16,7 @@ public interface ForgeServerConfiguration {
 
     /**
      * Returns directory for static files as js, css, images, etc.
+     *
      * @return path to the static files directory
      */
     String getStaticFilesDir();

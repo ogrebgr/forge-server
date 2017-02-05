@@ -3,7 +3,10 @@ package com.bolyartech.forge.server.db;
 import com.bolyartech.forge.server.config.ForgeConfigurationException;
 import org.slf4j.LoggerFactory;
 
-import java.io.*;
+import java.io.BufferedInputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
 import java.text.MessageFormat;
 import java.util.Properties;
 
@@ -12,9 +15,7 @@ import java.util.Properties;
  * Implementation of {@link DbConfigurationLoader} that loads from property file
  */
 public class FileDbConfigurationLoader implements DbConfigurationLoader {
-    private final org.slf4j.Logger mLogger = LoggerFactory.getLogger(this.getClass());
     private static final String FILENAME = "db.conf";
-
     private static final String PROP_DB_DSN = "db_dsn";
     private static final String PROP_DB_USERNAME = "db_username";
     private static final String PROP_DB_PASSWORD = "db_password";
@@ -25,18 +26,18 @@ public class FileDbConfigurationLoader implements DbConfigurationLoader {
     private static final String PROP_C3P0_IDLE_CONNECTION_TEST_PERIOD = "c3p0_idle_connection_test_period";
     private static final String PROP_C3P0_TEST_CONNECTION_ON_CHECKIN = "c3p0_test_connection_on_checkin";
     private static final String PROP_C3P0_TEST_CONNECTION_ON_CHECKOUT = "c3p0_test_connection_on_checkout";
-
+    private final org.slf4j.Logger mLogger = LoggerFactory.getLogger(this.getClass());
     private final String mConfigDir;
 
 
     /**
      * Creates new FileDbConfigurationLoader
+     *
      * @param configDir Configuration directory
      */
     public FileDbConfigurationLoader(String configDir) {
         mConfigDir = configDir;
     }
-
 
 
     @Override

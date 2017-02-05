@@ -20,7 +20,7 @@ abstract public class ForgeEndpoint implements RouteHandler {
 
 
     @Override
-    public ForgeResponse handle(RequestContext ctx) throws ResponseException {
+    public ForgeResponse handle(RequestContext ctx) {
         return handleForge(ctx);
     }
 }

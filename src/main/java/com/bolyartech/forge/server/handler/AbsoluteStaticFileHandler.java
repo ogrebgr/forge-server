@@ -3,7 +3,6 @@ package com.bolyartech.forge.server.handler;
 import com.bolyartech.forge.server.misc.GzipUtils;
 import com.bolyartech.forge.server.misc.MimeTypeResolver;
 import com.bolyartech.forge.server.response.Response;
-import com.bolyartech.forge.server.response.ResponseException;
 import com.bolyartech.forge.server.response.StaticFileResponse;
 import com.bolyartech.forge.server.route.RequestContext;
 
@@ -61,7 +60,7 @@ public class AbsoluteStaticFileHandler implements RouteHandler {
 
 
     @Override
-    public Response handle(RequestContext ctx) throws ResponseException {
+    public Response handle(RequestContext ctx) {
         File file = new File(mSourceDir, ctx.getPathInfoString());
         if (file.exists() && file.isFile()) {
             boolean actualEnableGzip = mEnableGzip && GzipUtils.supportsGzip(ctx);

@@ -4,6 +4,7 @@ import com.bolyartech.forge.server.misc.TemplateEngine;
 import com.bolyartech.forge.server.misc.TemplateEngineFactory;
 import com.bolyartech.forge.server.response.HtmlResponse;
 import com.bolyartech.forge.server.response.Response;
+import com.bolyartech.forge.server.response.ResponseException;
 import com.bolyartech.forge.server.route.RequestContext;
 
 
@@ -45,7 +46,7 @@ abstract public class WebPage implements RouteHandler {
      * @param tple Template engine
      * @return HTML
      */
-    abstract public String produceHtml(RequestContext ctx, TemplateEngine tple);
+    abstract public String produceHtml(RequestContext ctx, TemplateEngine tple) throws ResponseException;
 
 
     @Override
@@ -53,5 +54,10 @@ abstract public class WebPage implements RouteHandler {
         String content = produceHtml(ctx, mTemplateEngineFactory.createNew());
 
         return new HtmlResponse(content, mEnableGzipSupport);
+    }
+
+
+    public TemplateEngineFactory getTemplateEngineFactory() {
+        return mTemplateEngineFactory;
     }
 }

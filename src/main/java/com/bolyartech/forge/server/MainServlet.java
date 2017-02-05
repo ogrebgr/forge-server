@@ -1,6 +1,5 @@
 package com.bolyartech.forge.server;
 
-import com.bolyartech.forge.server.config.ForgeServerConfiguration;
 import com.bolyartech.forge.server.config.ForgeServerConfigurationLoader;
 import com.bolyartech.forge.server.handler.RouteHandler;
 import com.bolyartech.forge.server.module.HttpModule;
@@ -36,12 +35,6 @@ abstract public class MainServlet extends HttpServlet {
 
 
     ForgeServerConfigurationLoader mForgeServerConfigurationLoader;
-    private final ForgeServerConfiguration mForgeServerConfig;
-
-
-    public MainServlet(ForgeServerConfiguration forgeServerConfig) {
-        mForgeServerConfig = forgeServerConfig;
-    }
 
 
     @Override
@@ -156,9 +149,4 @@ abstract public class MainServlet extends HttpServlet {
 //            return false;
 //        }
 //    }
-
-
-    protected ForgeServerConfiguration getForgeServerConfig() {
-        return mForgeServerConfig;
-    }
 }

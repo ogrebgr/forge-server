@@ -41,7 +41,7 @@ abstract public class ForgeDbSecureEndpoint extends ForgeSecureEndpoint {
 
 
     @Override
-    public ForgeResponse handleForgeSecure(RequestContext ctx) throws ResponseException {
+    public ForgeResponse handleForgeSecure(RequestContext ctx) {
         try {
             Connection dbc = mDbPool.getConnection();
             ForgeResponse ret = handleForgeSecure(ctx, dbc);

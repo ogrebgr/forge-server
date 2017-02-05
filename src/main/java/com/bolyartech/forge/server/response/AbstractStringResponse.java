@@ -48,7 +48,7 @@ abstract public class AbstractStringResponse implements StringResponse {
 
 
     @Override
-    public void toServletResponse(HttpServletResponse resp) throws ResponseException {
+    public void toServletResponse(HttpServletResponse resp) {
         resp.setStatus(HttpServletResponse.SC_OK);
         resp.setContentType(getContentType());
 

@@ -21,7 +21,7 @@ abstract public class ForgeSecureEndpoint extends ForgeEndpoint {
 
 
     @Override
-    public ForgeResponse handleForge(RequestContext ctx) throws ResponseException {
+    public ForgeResponse handleForge(RequestContext ctx) {
         if (ctx.getScheme().equals("https")) {
             return handleForgeSecure(ctx);
         } else {

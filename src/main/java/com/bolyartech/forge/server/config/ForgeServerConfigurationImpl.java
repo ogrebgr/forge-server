@@ -12,10 +12,10 @@ public class ForgeServerConfigurationImpl implements ForgeServerConfiguration {
     private final String mStaticFilesDir;
 
 
-
     /**
      * Creates new ForgeServerConfigurationImpl
-     * @param serverLogName Prefix for log files for this server
+     *
+     * @param serverLogName  Prefix for log files for this server
      * @param staticFilesDir Path to the directory for static files like js, css, images
      */
     public ForgeServerConfigurationImpl(String serverLogName, String staticFilesDir) {

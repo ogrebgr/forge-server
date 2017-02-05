@@ -11,7 +11,7 @@ public class MissingParametersResponse extends ForgeResponse {
      * Creates new MissingParametersResponse
      */
     public MissingParametersResponse() {
-        super(BasicResponseCodes.Errors.MISSING_PARAMETERS, "");
+        super(BasicResponseCodes.Errors.MISSING_PARAMETERS, "MISSING_PARAMETERS");
     }
 
 

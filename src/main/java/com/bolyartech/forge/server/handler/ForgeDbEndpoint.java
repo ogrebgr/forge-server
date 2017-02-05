@@ -40,7 +40,7 @@ abstract public class ForgeDbEndpoint extends ForgeEndpoint {
 
 
     @Override
-    public ForgeResponse handleForge(RequestContext ctx) throws ResponseException {
+    public ForgeResponse handleForge(RequestContext ctx) {
         try {
             Connection dbc = mDbPool.getConnection();
             ForgeResponse ret = handleForge(ctx, dbc);

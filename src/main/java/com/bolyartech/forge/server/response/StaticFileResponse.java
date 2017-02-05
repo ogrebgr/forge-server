@@ -37,7 +37,7 @@ public class StaticFileResponse implements Response {
 
 
     @Override
-    public void toServletResponse(HttpServletResponse resp) throws ResponseException {
+    public void toServletResponse(HttpServletResponse resp) {
         try {
             String mimeType = mMimeTypeResolver.resolveForFilename(mFile.getName());
             resp.setContentType(mimeType);

@@ -71,7 +71,7 @@ public class RouteImpl implements Route {
 
 
     @Override
-    public void handle(HttpServletRequest httpReq, HttpServletResponse httpResp) throws ResponseException {
+    public void handle(HttpServletRequest httpReq, HttpServletResponse httpResp) {
         try {
             mLogger.trace("Will handle {} {}", mHttpMethod, mPath);
             Response resp = mRouteHandler.handle(new RequestContextImpl(httpReq, mPath));
