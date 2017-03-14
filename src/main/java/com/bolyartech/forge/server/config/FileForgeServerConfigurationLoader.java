@@ -41,7 +41,7 @@ public class FileForgeServerConfigurationLoader implements ForgeServerConfigurat
             try {
                 prop.load(new BufferedInputStream(new FileInputStream(confFile)));
             } catch (IOException e) {
-                mLogger.error("Cannot load config file");
+                mLogger.error("Cannot load config file", e);
                 throw new ForgeConfigurationException(e);
             }
 
@@ -55,7 +55,7 @@ public class FileForgeServerConfigurationLoader implements ForgeServerConfigurat
             }
         } else {
             mLogger.error("Cannot find configuration file: {}", confFile.getAbsolutePath());
-            throw new IllegalStateException(MessageFormat.format("Cannot find configuration file: {1}",
+            throw new IllegalStateException(MessageFormat.format("Cannot find configuration file: {0}",
                     confFile.getAbsolutePath()));
         }
     }
