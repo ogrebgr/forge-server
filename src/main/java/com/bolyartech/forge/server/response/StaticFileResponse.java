@@ -17,9 +17,9 @@ import java.util.zip.GZIPOutputStream;
  */
 public class StaticFileResponse implements Response {
 
-    private final MimeTypeResolver mMimeTypeResolver;
     private final File mFile;
     private final boolean mEnableGzip;
+    private final String mMimeType;
 
 
     /**
@@ -30,17 +30,30 @@ public class StaticFileResponse implements Response {
      * @param enableGzip       if true Gzip compression will be used if the client supports it
      */
     public StaticFileResponse(MimeTypeResolver mimeTypeResolver, File file, boolean enableGzip) {
-        mMimeTypeResolver = mimeTypeResolver;
         mFile = file;
         mEnableGzip = enableGzip;
+
+        mMimeType = mimeTypeResolver.resolveForFilename(mFile.getName());
+    }
+
+
+    /**
+     *
+     * @param file
+     * @param enableGzip
+     * @param mimeType
+     */
+    public StaticFileResponse(File file, boolean enableGzip, String mimeType) {
+        mFile = file;
+        mEnableGzip = enableGzip;
+        mMimeType = mimeType;
     }
 
 
     @Override
     public void toServletResponse(HttpServletResponse resp) {
         try {
-            String mimeType = mMimeTypeResolver.resolveForFilename(mFile.getName());
-            resp.setContentType(mimeType);
+            resp.setContentType(mMimeType);
 
             ZonedDateTime ts =
                     ZonedDateTime.ofInstant(Instant.ofEpochMilli(mFile.lastModified()), ZoneId.of("UTC"));
