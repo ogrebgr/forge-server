@@ -1,5 +1,9 @@
+ext {
+    forge_server_version = '4.1.0'
+}
+
 group 'com.bolyartech.forge'
-version '4.0.0'
+version forge_server_version
 
 apply plugin: 'java'
 apply plugin: 'maven-publish'
@@ -49,7 +53,7 @@ publishing {
             from components.java
             groupId 'com.bolyartech.forge'
             artifactId 'forge-server'
-            version '4.0.0'
+            version forge_server_version
             artifact sourcesJar
         }
     }
@@ -67,9 +71,9 @@ bintray {
         issueTrackerUrl = 'https://github.com/ogrebgr/forge-server/issues'
         vcsUrl = 'git@github.com:ogrebgr/forge-server.git'
         version {
-            name = '4.0.0'
+            name = forge_server_version
             desc = 'Forge Server'
-            vcsTag = 'v4.0.0'
+            vcsTag = 'v' + forge_server_version
         }
     }
     publications = ['MyPublication']
