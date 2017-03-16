@@ -7,6 +7,9 @@ import java.util.UUID;
 
 /**
  * Fake session meant to be used in unit tests
+ *
+ * Please note that methods {@link #getCreationTime()}, {@link #getLastAccessedTime()} and
+ * {@link #getMaxInactiveInterval()} always return 0, i.e. they have empty implementation
  */
 public class TestSession implements Session {
     private final String mId;
@@ -43,7 +46,25 @@ public class TestSession implements Session {
 
 
     @Override
+    public void removeVar(String varName) {
+        mVars.remove(varName);
+    }
+
+
+    @Override
     public int getMaxInactiveInterval() {
+        return 0;
+    }
+
+
+    @Override
+    public long getCreationTime() {
+        return 0;
+    }
+
+
+    @Override
+    public long getLastAccessedTime() {
         return 0;
     }
 }
