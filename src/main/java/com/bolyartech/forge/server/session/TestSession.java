@@ -2,13 +2,31 @@ package com.bolyartech.forge.server.session;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.UUID;
 
 
 /**
  * Fake session meant to be used in unit tests
  */
 public class TestSession implements Session {
+    private final String mId;
     private final Map<String, Object> mVars = new HashMap<>();
+
+
+    public TestSession() {
+        mId = UUID.randomUUID().toString();
+    }
+
+
+    public TestSession(String id) {
+        mId = id;
+    }
+
+
+    @Override
+    public String getId() {
+        return null;
+    }
 
 
     @Override

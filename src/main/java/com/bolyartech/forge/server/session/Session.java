@@ -5,6 +5,12 @@ package com.bolyartech.forge.server.session;
  */
 public interface Session {
     /**
+     * Returns the unique session ID
+     * @return session ID
+     */
+    String getId();
+
+    /**
      * Returns the value of a session variable (if previously set)
      *
      * @param varName Variable naem

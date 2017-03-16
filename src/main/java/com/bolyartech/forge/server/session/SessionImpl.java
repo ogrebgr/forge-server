@@ -21,6 +21,12 @@ public class SessionImpl implements Session {
 
 
     @Override
+    public String getId() {
+        return mHttpSession.getId();
+    }
+
+
+    @Override
     public <T> T getVar(String varName) {
         //noinspection unchecked
         return (T) mHttpSession.getAttribute(varName);
