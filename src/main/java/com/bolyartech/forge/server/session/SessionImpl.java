@@ -40,7 +40,25 @@ public class SessionImpl implements Session {
 
 
     @Override
+    public void removeVar(String varName) {
+        mHttpSession.removeAttribute(varName);
+    }
+
+
+    @Override
     public int getMaxInactiveInterval() {
         return mHttpSession.getMaxInactiveInterval();
+    }
+
+
+    @Override
+    public long getCreationTime() {
+        return mHttpSession.getCreationTime();
+    }
+
+
+    @Override
+    public long getLastAccessedTime() {
+        return mHttpSession.getLastAccessedTime();
     }
 }
