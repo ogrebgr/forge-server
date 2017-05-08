@@ -260,7 +260,7 @@ public class RequestContextImpl implements RequestContext {
                     mHttpReq.getHeader(HttpHeaders.ACCEPT_LANGUAGE),
                     mHttpReq.getHeader(HttpHeaders.CONNECTION),
                     mHttpReq.getHeader(HttpHeaders.HOST),
-                    mHttpReq.getHeader(HttpHeaders.REFERER),
+                    mHttpReq.getHeader(HttpHeaders.REFERRER),
                     mHttpReq.getHeader(HttpHeaders.USER_AGENT),
                     mHttpReq.getRemoteAddr(),
                     mHttpReq.getRemoteHost(),

@@ -5,7 +5,7 @@ package com.bolyartech.forge.server.misc;
  */
 public interface TemplateEngine {
     /**
-     * Assing value to a variable name
+     * Assign value to a variable name
      *
      * @param varName Variable name
      * @param object  Value

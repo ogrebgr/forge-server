@@ -6,6 +6,19 @@ import com.bolyartech.forge.server.route.RequestContext;
 import java.sql.Connection;
 
 
+/**
+ * Web page that uses database connection to handle the request
+ */
 public interface DbWebPageInterface extends RouteHandler {
-    abstract public String produceHtml(RequestContext ctx, TemplateEngine tple, Connection dbc);
+
+    /**
+     * Handles the request and produces HTML
+     *
+     * @param ctx  Request context
+     * @param tple Template engine to be used
+     * @param dbc  Database connection
+     * @return Produced HTML
+     */
+    @SuppressWarnings("EmptyMethod")
+    String produceHtml(RequestContext ctx, TemplateEngine tple, Connection dbc);
 }

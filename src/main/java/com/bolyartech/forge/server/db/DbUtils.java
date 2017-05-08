@@ -52,23 +52,25 @@ public class DbUtils {
      */
     public static DbPool createC3P0DbPool(DbConfiguration conf) {
         Properties p = new Properties(System.getProperties());
+        //noinspection SpellCheckingInspection
         p.put("com.mchange.v2.log.MLog", "com.mchange.v2.log.FallbackMLog");
+        //noinspection SpellCheckingInspection
         p.put("com.mchange.v2.log.FallbackMLog.DEFAULT_CUTOFF_LEVEL", "OFF");
         System.setProperties(p);
 
-        ComboPooledDataSource cpds = new ComboPooledDataSource();
-        cpds.setJdbcUrl(conf.getDbDsn());
-        cpds.setUser(conf.getDbUsername());
-        cpds.setPassword(conf.getDbPassword());
-        cpds.setMaxStatements(conf.getCacheMaxStatements());
-        cpds.setInitialPoolSize(conf.getInitialPoolSize());
-        cpds.setMinPoolSize(conf.getMinPoolSize());
-        cpds.setMaxPoolSize(conf.getMaxPoolSize());
-        cpds.setIdleConnectionTestPeriod(conf.getIdleConnectionTestPeriod());
-        cpds.setTestConnectionOnCheckin(conf.getTestConnectionOnCheckin());
-        cpds.setTestConnectionOnCheckout(conf.getTestConnectionOnCheckout());
-        cpds.setConnectionCustomizerClassName("com.bolyartech.forge.server.db.C3p0ConnectionCustomizer");
+        ComboPooledDataSource comboPooledDataSource = new ComboPooledDataSource();
+        comboPooledDataSource.setJdbcUrl(conf.getDbDsn());
+        comboPooledDataSource.setUser(conf.getDbUsername());
+        comboPooledDataSource.setPassword(conf.getDbPassword());
+        comboPooledDataSource.setMaxStatements(conf.getCacheMaxStatements());
+        comboPooledDataSource.setInitialPoolSize(conf.getInitialPoolSize());
+        comboPooledDataSource.setMinPoolSize(conf.getMinPoolSize());
+        comboPooledDataSource.setMaxPoolSize(conf.getMaxPoolSize());
+        comboPooledDataSource.setIdleConnectionTestPeriod(conf.getIdleConnectionTestPeriod());
+        comboPooledDataSource.setTestConnectionOnCheckin(conf.getTestConnectionOnCheckIn());
+        comboPooledDataSource.setTestConnectionOnCheckout(conf.getTestConnectionOnCheckout());
+        comboPooledDataSource.setConnectionCustomizerClassName("com.bolyartech.forge.server.db.C3p0ConnectionCustomizer");
 
-        return new C3p0DbPool(cpds);
+        return new C3p0DbPool(comboPooledDataSource);
     }
 }

@@ -16,11 +16,19 @@ public class TestSession implements Session {
     private final Map<String, Object> mVars = new HashMap<>();
 
 
+    /**
+     * Creates new TestSession
+     */
     public TestSession() {
         mId = UUID.randomUUID().toString();
     }
 
 
+    /**
+     * Creates new TestSession with specific ID
+     *
+     * @param id ID to be used
+     */
     public TestSession(String id) {
         mId = id;
     }

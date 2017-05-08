@@ -9,6 +9,7 @@ import java.util.Map;
 /**
  * MIME type resolver
  */
+@SuppressWarnings("SpellCheckingInspection")
 public class MimeTypeResolverImpl implements MimeTypeResolver {
     private static final String FALLBACK_MIME = "application/octet-stream";
 

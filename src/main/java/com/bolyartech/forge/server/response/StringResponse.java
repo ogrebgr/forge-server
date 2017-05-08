@@ -1,7 +1,7 @@
 package com.bolyartech.forge.server.response;
 
 /**
- * String reponse
+ * String response
  */
 public interface StringResponse extends Response {
     /**

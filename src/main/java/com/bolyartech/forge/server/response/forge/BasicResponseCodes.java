@@ -11,6 +11,7 @@ public class BasicResponseCodes {
     /**
      * Codes for OK
      */
+    @SuppressWarnings("SameParameterValue")
     public enum Oks implements ForgeResponseCode {
         OK(1); // used as general code that indicates success
 

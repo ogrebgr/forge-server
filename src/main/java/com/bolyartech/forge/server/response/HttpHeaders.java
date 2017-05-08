@@ -6,7 +6,8 @@ package com.bolyartech.forge.server.response;
 public class HttpHeaders {
     public static final String CONNECTION = "Connection";
     public static final String HOST = "Host";
-    public static final String REFERER = "Referer";
+    @SuppressWarnings("SpellCheckingInspection")
+    public static final String REFERRER = "Referer";
     public static final String USER_AGENT = "User-Agent";
     public static final String LAST_MODIFIED = "Last-Modified";
     public static final String CONTENT_TYPE_OCTET = "application/octet-stream";

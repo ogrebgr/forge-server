@@ -53,7 +53,7 @@ public interface RequestContext {
     /**
      * Returns the path of the matched route
      *
-     * @return path of the mathed route
+     * @return path of the matched route
      */
     String getRoutePath();
 
@@ -127,7 +127,7 @@ public interface RequestContext {
      * @param headerName Header name
      * @return List of header values
      */
-    List<String> getHeaderValues(String headerName);
+    List<String> getHeaderValues(@SuppressWarnings("SameParameterValue") String headerName);
 
     /**
      * Returns true if the request is multipart, false otherwise
@@ -179,7 +179,7 @@ public interface RequestContext {
         public final String httpAcceptLanguage;
         public final String httpConnection;
         public final String httpHost;
-        public final String httpReferer;
+        public final String httpReferrer;
         public final String httpUserAgent;
         public final String remoteAddress;
         public final String remoteHost;
@@ -200,7 +200,7 @@ public interface RequestContext {
                    String httpAcceptLanguage,
                    String httpConnection,
                    String httpHost,
-                   String httpReferer,
+                   String httpReferrer,
                    String httpUserAgent,
                    String remoteAddress,
                    String remoteHost,
@@ -220,7 +220,7 @@ public interface RequestContext {
             this.httpAcceptLanguage = httpAcceptLanguage;
             this.httpConnection = httpConnection;
             this.httpHost = httpHost;
-            this.httpReferer = httpReferer;
+            this.httpReferrer = httpReferrer;
             this.httpUserAgent = httpUserAgent;
             this.remoteAddress = remoteAddress;
             this.remoteHost = remoteHost;

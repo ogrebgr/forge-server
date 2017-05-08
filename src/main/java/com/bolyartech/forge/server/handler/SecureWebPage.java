@@ -8,22 +8,43 @@ import com.bolyartech.forge.server.response.forge.RequiresHttpsResponse;
 import com.bolyartech.forge.server.route.RequestContext;
 
 
+/**
+ * Web page that <b>must</b> be accessed via HTTPS
+ */
 abstract public class SecureWebPage implements RouteHandler {
     private final TemplateEngineFactory mTemplateEngineFactory;
     private final boolean mEnableGzipSupport;
 
-    abstract public String produceHtmlSecure(RequestContext ctx, TemplateEngine tple);
 
-
-    public SecureWebPage(TemplateEngineFactory templateEngineFactory, boolean enableGzipSupport) {
+    /**
+     * Creates new SecureWebPage
+     *
+     * @param templateEngineFactory Template engine factory
+     * @param enableGzipSupport     if true GZIP compression will be enabled (if available)
+     */
+    public SecureWebPage(TemplateEngineFactory templateEngineFactory, @SuppressWarnings("SameParameterValue") boolean enableGzipSupport) {
         mTemplateEngineFactory = templateEngineFactory;
         mEnableGzipSupport = enableGzipSupport;
     }
 
 
+    /**
+     * Creates new SecureWebPage
+     * @param templateEngineFactory Template engine factory
+     */
     public SecureWebPage(TemplateEngineFactory templateEngineFactory) {
         this(templateEngineFactory, false);
     }
+
+
+    /**
+     * Handles HTTPS request and produces HTML
+     *
+     * @param ctx  Context
+     * @param tple template engine to be used
+     * @return produced HTML
+     */
+    abstract public String produceHtmlSecure(RequestContext ctx, TemplateEngine tple);
 
 
     @Override

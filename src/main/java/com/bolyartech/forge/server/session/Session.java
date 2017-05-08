@@ -13,7 +13,7 @@ public interface Session {
     /**
      * Returns the value of a session variable (if previously set)
      *
-     * @param varName Variable naem
+     * @param varName Variable name
      * @param <T>     Type of the value (inferred)
      * @return Value of the session variable or null if not set
      */

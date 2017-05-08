@@ -45,6 +45,7 @@ abstract public class WebPage implements RouteHandler {
      * @param ctx  Request context
      * @param tple Template engine
      * @return HTML
+     * @throws ResponseException if there is a problem handling the request
      */
     abstract public String produceHtml(RequestContext ctx, TemplateEngine tple) throws ResponseException;
 
@@ -57,6 +58,11 @@ abstract public class WebPage implements RouteHandler {
     }
 
 
+    /**
+     * Returns the template engine factory
+     *
+     * @return template engine factory
+     */
     public TemplateEngineFactory getTemplateEngineFactory() {
         return mTemplateEngineFactory;
     }

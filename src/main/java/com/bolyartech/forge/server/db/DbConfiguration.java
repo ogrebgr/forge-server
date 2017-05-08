@@ -62,11 +62,11 @@ public interface DbConfiguration {
     int getIdleConnectionTestPeriod();
 
     /**
-     * Returns setting for testing connection on checkin
+     * Returns setting for testing connection on check-in
      *
-     * @return setting for testing connection on checkin
+     * @return setting for testing connection on check-in
      */
-    boolean getTestConnectionOnCheckin();
+    boolean getTestConnectionOnCheckIn();
 
     /**
      * Returns setting for testing connection on checkout

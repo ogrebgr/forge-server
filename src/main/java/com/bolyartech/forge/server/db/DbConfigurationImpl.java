@@ -14,7 +14,7 @@ public class DbConfigurationImpl implements DbConfiguration {
     private final int mMinPoolSize;
     private final int mMaxPoolSize;
     private final int mIdleConnectionTestPeriod;
-    private final boolean mTestConnectionOnCheckin;
+    private final boolean mTestConnectionOnCheckIn;
     private final boolean mTestConnectionOnCheckout;
 
 
@@ -22,14 +22,14 @@ public class DbConfigurationImpl implements DbConfiguration {
      * Creates new DbConfigurationImpl
      *
      * @param dbDsn                    DB DSN
-     * @param dbUsername               DB usetname
+     * @param dbUsername               DB username
      * @param dbPassword               DB password
      * @param cacheMaxStatements       maximum statements to be cached
      * @param initialPoolSize          initial pool size
      * @param minPoolSize              minimum pool size
      * @param maxPoolSize              maximum pool size
      * @param idleConnectionTestPeriod idle connection test period
-     * @param testConnectionOnCheckin  setting for testing connection on checkin
+     * @param testConnectionOnCheckIn  setting for testing connection on check-in
      * @param testConnectionOnCheckout setting for testing connection on checkout
      */
     public DbConfigurationImpl(String dbDsn,
@@ -40,7 +40,7 @@ public class DbConfigurationImpl implements DbConfiguration {
                                int minPoolSize,
                                int maxPoolSize,
                                int idleConnectionTestPeriod,
-                               boolean testConnectionOnCheckin,
+                               boolean testConnectionOnCheckIn,
                                boolean testConnectionOnCheckout) {
 
         mDbDsn = dbDsn;
@@ -51,7 +51,7 @@ public class DbConfigurationImpl implements DbConfiguration {
         mMinPoolSize = minPoolSize;
         mMaxPoolSize = maxPoolSize;
         mIdleConnectionTestPeriod = idleConnectionTestPeriod;
-        mTestConnectionOnCheckin = testConnectionOnCheckin;
+        mTestConnectionOnCheckIn = testConnectionOnCheckIn;
         mTestConnectionOnCheckout = testConnectionOnCheckout;
     }
 
@@ -98,8 +98,8 @@ public class DbConfigurationImpl implements DbConfiguration {
 
 
     @Override
-    public boolean getTestConnectionOnCheckin() {
-        return mTestConnectionOnCheckin;
+    public boolean getTestConnectionOnCheckIn() {
+        return mTestConnectionOnCheckIn;
     }
 
 

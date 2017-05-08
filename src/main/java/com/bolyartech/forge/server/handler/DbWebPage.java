@@ -11,12 +11,22 @@ import java.sql.Connection;
 import java.sql.SQLException;
 
 
+/**
+ * Web page that uses database connection while processing the request
+ */
 abstract public class DbWebPage implements DbWebPageInterface {
     private final TemplateEngineFactory mTemplateEngineFactory;
     private final boolean mEnableGzipSupport;
     private final DbPool mDbPool;
 
 
+    /**
+     * Creates new DbWebPage
+     *
+     * @param templateEngineFactory template engine factory to be used
+     * @param enableGzipSupport     if true Gzip compression will be used (if supported by the client)
+     * @param dbPool                DB pool
+     */
     public DbWebPage(TemplateEngineFactory templateEngineFactory, boolean enableGzipSupport, DbPool dbPool) {
         mTemplateEngineFactory = templateEngineFactory;
         mEnableGzipSupport = enableGzipSupport;
@@ -24,6 +34,11 @@ abstract public class DbWebPage implements DbWebPageInterface {
     }
 
 
+    /**
+     * Creates new DbWebPage
+     * @param templateEngineFactory template engine factory to be used
+     * @param dbPool DB pool
+     */
     public DbWebPage(TemplateEngineFactory templateEngineFactory, DbPool dbPool) {
         this(templateEngineFactory, false, dbPool);
     }

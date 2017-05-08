@@ -21,7 +21,7 @@ public interface RouteRegister {
      * Checks if a route is registered
      *
      * @param route Route
-     * @return true if route is registered, false otherwis
+     * @return true if route is registered, false otherwise
      */
     boolean isRegistered(Route route);
 

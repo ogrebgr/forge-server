@@ -36,6 +36,7 @@ abstract public class ForgeDbSecureEndpoint extends ForgeSecureEndpoint {
      * @throws ResponseException if there is problem handling the request
      * @throws SQLException      if there is a DB error
      */
+    @SuppressWarnings("RedundantThrows")
     public abstract ForgeResponse handleForgeSecure(RequestContext ctx, Connection dbc) throws ResponseException,
             SQLException;
 

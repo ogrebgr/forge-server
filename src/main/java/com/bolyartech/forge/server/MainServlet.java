@@ -131,22 +131,4 @@ abstract public class MainServlet extends HttpServlet {
             }
         }
     }
-
-
-//    private boolean initLog(String serverLogFileName) {
-//        LoggerContext context = (LoggerContext) LoggerFactory.getILoggerFactory();
-//        JoranConfigurator jc = new JoranConfigurator();
-//        jc.setContext(context);
-//        context.reset();
-//        context.putProperty("server-name", serverLogFileName);
-//
-//        try {
-//            File configFile = new File(getConfigDir(), LOGBACK_CONFIG_FILE);
-//            jc.doConfigure(configFile);
-//            return true;
-//        } catch (JoranException e) {
-//            mLogger.error("Cannot load logback configuration!", e);
-//            return false;
-//        }
-//    }
 }

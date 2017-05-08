@@ -14,7 +14,7 @@ abstract public class ForgeSecureEndpoint extends ForgeEndpoint {
      * Handles request which is guaranteed to be on HTTPS
      *
      * @param ctx Response context
-     * @return Reponse
+     * @return ForgeResponse
      * @throws ResponseException if there is a problem handling the request
      */
     abstract public ForgeResponse handleForgeSecure(RequestContext ctx) throws ResponseException;

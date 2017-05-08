@@ -38,10 +38,11 @@ public class StaticFileResponse implements Response {
 
 
     /**
+     * Creates new StaticFileResponse
      *
-     * @param file
-     * @param enableGzip
-     * @param mimeType
+     * @param file       File to be used as content
+     * @param enableGzip if true Gzip compression will be used if the client supports it
+     * @param mimeType   MIME type to be used
      */
     public StaticFileResponse(File file, boolean enableGzip, String mimeType) {
         mFile = file;

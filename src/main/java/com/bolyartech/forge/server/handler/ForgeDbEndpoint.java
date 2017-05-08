@@ -32,9 +32,10 @@ abstract public class ForgeDbEndpoint extends ForgeEndpoint {
      * @param ctx Request context
      * @param dbc DB connection
      * @return Forge response
-     * @throws ResponseException if there is problem handling the requesat
+     * @throws ResponseException if there is problem handling the request
      * @throws SQLException      if there is error during DB operations
      */
+    @SuppressWarnings("RedundantThrows")
     abstract public ForgeResponse handleForge(RequestContext ctx, Connection dbc) throws ResponseException,
             SQLException;
 

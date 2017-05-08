@@ -12,6 +12,7 @@ public interface ForgeServerConfiguration {
      *
      * @return server's log name
      */
+    @SuppressWarnings("SpellCheckingInspection")
     String getServerLogName();
 
     /**

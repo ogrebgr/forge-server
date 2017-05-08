@@ -24,7 +24,7 @@ public class FileDbConfigurationLoader implements DbConfigurationLoader {
     private static final String PROP_C3P0_MIN_POOL_SIZE = "c3p0_min_pool_size";
     private static final String PROP_C3P0_MAX_POOL_SIZE = "c3p0_max_pool_size";
     private static final String PROP_C3P0_IDLE_CONNECTION_TEST_PERIOD = "c3p0_idle_connection_test_period";
-    private static final String PROP_C3P0_TEST_CONNECTION_ON_CHECKIN = "c3p0_test_connection_on_checkin";
+    private static final String PROP_C3P0_TEST_CONNECTION_ON_CHECK_IN = "c3p0_test_connection_on_check_in";
     private static final String PROP_C3P0_TEST_CONNECTION_ON_CHECKOUT = "c3p0_test_connection_on_checkout";
     private final org.slf4j.Logger mLogger = LoggerFactory.getLogger(this.getClass());
     private final String mConfigDir;
@@ -63,7 +63,7 @@ public class FileDbConfigurationLoader implements DbConfigurationLoader {
                         Integer.parseInt(prop.getProperty(PROP_C3P0_MIN_POOL_SIZE)),
                         Integer.parseInt(prop.getProperty(PROP_C3P0_MAX_POOL_SIZE)),
                         Integer.parseInt(prop.getProperty(PROP_C3P0_IDLE_CONNECTION_TEST_PERIOD)),
-                        Boolean.valueOf(prop.getProperty(PROP_C3P0_TEST_CONNECTION_ON_CHECKIN)),
+                        Boolean.valueOf(prop.getProperty(PROP_C3P0_TEST_CONNECTION_ON_CHECK_IN)),
                         Boolean.valueOf(prop.getProperty(PROP_C3P0_TEST_CONNECTION_ON_CHECKOUT))
                 );
             } catch (Exception e) {
