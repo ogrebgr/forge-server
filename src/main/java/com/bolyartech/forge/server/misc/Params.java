@@ -111,7 +111,7 @@ public class Params {
      * @throws MissingParameterValue if there is no value for this parameter
      * @throws InvalidParameterValue if the value is present but cannot be parsed as int
      */
-    public static long extractIntFromPost(@NonNull RequestContext ctx, @NonNull String parameterName)
+    public static int extractIntFromPost(@NonNull RequestContext ctx, @NonNull String parameterName)
             throws MissingParameterValue, InvalidParameterValue {
 
         String s = ctx.getFromPost(parameterName);
@@ -129,7 +129,7 @@ public class Params {
      * @throws MissingParameterValue if there is no value for this parameter
      * @throws InvalidParameterValue if the value is present but cannot be parsed as int
      */
-    public static long extractIntFromGet(@NonNull RequestContext ctx, @NonNull String parameterName)
+    public static int extractIntFromGet(@NonNull RequestContext ctx, @NonNull String parameterName)
             throws MissingParameterValue, InvalidParameterValue {
 
         String s = ctx.getFromGet(parameterName);
@@ -138,9 +138,9 @@ public class Params {
     }
 
 
-    private static long extractIntHelper(@NonNull String parameterName,
-                                         @Nullable String value,
-                                         @NonNull String type)
+    private static int extractIntHelper(@NonNull String parameterName,
+                                        @Nullable String value,
+                                        @NonNull String type)
             throws MissingParameterValue, InvalidParameterValue {
 
         if (value == null) {
