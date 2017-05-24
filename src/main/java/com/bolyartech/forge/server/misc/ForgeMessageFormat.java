@@ -15,6 +15,12 @@ public class ForgeMessageFormat {
      * @return formatted message
      */
     public static String format(String msg, Object... params) {
-        return MessageFormatter.format(msg, params).getMessage();
+        if (params.length == 1) {
+            return MessageFormatter.format(msg, params[0]).getMessage();
+        } else if (params.length > 1) {
+            return MessageFormatter.arrayFormat(msg, params).getMessage();
+        } else {
+            return MessageFormatter.format(msg, params).getMessage();
+        }
     }
 }
