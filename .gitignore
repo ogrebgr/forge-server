@@ -12,4 +12,5 @@
 /src/main/resources/keystore
 logs/*
 conf/
+out/
 bintray-config.gradle
