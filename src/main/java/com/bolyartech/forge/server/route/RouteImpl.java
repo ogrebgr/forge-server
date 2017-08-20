@@ -16,7 +16,7 @@ import java.util.regex.Pattern;
  */
 public class RouteImpl implements Route {
     private static final Pattern PATH_PATTERN = Pattern.compile("^(/[-\\w:@&?=+,.!/~*'%$_;]*)?$");
-    private final org.slf4j.Logger mLogger = LoggerFactory.getLogger(this.getClass());
+    private final org.slf4j.Logger mLogger = LoggerFactory.getLogger("Request");
     private final HttpMethod mHttpMethod;
     private final String mPath;
     private final RouteHandler mRouteHandler;
@@ -73,7 +73,7 @@ public class RouteImpl implements Route {
     @Override
     public void handle(HttpServletRequest httpReq, HttpServletResponse httpResp) {
         try {
-            mLogger.trace("Will handle {} {}", mHttpMethod, mPath);
+            mLogger.trace("{} {} IP: {}", mHttpMethod, mPath, httpReq.getRemoteAddr());
             Response resp = mRouteHandler.handle(new RequestContextImpl(httpReq, mPath));
             resp.toServletResponse(httpResp);
         } catch (Exception e) {
