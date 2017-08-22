@@ -34,9 +34,6 @@ abstract public class MainServlet extends HttpServlet {
     private final HttpModuleRegister mHttpModuleRegister = new HttpModuleRegisterImpl(mRouteRegister);
 
 
-    ForgeServerConfigurationLoader mForgeServerConfigurationLoader;
-
-
     @Override
     public void init() throws ServletException {
         super.init();
