@@ -3,10 +3,7 @@ package com.bolyartech.forge.server.db;
 import com.bolyartech.forge.server.config.ForgeConfigurationException;
 import org.slf4j.LoggerFactory;
 
-import java.io.BufferedInputStream;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
+import java.io.*;
 import java.text.MessageFormat;
 import java.util.Properties;
 
@@ -47,8 +44,9 @@ public class FileDbConfigurationLoader implements DbConfigurationLoader {
 
             Properties prop = new Properties();
             try {
-                prop.load(new BufferedInputStream(new FileInputStream(confFile)));
-
+                InputStream is = new BufferedInputStream(new FileInputStream(confFile));
+                prop.load(is);
+                is.close();
             } catch (IOException e) {
                 mLogger.error("Cannot load config file");
                 throw new ForgeConfigurationException(e);
