@@ -55,10 +55,12 @@ public class RequestContextImpl implements RequestContext {
 
         if (httpReq.getMethod().equalsIgnoreCase(HttpMethod.POST.getLiteral())) {
             String contentType = httpReq.getHeader(HEADER_CONTENT_TYPE);
-            if (contentType.toLowerCase().contains(CONTENT_TYPE_FORM_ENCODED.toLowerCase())) {
-                extractParameters(CharStreams.toString(httpReq.getReader()), mPostParams);
-            } else if (contentType.toLowerCase().contains(CONTENT_TYPE_MULTIPART.toLowerCase())) {
-                mIsMultipart = true;
+            if (contentType != null) {
+                if (contentType.toLowerCase().contains(CONTENT_TYPE_FORM_ENCODED.toLowerCase())) {
+                    extractParameters(CharStreams.toString(httpReq.getReader()), mPostParams);
+                } else if (contentType.toLowerCase().contains(CONTENT_TYPE_MULTIPART.toLowerCase())) {
+                    mIsMultipart = true;
+                }
             }
         }
 
