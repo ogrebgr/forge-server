@@ -39,6 +39,7 @@ public class RequestContextImpl implements RequestContext {
     private boolean mCookiesInitialized = false;
     private boolean mIsMultipart;
     private ServerData mServerData;
+    private String mBody;
 
 
     /**
@@ -53,11 +54,12 @@ public class RequestContextImpl implements RequestContext {
 
         extractParameters(httpReq.getQueryString(), mGetParams);
 
+        mBody = CharStreams.toString(httpReq.getReader());
         if (httpReq.getMethod().equalsIgnoreCase(HttpMethod.POST.getLiteral())) {
             String contentType = httpReq.getHeader(HEADER_CONTENT_TYPE);
             if (contentType != null) {
                 if (contentType.toLowerCase().contains(CONTENT_TYPE_FORM_ENCODED.toLowerCase())) {
-                    extractParameters(CharStreams.toString(httpReq.getReader()), mPostParams);
+                    extractParameters(mBody, mPostParams);
                 } else if (contentType.toLowerCase().contains(CONTENT_TYPE_MULTIPART.toLowerCase())) {
                     mIsMultipart = true;
                 }
@@ -268,10 +270,15 @@ public class RequestContextImpl implements RequestContext {
                     mHttpReq.getRemoteHost(),
                     mHttpReq.getRemotePort(),
                     mHttpReq.getRequestURI(),
-                    mHttpReq.getPathInfo()
-            );
+                    mHttpReq.getPathInfo());
         }
 
         return mServerData;
+    }
+
+
+    @Override
+    public String getBody() {
+        return mBody;
     }
 }

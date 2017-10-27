@@ -165,6 +165,12 @@ public interface RequestContext {
      */
     ServerData getServerData();
 
+    /**
+     * Return body of the request
+     *
+     * @return body of the request
+     */
+    String getBody();
 
     final class ServerData {
         public final String serverAddress;
