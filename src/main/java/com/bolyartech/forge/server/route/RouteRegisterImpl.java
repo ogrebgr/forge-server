@@ -26,7 +26,11 @@ public class RouteRegisterImpl implements RouteRegister {
 
 
     static String removeLastPathSegment(String path) {
-        return path.substring(0, path.lastIndexOf('/'));
+        if (path.endsWith("/")) {
+            return path.substring(0, path.lastIndexOf('/'));
+        } else {
+            return path.substring(0, path.lastIndexOf('/') + 1);
+        }
     }
 
 

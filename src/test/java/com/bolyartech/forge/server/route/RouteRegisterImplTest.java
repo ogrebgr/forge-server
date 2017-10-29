@@ -8,9 +8,12 @@ import static org.junit.Assert.assertTrue;
 public class RouteRegisterImplTest {
     @Test
     public void testRemoveLastPathSegment() {
-        String source = "/presni/chudesni";
+        String source = "/presni/chudesni/";
         String result = RouteRegisterImpl.removeLastPathSegment(source);
-
+        assertTrue("Last segment not removed. result: " + result, result.equals("/presni/chudesni"));
+        result = RouteRegisterImpl.removeLastPathSegment(result);
+        assertTrue("Last segment not removed. result: " + result, result.equals("/presni/"));
+        result = RouteRegisterImpl.removeLastPathSegment(result);
         assertTrue("Last segment not removed. result: " + result, result.equals("/presni"));
     }
 
