@@ -8,7 +8,7 @@ import javax.servlet.http.HttpServletResponse;
  */
 public class RedirectResponseMovedTemporarily implements RedirectResponse {
     private static final String HEADER_LOCATION = "Location";
-    private final String mLocation;
+    private final String location;
 
 
     /**
@@ -17,19 +17,19 @@ public class RedirectResponseMovedTemporarily implements RedirectResponse {
      * @param location Target location
      */
     public RedirectResponseMovedTemporarily(String location) {
-        mLocation = location;
+        this.location = location;
     }
 
 
     @Override
     public String getLocation() {
-        return mLocation;
+        return location;
     }
 
 
     @Override
     public void toServletResponse(HttpServletResponse resp) {
         resp.setStatus(HttpServletResponse.SC_MOVED_TEMPORARILY);
-        resp.setHeader(HEADER_LOCATION, mLocation);
+        resp.setHeader(HEADER_LOCATION, location);
     }
 }

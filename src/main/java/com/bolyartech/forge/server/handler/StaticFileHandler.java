@@ -17,10 +17,10 @@ import java.io.File;
  */
 public class StaticFileHandler implements RouteHandler {
 
-    private final String mSourceDir;
-    private final Response mNotFoundResponse;
-    private final MimeTypeResolver mMimeTypeResolver;
-    private final boolean mEnableGzip;
+    private final String sourceDir;
+    private final Response notFoundResponse;
+    private final MimeTypeResolver mimeTypeResolver;
+    private final boolean enableGzip;
 
 
     /**
@@ -36,22 +36,22 @@ public class StaticFileHandler implements RouteHandler {
                              MimeTypeResolver mimeTypeResolver,
                              boolean enableGzip) {
 
-        mSourceDir = sourceDir;
+        this.sourceDir = sourceDir;
 
-        mNotFoundResponse = notFoundResponse;
-        mEnableGzip = enableGzip;
-        mMimeTypeResolver = mimeTypeResolver;
+        this.notFoundResponse = notFoundResponse;
+        this.enableGzip = enableGzip;
+        this.mimeTypeResolver = mimeTypeResolver;
     }
 
 
     @Override
     public Response handle(RequestContext ctx) {
-        File file = new File(mSourceDir + ctx.getPathInfoString());
+        File file = new File(sourceDir + ctx.getPathInfoString());
         if (file.isFile()) {
-            boolean actualEnableGzip = mEnableGzip && GzipUtils.supportsGzip(ctx);
-            return new StaticFileResponse(mMimeTypeResolver, file, actualEnableGzip);
+            boolean actualEnableGzip = enableGzip && GzipUtils.supportsGzip(ctx);
+            return new StaticFileResponse(mimeTypeResolver, file, actualEnableGzip);
         } else {
-            return mNotFoundResponse;
+            return notFoundResponse;
         }
     }
 }

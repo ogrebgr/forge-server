@@ -14,8 +14,8 @@ import java.util.zip.GZIPOutputStream;
  * Base class for specialized string responses
  */
 abstract public class AbstractStringResponse implements StringResponse {
-    private final String mString;
-    private final boolean mEnableGzipSupport;
+    private final String string;
+    private final boolean enableGzipSupport;
 
 
     /**
@@ -24,8 +24,8 @@ abstract public class AbstractStringResponse implements StringResponse {
      * @param string String of the response
      */
     public AbstractStringResponse(String string) {
-        mString = string;
-        mEnableGzipSupport = false;
+        this.string = string;
+        enableGzipSupport = false;
     }
 
 
@@ -36,14 +36,14 @@ abstract public class AbstractStringResponse implements StringResponse {
      * @param enableGzipSupport if true Gzip compression will be used if the client supports it
      */
     public AbstractStringResponse(String string, boolean enableGzipSupport) {
-        mString = string;
-        mEnableGzipSupport = enableGzipSupport;
+        this.string = string;
+        this.enableGzipSupport = enableGzipSupport;
     }
 
 
     @Override
     public String getString() {
-        return mString;
+        return string;
     }
 
 
@@ -55,15 +55,15 @@ abstract public class AbstractStringResponse implements StringResponse {
 
         try {
             OutputStream out;
-            if (mEnableGzipSupport) {
+            if (enableGzipSupport) {
                 resp.setHeader(HttpHeaders.CONTENT_ENCODING, HttpHeaders.CONTENT_ENCODING_GZIP);
                 out = new GZIPOutputStream(resp.getOutputStream(), true);
             } else {
-                resp.setContentLength(mString.getBytes().length);
+                resp.setContentLength(string.getBytes().length);
                 out = resp.getOutputStream();
             }
 
-            InputStream is = new ByteArrayInputStream(mString.getBytes("UTF-8"));
+            InputStream is = new ByteArrayInputStream(string.getBytes("UTF-8"));
             ByteStreams.copy(is, out);
             out.flush();
             out.close();

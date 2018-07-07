@@ -13,9 +13,9 @@ import java.util.List;
  * Modules register
  */
 public class HttpModuleRegisterImpl implements HttpModuleRegister {
-    private final RouteRegister mRouteRegister;
+    private final RouteRegister routeRegister;
 
-    private final List<HttpModule> mModules = new ArrayList<>();
+    private final List<HttpModule> modules = new ArrayList<>();
 
 
     /**
@@ -24,19 +24,19 @@ public class HttpModuleRegisterImpl implements HttpModuleRegister {
      * @param routeRegister Route register
      */
     public HttpModuleRegisterImpl(RouteRegister routeRegister) {
-        mRouteRegister = routeRegister;
+        this.routeRegister = routeRegister;
     }
 
 
     @Override
     public void registerModule(HttpModule mod) {
         if (!isModuleRegistered(mod)) {
-            mModules.add(mod);
+            modules.add(mod);
             for (Route ep : mod.createRoutes()) {
-                if (!mRouteRegister.isRegistered(ep)) {
-                    mRouteRegister.register(mod.getSystemName() + " (" + mod.getVersionName() + ")", ep);
+                if (!routeRegister.isRegistered(ep)) {
+                    routeRegister.register(mod.getSystemName() + " (" + mod.getVersionName() + ")", ep);
                 } else {
-                    RouteRegister.Registration reg = mRouteRegister.getRegistration(ep);
+                    RouteRegister.Registration reg = routeRegister.getRegistration(ep);
                     throw new IllegalStateException(
                             MessageFormat.format("Path {0} already registered for module {1}",
                                     reg.mRoute.getPath(),
@@ -53,7 +53,7 @@ public class HttpModuleRegisterImpl implements HttpModuleRegister {
     public boolean isModuleRegistered(HttpModule mod) {
         boolean ret = false;
 
-        for (HttpModule m : mModules) {
+        for (HttpModule m : modules) {
             if (m.getSystemName().equalsIgnoreCase(mod.getSystemName())) {
                 ret = true;
                 break;
@@ -66,6 +66,6 @@ public class HttpModuleRegisterImpl implements HttpModuleRegister {
 
     @Override
     public Route match(HttpMethod method, String path) {
-        return mRouteRegister.match(method, path);
+        return routeRegister.match(method, path);
     }
 }

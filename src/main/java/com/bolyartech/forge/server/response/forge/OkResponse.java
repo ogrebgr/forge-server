@@ -4,7 +4,7 @@ package com.bolyartech.forge.server.response.forge;
  * Response with code BasicResponseCodes.Oks.OK
  */
 public class OkResponse extends ForgeResponse {
-    private static final OkResponse mInstance = new OkResponse();
+    private static final OkResponse instance = new OkResponse();
 
 
     /**
@@ -31,6 +31,6 @@ public class OkResponse extends ForgeResponse {
      * @return OkResponse
      */
     public static OkResponse getInstance() {
-        return mInstance;
+        return instance;
     }
 }

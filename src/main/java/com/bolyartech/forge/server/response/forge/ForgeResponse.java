@@ -19,7 +19,7 @@ import javax.servlet.http.HttpServletResponse;
 public class ForgeResponse extends JsonResponse {
     private static final String FORGE_RESULT_CODE_HEADER = "X-Forge-Result-Code";
 
-    private final int mResultCode;
+    private final int resultCode;
 
 
     /**
@@ -29,7 +29,7 @@ public class ForgeResponse extends JsonResponse {
      */
     public ForgeResponse(int resultCode) {
         super("");
-        mResultCode = resultCode;
+        this.resultCode = resultCode;
     }
 
 
@@ -40,7 +40,7 @@ public class ForgeResponse extends JsonResponse {
      */
     public ForgeResponse(ForgeResponseCode resultCode) {
         super("");
-        mResultCode = resultCode.getCode();
+        this.resultCode = resultCode.getCode();
     }
 
 
@@ -52,7 +52,7 @@ public class ForgeResponse extends JsonResponse {
      */
     public ForgeResponse(int resultCode, String string) {
         super(string);
-        mResultCode = resultCode;
+        this.resultCode = resultCode;
     }
 
 
@@ -65,7 +65,7 @@ public class ForgeResponse extends JsonResponse {
      */
     public ForgeResponse(int resultCode, String string, boolean enableGzipSupport) {
         super(string, enableGzipSupport);
-        mResultCode = resultCode;
+        this.resultCode = resultCode;
     }
 
 
@@ -77,7 +77,7 @@ public class ForgeResponse extends JsonResponse {
      */
     public ForgeResponse(ForgeResponseCode resultCode, String string) {
         super(string);
-        mResultCode = resultCode.getCode();
+        this.resultCode = resultCode.getCode();
     }
 
 
@@ -90,13 +90,13 @@ public class ForgeResponse extends JsonResponse {
      */
     public ForgeResponse(ForgeResponseCode resultCode, String string, boolean enableGzipSupport) {
         super(string, enableGzipSupport);
-        mResultCode = resultCode.getCode();
+        this.resultCode = resultCode.getCode();
     }
 
 
     @Override
     public void toServletResponse(HttpServletResponse resp) {
-        resp.setHeader(FORGE_RESULT_CODE_HEADER, Integer.toString(mResultCode));
+        resp.setHeader(FORGE_RESULT_CODE_HEADER, Integer.toString(resultCode));
         super.toServletResponse(resp);
     }
 
@@ -107,7 +107,7 @@ public class ForgeResponse extends JsonResponse {
      * @return Result code
      */
     public int getResultCode() {
-        return mResultCode;
+        return resultCode;
     }
 
 

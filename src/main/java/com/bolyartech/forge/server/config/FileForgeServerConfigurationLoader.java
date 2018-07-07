@@ -16,7 +16,7 @@ public class FileForgeServerConfigurationLoader implements ForgeServerConfigurat
     private static final String PROP_STATIC_FILES_DIR = "static_files_dir";
     private final org.slf4j.Logger mLogger = LoggerFactory.getLogger(this.getClass());
 
-    private final String mConfigDir;
+    private final String configDir;
 
 
     /**
@@ -25,13 +25,13 @@ public class FileForgeServerConfigurationLoader implements ForgeServerConfigurat
      * @param configDir Path to the directory that contains the configuration files
      */
     public FileForgeServerConfigurationLoader(String configDir) {
-        mConfigDir = configDir;
+        this.configDir = configDir;
     }
 
 
     @Override
     public ForgeServerConfiguration load() throws ForgeConfigurationException {
-        File confFile = new File(mConfigDir, FILENAME);
+        File confFile = new File(configDir, FILENAME);
         if (confFile.exists()) {
 
             Properties prop = new Properties();

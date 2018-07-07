@@ -13,7 +13,7 @@ import java.sql.SQLException;
  * Endpoint that handles a request utilizing a DB connection
  */
 abstract public class ForgeDbEndpoint extends ForgeEndpoint {
-    private final DbPool mDbPool;
+    private final DbPool dbPool;
 
 
     /**
@@ -22,7 +22,7 @@ abstract public class ForgeDbEndpoint extends ForgeEndpoint {
      * @param dbPool DB pool
      */
     public ForgeDbEndpoint(DbPool dbPool) {
-        mDbPool = dbPool;
+        this.dbPool = dbPool;
     }
 
 
@@ -43,7 +43,7 @@ abstract public class ForgeDbEndpoint extends ForgeEndpoint {
     @Override
     public ForgeResponse handleForge(RequestContext ctx) {
         try {
-            Connection dbc = mDbPool.getConnection();
+            Connection dbc = dbPool.getConnection();
             ForgeResponse ret = handleForge(ctx, dbc);
             dbc.close();
 

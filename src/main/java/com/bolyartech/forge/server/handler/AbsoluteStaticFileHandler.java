@@ -14,10 +14,10 @@ import java.io.File;
  * This class uses absolute path on the file system to look for the static files
  */
 public class AbsoluteStaticFileHandler implements RouteHandler {
-    private final File mSourceDir;
-    private final Response mNotFoundResponse;
-    private final MimeTypeResolver mMimeTypeResolver;
-    private final boolean mEnableGzip;
+    private final File sourceDir;
+    private final Response notFoundResponse;
+    private final MimeTypeResolver mimeTypeResolver;
+    private final boolean enableGzip;
 
 
     /**
@@ -52,21 +52,21 @@ public class AbsoluteStaticFileHandler implements RouteHandler {
         if (!sourceDir.exists()) {
             throw new IllegalArgumentException("sourceDir does not exist");
         }
-        mSourceDir = sourceDir;
-        mNotFoundResponse = notFoundResponse;
-        mMimeTypeResolver = mimeTypeResolver;
-        mEnableGzip = enableGzip;
+        this.sourceDir = sourceDir;
+        this.notFoundResponse = notFoundResponse;
+        this.mimeTypeResolver = mimeTypeResolver;
+        this.enableGzip = enableGzip;
     }
 
 
     @Override
     public Response handle(RequestContext ctx) {
-        File file = new File(mSourceDir, ctx.getPathInfoString());
+        File file = new File(sourceDir, ctx.getPathInfoString());
         if (file.exists() && file.isFile()) {
-            boolean actualEnableGzip = mEnableGzip && GzipUtils.supportsGzip(ctx);
-            return new StaticFileResponse(mMimeTypeResolver, file, actualEnableGzip);
+            boolean actualEnableGzip = enableGzip && GzipUtils.supportsGzip(ctx);
+            return new StaticFileResponse(mimeTypeResolver, file, actualEnableGzip);
         } else {
-            return mNotFoundResponse;
+            return notFoundResponse;
         }
 
     }

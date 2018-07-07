@@ -13,7 +13,7 @@ import java.util.Map;
 public class MimeTypeResolverImpl implements MimeTypeResolver {
     private static final String FALLBACK_MIME = "application/octet-stream";
 
-    private static final Map<String, String> mExtToMime = new HashMap<String, String>() {{
+    private static final Map<String, String> extToMime = new HashMap<String, String>() {{
         put("au", "audio/basic");
         put("avi", "video/msvideo,video/avi,video/x-msvideo");
         put("bmp", "image/bmp");
@@ -82,7 +82,7 @@ public class MimeTypeResolverImpl implements MimeTypeResolver {
         String ret = FALLBACK_MIME;
 
         if (!Strings.isNullOrEmpty(fileExtension)) {
-            String mime = mExtToMime.get(fileExtension);
+            String mime = extToMime.get(fileExtension);
             if (mime != null) {
                 ret = mime;
             }

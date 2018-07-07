@@ -17,9 +17,9 @@ import java.util.zip.GZIPOutputStream;
  */
 public class StaticFileResponse implements Response {
 
-    private final File mFile;
-    private final boolean mEnableGzip;
-    private final String mMimeType;
+    private final File file;
+    private final boolean enableGzip;
+    private final String mimeType;
 
 
     /**
@@ -30,10 +30,10 @@ public class StaticFileResponse implements Response {
      * @param enableGzip       if true Gzip compression will be used if the client supports it
      */
     public StaticFileResponse(MimeTypeResolver mimeTypeResolver, File file, boolean enableGzip) {
-        mFile = file;
-        mEnableGzip = enableGzip;
+        this.file = file;
+        this.enableGzip = enableGzip;
 
-        mMimeType = mimeTypeResolver.resolveForFilename(mFile.getName());
+        mimeType = mimeTypeResolver.resolveForFilename(this.file.getName());
     }
 
 
@@ -45,26 +45,26 @@ public class StaticFileResponse implements Response {
      * @param mimeType   MIME type to be used
      */
     public StaticFileResponse(File file, boolean enableGzip, String mimeType) {
-        mFile = file;
-        mEnableGzip = enableGzip;
-        mMimeType = mimeType;
+        this.file = file;
+        this.enableGzip = enableGzip;
+        this.mimeType = mimeType;
     }
 
 
     @Override
     public void toServletResponse(HttpServletResponse resp) {
         try {
-            resp.setContentType(mMimeType);
+            resp.setContentType(mimeType);
 
             ZonedDateTime ts =
-                    ZonedDateTime.ofInstant(Instant.ofEpochMilli(mFile.lastModified()), ZoneId.of("UTC"));
+                    ZonedDateTime.ofInstant(Instant.ofEpochMilli(file.lastModified()), ZoneId.of("UTC"));
             String lm = java.time.format.DateTimeFormatter.RFC_1123_DATE_TIME.format(ts);
             resp.setHeader(HttpHeaders.LAST_MODIFIED, lm);
 
-            InputStream is = new BufferedInputStream(new FileInputStream(mFile));
+            InputStream is = new BufferedInputStream(new FileInputStream(file));
             try {
                 OutputStream out;
-                if (mEnableGzip) {
+                if (enableGzip) {
                     resp.setHeader(HttpHeaders.CONTENT_ENCODING, HttpHeaders.CONTENT_ENCODING_GZIP);
                     out = new GZIPOutputStream(resp.getOutputStream(), true);
                 } else {

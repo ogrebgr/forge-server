@@ -5,17 +5,17 @@ package com.bolyartech.forge.server.db;
  * DB configuration
  */
 public class DbConfigurationImpl implements DbConfiguration {
-    private final String mDbDsn;
-    private final String mDbUsername;
-    private final String mDbPassword;
+    private final String dbDsn;
+    private final String dbUsername;
+    private final String dbPassword;
 
-    private final int mCacheMaxStatements;
-    private final int mInitialPoolSize;
-    private final int mMinPoolSize;
-    private final int mMaxPoolSize;
-    private final int mIdleConnectionTestPeriod;
-    private final boolean mTestConnectionOnCheckIn;
-    private final boolean mTestConnectionOnCheckout;
+    private final int cacheMaxStatements;
+    private final int initialPoolSize;
+    private final int minPoolSize;
+    private final int maxPoolSize;
+    private final int idleConnectionTestPeriod;
+    private final boolean testConnectionOnCheckIn;
+    private final boolean testConnectionOnCheckout;
 
 
     /**
@@ -43,68 +43,68 @@ public class DbConfigurationImpl implements DbConfiguration {
                                boolean testConnectionOnCheckIn,
                                boolean testConnectionOnCheckout) {
 
-        mDbDsn = dbDsn;
-        mDbUsername = dbUsername;
-        mDbPassword = dbPassword;
-        mCacheMaxStatements = cacheMaxStatements;
-        mInitialPoolSize = initialPoolSize;
-        mMinPoolSize = minPoolSize;
-        mMaxPoolSize = maxPoolSize;
-        mIdleConnectionTestPeriod = idleConnectionTestPeriod;
-        mTestConnectionOnCheckIn = testConnectionOnCheckIn;
-        mTestConnectionOnCheckout = testConnectionOnCheckout;
+        this.dbDsn = dbDsn;
+        this.dbUsername = dbUsername;
+        this.dbPassword = dbPassword;
+        this.cacheMaxStatements = cacheMaxStatements;
+        this.initialPoolSize = initialPoolSize;
+        this.minPoolSize = minPoolSize;
+        this.maxPoolSize = maxPoolSize;
+        this.idleConnectionTestPeriod = idleConnectionTestPeriod;
+        this.testConnectionOnCheckIn = testConnectionOnCheckIn;
+        this.testConnectionOnCheckout = testConnectionOnCheckout;
     }
 
 
     public String getDbDsn() {
-        return mDbDsn;
+        return dbDsn;
     }
 
 
     public String getDbUsername() {
-        return mDbUsername;
+        return dbUsername;
     }
 
 
     @Override
     public String getDbPassword() {
-        return mDbPassword;
+        return dbPassword;
     }
 
 
     public int getCacheMaxStatements() {
-        return mCacheMaxStatements;
+        return cacheMaxStatements;
     }
 
 
     public int getInitialPoolSize() {
-        return mInitialPoolSize;
+        return initialPoolSize;
     }
 
 
     public int getMinPoolSize() {
-        return mMinPoolSize;
+        return minPoolSize;
     }
 
 
     public int getMaxPoolSize() {
-        return mMaxPoolSize;
+        return maxPoolSize;
     }
 
 
     public int getIdleConnectionTestPeriod() {
-        return mIdleConnectionTestPeriod;
+        return idleConnectionTestPeriod;
     }
 
 
     @Override
     public boolean getTestConnectionOnCheckIn() {
-        return mTestConnectionOnCheckIn;
+        return testConnectionOnCheckIn;
     }
 
 
     @Override
     public boolean getTestConnectionOnCheckout() {
-        return mTestConnectionOnCheckout;
+        return testConnectionOnCheckout;
     }
 }

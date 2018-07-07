@@ -11,7 +11,7 @@ import com.bolyartech.forge.server.route.RequestContext;
  * Use this handler when user needs to download (from his point of view) a file.
  */
 abstract public class FileUploadHandler implements RouteHandler {
-    private final boolean mEnableGzip;
+    private final boolean enableGzip;
 
 
     /**
@@ -20,13 +20,13 @@ abstract public class FileUploadHandler implements RouteHandler {
      * @param enableGzip if true Gzip compression will be used if the client supports it
      */
     public FileUploadHandler(boolean enableGzip) {
-        mEnableGzip = enableGzip;
+        this.enableGzip = enableGzip;
     }
 
 
     @Override
     public Response handle(RequestContext ctx) {
-        boolean actualEnableGzip = mEnableGzip && GzipUtils.supportsGzip(ctx);
+        boolean actualEnableGzip = enableGzip && GzipUtils.supportsGzip(ctx);
         return handleFileUpload(ctx, actualEnableGzip);
     }
 

@@ -13,8 +13,8 @@ import java.util.zip.GZIPOutputStream;
  * Response for uploading file (from server point of view)
  */
 public class FileUploadResponse implements Response {
-    private final File mFile;
-    private final boolean mEnableGzip;
+    private final File file;
+    private final boolean enableGzip;
 
 
     /**
@@ -28,12 +28,12 @@ public class FileUploadResponse implements Response {
             throw new IllegalArgumentException("filePath null or empty");
         }
 
-        mFile = new File(filePath);
-        if (!mFile.exists()) {
+        file = new File(filePath);
+        if (!file.exists()) {
             throw new IllegalArgumentException("No such file exist: " + filePath);
         }
 
-        mEnableGzip = enableGzip;
+        this.enableGzip = enableGzip;
     }
 
 
@@ -41,17 +41,17 @@ public class FileUploadResponse implements Response {
     public void toServletResponse(HttpServletResponse resp) {
         resp.setContentType(HttpHeaders.CONTENT_TYPE_OCTET);
         resp.setHeader(HttpHeaders.CONTENT_DISPOSITION,
-                MessageFormat.format(HttpHeaders.CONTENT_DISPOSITION_ATTACHMENT, mFile.getName()));
+                MessageFormat.format(HttpHeaders.CONTENT_DISPOSITION_ATTACHMENT, file.getName()));
 
         InputStream is;
         try {
-            is = new BufferedInputStream(new FileInputStream(mFile));
+            is = new BufferedInputStream(new FileInputStream(file));
             OutputStream out;
-            if (mEnableGzip) {
+            if (enableGzip) {
                 resp.setHeader(HttpHeaders.CONTENT_ENCODING, HttpHeaders.CONTENT_ENCODING_GZIP);
                 out = new GZIPOutputStream(resp.getOutputStream(), true);
             } else {
-                resp.setContentLength((int) mFile.length());
+                resp.setContentLength((int) file.length());
                 out = resp.getOutputStream();
             }
             ByteStreams.copy(is, out);

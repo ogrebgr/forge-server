@@ -12,8 +12,8 @@ import com.bolyartech.forge.server.route.RequestContext;
  * Handler that produces HTML content, i.e. web page
  */
 abstract public class WebPage implements RouteHandler {
-    private final TemplateEngineFactory mTemplateEngineFactory;
-    private final boolean mEnableGzipSupport;
+    private final TemplateEngineFactory templateEngineFactory;
+    private final boolean enableGzipSupport;
 
 
     /**
@@ -22,8 +22,8 @@ abstract public class WebPage implements RouteHandler {
      * @param templateEngineFactory Template engine factory
      */
     public WebPage(TemplateEngineFactory templateEngineFactory) {
-        mTemplateEngineFactory = templateEngineFactory;
-        mEnableGzipSupport = false;
+        this.templateEngineFactory = templateEngineFactory;
+        enableGzipSupport = false;
     }
 
 
@@ -34,8 +34,8 @@ abstract public class WebPage implements RouteHandler {
      * @param enableGzipSupport     if true Gzip compression will be used (if supported by the client)
      */
     public WebPage(TemplateEngineFactory templateEngineFactory, boolean enableGzipSupport) {
-        mTemplateEngineFactory = templateEngineFactory;
-        mEnableGzipSupport = enableGzipSupport;
+        this.templateEngineFactory = templateEngineFactory;
+        this.enableGzipSupport = enableGzipSupport;
     }
 
 
@@ -52,9 +52,9 @@ abstract public class WebPage implements RouteHandler {
 
     @Override
     public Response handle(RequestContext ctx) {
-        String content = produceHtml(ctx, mTemplateEngineFactory.createNew());
+        String content = produceHtml(ctx, templateEngineFactory.createNew());
 
-        return new HtmlResponse(content, mEnableGzipSupport);
+        return new HtmlResponse(content, enableGzipSupport);
     }
 
 
@@ -64,6 +64,6 @@ abstract public class WebPage implements RouteHandler {
      * @return template engine factory
      */
     public TemplateEngineFactory getTemplateEngineFactory() {
-        return mTemplateEngineFactory;
+        return templateEngineFactory;
     }
 }

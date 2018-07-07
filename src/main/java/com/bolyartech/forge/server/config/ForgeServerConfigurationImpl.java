@@ -8,8 +8,8 @@ import java.io.File;
  * Implementation of {@link ForgeServerConfiguration}
  */
 public class ForgeServerConfigurationImpl implements ForgeServerConfiguration {
-    private final String mServerLogName;
-    private final String mStaticFilesDir;
+    private final String serverLogName;
+    private final String staticFilesDir;
 
 
     /**
@@ -19,22 +19,22 @@ public class ForgeServerConfigurationImpl implements ForgeServerConfiguration {
      * @param staticFilesDir Path to the directory for static files like js, css, images
      */
     public ForgeServerConfigurationImpl(String serverLogName, String staticFilesDir) {
-        mServerLogName = serverLogName;
+        this.serverLogName = serverLogName;
         if (!staticFilesDir.endsWith(File.separator)) {
             staticFilesDir += File.separator;
         }
-        mStaticFilesDir = staticFilesDir;
+        this.staticFilesDir = staticFilesDir;
     }
 
 
     @Override
     public String getServerLogName() {
-        return mServerLogName;
+        return serverLogName;
     }
 
 
     @Override
     public String getStaticFilesDir() {
-        return mStaticFilesDir;
+        return staticFilesDir;
     }
 }

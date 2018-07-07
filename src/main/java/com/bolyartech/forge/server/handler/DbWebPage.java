@@ -15,9 +15,9 @@ import java.sql.SQLException;
  * Web page that uses database connection while processing the request
  */
 abstract public class DbWebPage implements DbWebPageInterface {
-    private final TemplateEngineFactory mTemplateEngineFactory;
-    private final boolean mEnableGzipSupport;
-    private final DbPool mDbPool;
+    private final TemplateEngineFactory templateEngineFactory;
+    private final boolean enableGzipSupport;
+    private final DbPool dbPool;
 
 
     /**
@@ -28,9 +28,9 @@ abstract public class DbWebPage implements DbWebPageInterface {
      * @param dbPool                DB pool
      */
     public DbWebPage(TemplateEngineFactory templateEngineFactory, boolean enableGzipSupport, DbPool dbPool) {
-        mTemplateEngineFactory = templateEngineFactory;
-        mEnableGzipSupport = enableGzipSupport;
-        mDbPool = dbPool;
+        this.templateEngineFactory = templateEngineFactory;
+        this.enableGzipSupport = enableGzipSupport;
+        this.dbPool = dbPool;
     }
 
 
@@ -47,11 +47,11 @@ abstract public class DbWebPage implements DbWebPageInterface {
     @Override
     public Response handle(RequestContext ctx) throws ResponseException {
         try {
-            Connection dbc = mDbPool.getConnection();
-            String content = produceHtml(ctx, mTemplateEngineFactory.createNew(), dbc);
+            Connection dbc = dbPool.getConnection();
+            String content = produceHtml(ctx, templateEngineFactory.createNew(), dbc);
             dbc.close();
 
-            return new HtmlResponse(content, mEnableGzipSupport);
+            return new HtmlResponse(content, enableGzipSupport);
         } catch (SQLException e) {
             throw new ResponseException(e);
         }

@@ -23,8 +23,8 @@ public class FileDbConfigurationLoader implements DbConfigurationLoader {
     private static final String PROP_C3P0_IDLE_CONNECTION_TEST_PERIOD = "c3p0_idle_connection_test_period";
     private static final String PROP_C3P0_TEST_CONNECTION_ON_CHECK_IN = "c3p0_test_connection_on_check_in";
     private static final String PROP_C3P0_TEST_CONNECTION_ON_CHECKOUT = "c3p0_test_connection_on_checkout";
-    private final org.slf4j.Logger mLogger = LoggerFactory.getLogger(this.getClass());
-    private final String mConfigDir;
+    private final org.slf4j.Logger logger = LoggerFactory.getLogger(this.getClass());
+    private final String configDir;
 
 
     /**
@@ -33,13 +33,13 @@ public class FileDbConfigurationLoader implements DbConfigurationLoader {
      * @param configDir Configuration directory
      */
     public FileDbConfigurationLoader(String configDir) {
-        mConfigDir = configDir;
+        this.configDir = configDir;
     }
 
 
     @Override
     public DbConfiguration load() throws ForgeConfigurationException {
-        File confFile = new File(mConfigDir, FILENAME);
+        File confFile = new File(configDir, FILENAME);
         if (confFile.exists()) {
 
             Properties prop = new Properties();
@@ -48,7 +48,7 @@ public class FileDbConfigurationLoader implements DbConfigurationLoader {
                 prop.load(is);
                 is.close();
             } catch (IOException e) {
-                mLogger.error("Cannot load config file");
+                logger.error("Cannot load config file");
                 throw new ForgeConfigurationException(e);
             }
 
@@ -65,11 +65,11 @@ public class FileDbConfigurationLoader implements DbConfigurationLoader {
                         Boolean.valueOf(prop.getProperty(PROP_C3P0_TEST_CONNECTION_ON_CHECKOUT))
                 );
             } catch (Exception e) {
-                mLogger.error("Error populating configuration", e);
+                logger.error("Error populating configuration", e);
                 throw new ForgeConfigurationException(e);
             }
         } else {
-            mLogger.error("Cannot find configuration file: {}", confFile.getAbsolutePath());
+            logger.error("Cannot find configuration file: {}", confFile.getAbsolutePath());
             throw new IllegalStateException(MessageFormat.format("Cannot find configuration file: {0}",
                     confFile.getAbsolutePath()));
         }

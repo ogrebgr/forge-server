@@ -1,6 +1,5 @@
 package com.bolyartech.forge.server;
 
-import com.bolyartech.forge.server.config.ForgeServerConfigurationLoader;
 import com.bolyartech.forge.server.handler.RouteHandler;
 import com.bolyartech.forge.server.module.HttpModule;
 import com.bolyartech.forge.server.module.HttpModuleRegister;
@@ -29,9 +28,9 @@ import java.util.List;
 abstract public class MainServlet extends HttpServlet {
     private static final String LOGBACK_CONFIG_FILE = "logback.xml";
     private static final String DEFAULT_MODULE_NAME = "default_module";
-    private final org.slf4j.Logger mLogger = LoggerFactory.getLogger(this.getClass());
-    private final RouteRegister mRouteRegister = new RouteRegisterImpl();
-    private final HttpModuleRegister mHttpModuleRegister = new HttpModuleRegisterImpl(mRouteRegister);
+    private final org.slf4j.Logger logger = LoggerFactory.getLogger(this.getClass());
+    private final RouteRegister routeRegister = new RouteRegisterImpl();
+    private final HttpModuleRegister httpModuleRegister = new HttpModuleRegisterImpl(routeRegister);
 
 
     @Override
@@ -42,11 +41,11 @@ abstract public class MainServlet extends HttpServlet {
 
         if (modules != null && modules.size() > 0) {
             for (HttpModule mod : getModules()) {
-                mHttpModuleRegister.registerModule(mod);
+                httpModuleRegister.registerModule(mod);
             }
-            mLogger.info("Forge server initialized and started.");
+            logger.info("Forge server initialized and started.");
         } else {
-            mLogger.error("getModules() returned empty list of modules, so no endpoints are registered.");
+            logger.error("getModules() returned empty list of modules, so no endpoints are registered.");
         }
     }
 
@@ -59,7 +58,7 @@ abstract public class MainServlet extends HttpServlet {
      * @param route Route to be added
      */
     public void addRoute(Route route) {
-        mRouteRegister.register(DEFAULT_MODULE_NAME, route);
+        routeRegister.register(DEFAULT_MODULE_NAME, route);
     }
 
 
@@ -72,13 +71,13 @@ abstract public class MainServlet extends HttpServlet {
      * @see #addRoute(Route)
      */
     public void addRoute(HttpMethod httpMethod, String path, RouteHandler routeHandler) {
-        mRouteRegister.register(DEFAULT_MODULE_NAME, new RouteImpl(httpMethod, path, routeHandler));
+        routeRegister.register(DEFAULT_MODULE_NAME, new RouteImpl(httpMethod, path, routeHandler));
     }
 
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        Route route = mHttpModuleRegister.match(HttpMethod.GET, req.getPathInfo());
+        Route route = httpModuleRegister.match(HttpMethod.GET, req.getPathInfo());
 
         if (route != null) {
             handle(req, resp, route);
@@ -94,7 +93,7 @@ abstract public class MainServlet extends HttpServlet {
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        Route route = mHttpModuleRegister.match(HttpMethod.POST, req.getPathInfo());
+        Route route = httpModuleRegister.match(HttpMethod.POST, req.getPathInfo());
 
         if (route != null) {
             handle(req, resp, route);
@@ -115,8 +114,8 @@ abstract public class MainServlet extends HttpServlet {
         try {
             route.handle(req, resp);
         } catch (ResponseException e) {
-            mLogger.error("Error handling {}, Error: {}", route, e.getMessage());
-            mLogger.debug("Exception: ", e);
+            logger.error("Error handling {}, Error: {}", route, e.getMessage());
+            logger.debug("Exception: ", e);
             resp.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
             try {
                 PrintWriter pw = resp.getWriter();

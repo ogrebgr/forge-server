@@ -12,12 +12,12 @@ import java.util.concurrent.ConcurrentHashMap;
  * Route register
  */
 public class RouteRegisterImpl implements RouteRegister {
-    private final org.slf4j.Logger mLogger = LoggerFactory.getLogger(this.getClass());
+    private final org.slf4j.Logger logger = LoggerFactory.getLogger(this.getClass());
 
-    private final Map<String, Registration> mEndpointsGet = new ConcurrentHashMap<>();
-    private final Map<String, Registration> mEndpointsPost = new ConcurrentHashMap<>();
-    private final Map<String, Registration> mEndpointsDelete = new ConcurrentHashMap<>();
-    private final Map<String, Registration> mEndpointsPut = new ConcurrentHashMap<>();
+    private final Map<String, Registration> endpointsGet = new ConcurrentHashMap<>();
+    private final Map<String, Registration> endpointsPost = new ConcurrentHashMap<>();
+    private final Map<String, Registration> endpointsDelete = new ConcurrentHashMap<>();
+    private final Map<String, Registration> endpointsPut = new ConcurrentHashMap<>();
 
 
     static int countSlashes(String str) {
@@ -42,16 +42,16 @@ public class RouteRegisterImpl implements RouteRegister {
 
         switch (route.getHttpMethod()) {
             case GET:
-                register(mEndpointsGet, moduleName, route);
+                register(endpointsGet, moduleName, route);
                 break;
             case POST:
-                register(mEndpointsPost, moduleName, route);
+                register(endpointsPost, moduleName, route);
                 break;
             case PUT:
-                register(mEndpointsPut, moduleName, route);
+                register(endpointsPut, moduleName, route);
                 break;
             case DELETE:
-                register(mEndpointsDelete, moduleName, route);
+                register(endpointsDelete, moduleName, route);
                 break;
         }
 
@@ -62,13 +62,13 @@ public class RouteRegisterImpl implements RouteRegister {
     public boolean isRegistered(Route route) {
         switch (route.getHttpMethod()) {
             case GET:
-                return mEndpointsGet.containsKey(route.getPath());
+                return endpointsGet.containsKey(route.getPath());
             case POST:
-                return mEndpointsPost.containsKey(route.getPath());
+                return endpointsPost.containsKey(route.getPath());
             case PUT:
-                return mEndpointsPut.containsKey(route.getPath());
+                return endpointsPut.containsKey(route.getPath());
             case DELETE:
-                return mEndpointsDelete.containsKey(route.getPath());
+                return endpointsDelete.containsKey(route.getPath());
             default:
                 return false;
         }
@@ -79,13 +79,13 @@ public class RouteRegisterImpl implements RouteRegister {
     public Registration getRegistration(Route route) {
         switch (route.getHttpMethod()) {
             case GET:
-                return mEndpointsGet.get(route.getPath());
+                return endpointsGet.get(route.getPath());
             case POST:
-                return mEndpointsPost.get(route.getPath());
+                return endpointsPost.get(route.getPath());
             case PUT:
-                return mEndpointsPut.get(route.getPath());
+                return endpointsPut.get(route.getPath());
             case DELETE:
-                return mEndpointsDelete.get(route.getPath());
+                return endpointsDelete.get(route.getPath());
             default:
                 return null;
         }
@@ -106,13 +106,13 @@ public class RouteRegisterImpl implements RouteRegister {
 
         switch (method) {
             case GET:
-                return match(mEndpointsGet, path);
+                return match(endpointsGet, path);
             case POST:
-                return match(mEndpointsPost, path);
+                return match(endpointsPost, path);
             case PUT:
-                return match(mEndpointsPut, path);
+                return match(endpointsPut, path);
             case DELETE:
-                return match(mEndpointsDelete, path);
+                return match(endpointsDelete, path);
             default:
                 return null;
         }
@@ -122,7 +122,7 @@ public class RouteRegisterImpl implements RouteRegister {
     private void register(Map<String, Registration> endpoints, String moduleName, Route route) {
         if (!endpoints.containsKey(route.getPath())) {
             endpoints.put(route.getPath(), new Registration(moduleName, route));
-            mLogger.info("Registered route {} {}", route.getHttpMethod(), route.getPath());
+            logger.info("Registered route {} {}", route.getHttpMethod(), route.getPath());
         } else {
             throw new IllegalStateException("Registered path already exist: " + route.getPath());
         }

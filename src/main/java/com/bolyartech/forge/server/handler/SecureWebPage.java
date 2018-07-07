@@ -12,8 +12,8 @@ import com.bolyartech.forge.server.route.RequestContext;
  * Web page that <b>must</b> be accessed via HTTPS
  */
 abstract public class SecureWebPage implements RouteHandler {
-    private final TemplateEngineFactory mTemplateEngineFactory;
-    private final boolean mEnableGzipSupport;
+    private final TemplateEngineFactory templateEngineFactory;
+    private final boolean enableGzipSupport;
 
 
     /**
@@ -23,8 +23,8 @@ abstract public class SecureWebPage implements RouteHandler {
      * @param enableGzipSupport     if true GZIP compression will be enabled (if available)
      */
     public SecureWebPage(TemplateEngineFactory templateEngineFactory, @SuppressWarnings("SameParameterValue") boolean enableGzipSupport) {
-        mTemplateEngineFactory = templateEngineFactory;
-        mEnableGzipSupport = enableGzipSupport;
+        this.templateEngineFactory = templateEngineFactory;
+        this.enableGzipSupport = enableGzipSupport;
     }
 
 
@@ -50,9 +50,9 @@ abstract public class SecureWebPage implements RouteHandler {
     @Override
     public Response handle(RequestContext ctx) {
         if (ctx.getScheme().equals("https")) {
-            String content = produceHtmlSecure(ctx, mTemplateEngineFactory.createNew());
+            String content = produceHtmlSecure(ctx, templateEngineFactory.createNew());
 
-            return new HtmlResponse(content, mEnableGzipSupport);
+            return new HtmlResponse(content, enableGzipSupport);
         } else {
             return new RequiresHttpsResponse();
         }

@@ -10,7 +10,7 @@ import java.sql.SQLException;
  * C3p0 implementation od {@link DbPool}
  */
 public final class C3p0DbPool implements DbPool {
-    private final ComboPooledDataSource mDataSource;
+    private final ComboPooledDataSource dataSource;
 
 
     /**
@@ -19,12 +19,12 @@ public final class C3p0DbPool implements DbPool {
      * @param dataSource data source to be used
      */
     public C3p0DbPool(ComboPooledDataSource dataSource) {
-        mDataSource = dataSource;
+        this.dataSource = dataSource;
     }
 
 
     @Override
     public Connection getConnection() throws SQLException {
-        return mDataSource.getConnection();
+        return dataSource.getConnection();
     }
 }

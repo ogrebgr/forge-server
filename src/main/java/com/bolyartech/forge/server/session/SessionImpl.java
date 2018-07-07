@@ -7,7 +7,7 @@ import javax.servlet.http.HttpSession;
  * Session
  */
 public class SessionImpl implements Session {
-    private final HttpSession mHttpSession;
+    private final HttpSession httpSession;
 
 
     /**
@@ -16,49 +16,49 @@ public class SessionImpl implements Session {
      * @param httpSession HTTP session
      */
     public SessionImpl(HttpSession httpSession) {
-        mHttpSession = httpSession;
+        this.httpSession = httpSession;
     }
 
 
     @Override
     public String getId() {
-        return mHttpSession.getId();
+        return httpSession.getId();
     }
 
 
     @Override
     public <T> T getVar(String varName) {
         //noinspection unchecked
-        return (T) mHttpSession.getAttribute(varName);
+        return (T) httpSession.getAttribute(varName);
     }
 
 
     @Override
     public void setVar(String varName, Object value) {
-        mHttpSession.setAttribute(varName, value);
+        httpSession.setAttribute(varName, value);
     }
 
 
     @Override
     public void removeVar(String varName) {
-        mHttpSession.removeAttribute(varName);
+        httpSession.removeAttribute(varName);
     }
 
 
     @Override
     public int getMaxInactiveInterval() {
-        return mHttpSession.getMaxInactiveInterval();
+        return httpSession.getMaxInactiveInterval();
     }
 
 
     @Override
     public long getCreationTime() {
-        return mHttpSession.getCreationTime();
+        return httpSession.getCreationTime();
     }
 
 
     @Override
     public long getLastAccessedTime() {
-        return mHttpSession.getLastAccessedTime();
+        return httpSession.getLastAccessedTime();
     }
 }

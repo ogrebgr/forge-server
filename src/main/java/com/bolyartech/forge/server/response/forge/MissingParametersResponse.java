@@ -4,7 +4,7 @@ package com.bolyartech.forge.server.response.forge;
  * Response indicating missing required parameters
  */
 public class MissingParametersResponse extends ForgeResponse {
-    private static final MissingParametersResponse mInstance = new MissingParametersResponse();
+    private static final MissingParametersResponse instance = new MissingParametersResponse();
 
 
     /**
@@ -31,6 +31,6 @@ public class MissingParametersResponse extends ForgeResponse {
      * @return Instance of MissingParametersResponse
      */
     public static MissingParametersResponse getInstance() {
-        return mInstance;
+        return instance;
     }
 }

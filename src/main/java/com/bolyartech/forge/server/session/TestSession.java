@@ -12,15 +12,15 @@ import java.util.UUID;
  * {@link #getMaxInactiveInterval()} always return 0, i.e. they have empty implementation
  */
 public class TestSession implements Session {
-    private final String mId;
-    private final Map<String, Object> mVars = new HashMap<>();
+    private final String id;
+    private final Map<String, Object> vars = new HashMap<>();
 
 
     /**
      * Creates new TestSession
      */
     public TestSession() {
-        mId = UUID.randomUUID().toString();
+        id = UUID.randomUUID().toString();
     }
 
 
@@ -30,7 +30,7 @@ public class TestSession implements Session {
      * @param id ID to be used
      */
     public TestSession(String id) {
-        mId = id;
+        this.id = id;
     }
 
 
@@ -43,19 +43,19 @@ public class TestSession implements Session {
     @Override
     public <T> T getVar(String varName) {
         //noinspection unchecked - user must take care to get same type
-        return (T) mVars.get(varName);
+        return (T) vars.get(varName);
     }
 
 
     @Override
     public void setVar(String varName, Object value) {
-        mVars.put(varName, value);
+        vars.put(varName, value);
     }
 
 
     @Override
     public void removeVar(String varName) {
-        mVars.remove(varName);
+        vars.remove(varName);
     }
 
 

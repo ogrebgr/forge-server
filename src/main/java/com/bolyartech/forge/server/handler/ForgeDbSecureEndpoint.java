@@ -13,7 +13,7 @@ import java.sql.SQLException;
  * Endpoint that requires request to be using HTTPS
  */
 abstract public class ForgeDbSecureEndpoint extends ForgeSecureEndpoint {
-    private final DbPool mDbPool;
+    private final DbPool dbPool;
 
 
     /**
@@ -22,7 +22,7 @@ abstract public class ForgeDbSecureEndpoint extends ForgeSecureEndpoint {
      * @param dbPool DB pool
      */
     public ForgeDbSecureEndpoint(DbPool dbPool) {
-        mDbPool = dbPool;
+        this.dbPool = dbPool;
     }
 
 
@@ -44,7 +44,7 @@ abstract public class ForgeDbSecureEndpoint extends ForgeSecureEndpoint {
     @Override
     public ForgeResponse handleForgeSecure(RequestContext ctx) {
         try {
-            Connection dbc = mDbPool.getConnection();
+            Connection dbc = dbPool.getConnection();
             ForgeResponse ret = handleForgeSecure(ctx, dbc);
             dbc.close();
 
