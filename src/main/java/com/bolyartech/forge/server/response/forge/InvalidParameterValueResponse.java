@@ -4,6 +4,8 @@ package com.bolyartech.forge.server.response.forge;
  * Invalid parameter value response
  */
 public class InvalidParameterValueResponse extends ForgeResponse {
+    private static final InvalidParameterValueResponse instance = new InvalidParameterValueResponse();
+
     /**
      * Creates new InvalidParameterValueResponse
      */
@@ -19,5 +21,10 @@ public class InvalidParameterValueResponse extends ForgeResponse {
      */
     public InvalidParameterValueResponse(String string) {
         super(BasicResponseCodes.Errors.INVALID_PARAMETER_VALUE, string);
+    }
+
+
+    public static InvalidParameterValueResponse getInstance() {
+        return instance;
     }
 }
