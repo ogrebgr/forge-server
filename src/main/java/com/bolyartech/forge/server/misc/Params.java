@@ -5,6 +5,8 @@ import com.bolyartech.forge.server.route.MissingParameterValue;
 import com.bolyartech.forge.server.route.RequestContext;
 import com.google.common.base.Strings;
 
+import java.util.Optional;
+
 import static com.bolyartech.forge.server.misc.ForgeMessageFormat.format;
 
 
@@ -155,4 +157,28 @@ public class Params {
         }
     }
 
+
+    public static Optional<Integer> optIntFromPost(@NonNull RequestContext ctx, @NonNull String parameterName)
+            throws InvalidParameterValue {
+
+        String s = ctx.getFromPost(parameterName);
+
+        return optIntHelper(parameterName, s, POST);
+    }
+
+
+    private static Optional<Integer> optIntHelper(@NonNull String parameterName, @Nullable String value, @NonNull String type)
+            throws InvalidParameterValue {
+
+        if (value == null) {
+            return Optional.empty();
+        }
+
+        try {
+            return Optional.of(Integer.parseInt(value));
+        } catch (NumberFormatException e) {
+            throw new InvalidParameterValue(format("Invalid value {} for parameter {}",
+                    value, parameterName));
+        }
+    }
 }
