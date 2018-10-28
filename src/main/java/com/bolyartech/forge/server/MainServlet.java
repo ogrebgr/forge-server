@@ -4,11 +4,9 @@ import com.bolyartech.forge.server.handler.RouteHandler;
 import com.bolyartech.forge.server.module.HttpModule;
 import com.bolyartech.forge.server.module.HttpModuleRegister;
 import com.bolyartech.forge.server.module.HttpModuleRegisterImpl;
+import com.bolyartech.forge.server.response.Response;
 import com.bolyartech.forge.server.response.ResponseException;
-import com.bolyartech.forge.server.route.Route;
-import com.bolyartech.forge.server.route.RouteImpl;
-import com.bolyartech.forge.server.route.RouteRegister;
-import com.bolyartech.forge.server.route.RouteRegisterImpl;
+import com.bolyartech.forge.server.route.*;
 import org.slf4j.LoggerFactory;
 
 import javax.servlet.ServletException;
@@ -31,6 +29,21 @@ abstract public class MainServlet extends HttpServlet {
     private final org.slf4j.Logger logger = LoggerFactory.getLogger(this.getClass());
     private final RouteRegister routeRegister = new RouteRegisterImpl();
     private final HttpModuleRegister httpModuleRegister = new HttpModuleRegisterImpl(routeRegister);
+
+    private final RouteHandler notFoundHandler;
+    private final RouteHandler internalServerError;
+
+
+    public MainServlet() {
+        this.notFoundHandler = null;
+        this.internalServerError = null;
+    }
+
+
+    public MainServlet(RouteHandler notFoundHandler, RouteHandler internalServerError) {
+        this.notFoundHandler = notFoundHandler;
+        this.internalServerError = internalServerError;
+    }
 
 
     @Override
@@ -76,55 +89,67 @@ abstract public class MainServlet extends HttpServlet {
 
 
     @Override
-    protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        Route route = httpModuleRegister.match(HttpMethod.GET, req.getPathInfo());
-
-        if (route != null) {
-            handle(req, resp, route);
-        } else {
-            resp.setStatus(HttpServletResponse.SC_NOT_FOUND);
-            PrintWriter pw = resp.getWriter();
-            pw.print("Not found");
-            pw.flush();
-            pw.close();
-        }
+    protected void doGet(HttpServletRequest req, HttpServletResponse httpResp) throws IOException {
+        processRequest(req, httpResp);
     }
 
 
     @Override
-    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        Route route = httpModuleRegister.match(HttpMethod.POST, req.getPathInfo());
-
-        if (route != null) {
-            handle(req, resp, route);
-        } else {
-            resp.setStatus(HttpServletResponse.SC_NOT_FOUND);
-            PrintWriter pw = resp.getWriter();
-            pw.print("Not found");
-            pw.flush();
-            pw.close();
-        }
+    protected void doPost(HttpServletRequest req, HttpServletResponse httpResp) throws IOException {
+        processRequest(req, httpResp);
     }
 
 
     protected abstract List<HttpModule> getModules();
 
 
-    private void handle(HttpServletRequest req, HttpServletResponse resp, Route route) {
+    private void handle(HttpServletRequest req, HttpServletResponse httpResp, Route route) throws IOException {
         try {
-            route.handle(req, resp);
+            route.handle(req, httpResp);
         } catch (ResponseException e) {
             logger.error("Error handling {}, Error: {}", route, e.getMessage());
             logger.debug("Exception: ", e);
-            resp.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
-            try {
-                PrintWriter pw = resp.getWriter();
-                pw.print("Internal server error");
-                pw.flush();
-                pw.close();
-            } catch (IOException e1) {
-                e1.printStackTrace();
+
+            if (internalServerError == null) {
+                httpResp.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+                try {
+                    PrintWriter pw = httpResp.getWriter();
+                    pw.print("Internal server error");
+                    pw.flush();
+                    pw.close();
+                } catch (IOException e1) {
+                    e1.printStackTrace();
+                }
+            } else {
+                Response resp = notFoundHandler.handle(new RequestContextImpl(req, req.getPathInfo()));
+                resp.toServletResponse(httpResp);
             }
+        }
+    }
+
+
+    private void notFound(HttpServletRequest req, HttpServletResponse httpResp) throws IOException {
+        logger.trace("Not found: {} {}", req.getMethod(), req.getPathInfo());
+        if (notFoundHandler != null) {
+            Response resp = notFoundHandler.handle(new RequestContextImpl(req, req.getPathInfo()));
+            resp.toServletResponse(httpResp);
+        } else {
+            httpResp.setStatus(HttpServletResponse.SC_NOT_FOUND);
+            PrintWriter pw = httpResp.getWriter();
+            pw.print("Not found");
+            pw.flush();
+            pw.close();
+        }
+    }
+
+
+    private void processRequest(HttpServletRequest req, HttpServletResponse httpResp) throws IOException {
+        Route route = httpModuleRegister.match(HttpMethod.POST, req.getPathInfo());
+
+        if (route != null) {
+            handle(req, httpResp, route);
+        } else {
+            notFound(req, httpResp);
         }
     }
 }

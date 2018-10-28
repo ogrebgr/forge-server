@@ -14,7 +14,7 @@ public class FileForgeServerConfigurationLoader implements ForgeServerConfigurat
     private static final String FILENAME = "forge.conf";
     private static final String PROP_SERVER_LOG_NAME = "server_log_name";
     private static final String PROP_STATIC_FILES_DIR = "static_files_dir";
-    private final org.slf4j.Logger mLogger = LoggerFactory.getLogger(this.getClass());
+    private final org.slf4j.Logger logger = LoggerFactory.getLogger(this.getClass());
 
     private final String configDir;
 
@@ -40,7 +40,7 @@ public class FileForgeServerConfigurationLoader implements ForgeServerConfigurat
                 prop.load(is);
                 is.close();
             } catch (IOException e) {
-                mLogger.error("Cannot load config file", e);
+                logger.error("Cannot load config file", e);
                 throw new ForgeConfigurationException(e);
             }
 
@@ -49,11 +49,11 @@ public class FileForgeServerConfigurationLoader implements ForgeServerConfigurat
                         prop.getProperty(PROP_STATIC_FILES_DIR));
 
             } catch (Exception e) {
-                mLogger.error("Error populating configuration", e);
+                logger.error("Error populating configuration", e);
                 throw new ForgeConfigurationException(e);
             }
         } else {
-            mLogger.error("Cannot find configuration file: {}", confFile.getAbsolutePath());
+            logger.error("Cannot find configuration file: {}", confFile.getAbsolutePath());
             throw new IllegalStateException(MessageFormat.format("Cannot find configuration file: {0}",
                     confFile.getAbsolutePath()));
         }
