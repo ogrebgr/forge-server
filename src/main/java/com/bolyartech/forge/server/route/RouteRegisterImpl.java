@@ -19,6 +19,7 @@ public class RouteRegisterImpl implements RouteRegister {
     private final Map<String, Registration> endpointsDelete = new ConcurrentHashMap<>();
     private final Map<String, Registration> endpointsPut = new ConcurrentHashMap<>();
 
+    private int maxPathSegments = 0;
 
     static int countSlashes(String str) {
         return CharMatcher.is('/').countIn(str);
@@ -55,6 +56,7 @@ public class RouteRegisterImpl implements RouteRegister {
                 break;
         }
 
+        maxPathSegments = Math.max(maxPathSegments, countSlashes(route.getPath()));
     }
 
 
@@ -135,9 +137,9 @@ public class RouteRegisterImpl implements RouteRegister {
             return reg.mRoute;
         } else {
             int count = countSlashes(path);
-            // < 15 prevents DDOS attacks with intentionally maliciously composed urls that contain multiple slashes like
+            // maxPathSegments prevents DDOS attacks with intentionally maliciously composed urls that contain multiple slashes like
             // "/a/a/a/a/b/b/a/d/" in order to slow down the matching (because matching is rather expensive operation)
-            if (count > 1 && count <= 15) {
+            if (count > 1 && count <= maxPathSegments) {
                 return match(endpoints, removeLastPathSegment(path));
             } else {
                 return null;
