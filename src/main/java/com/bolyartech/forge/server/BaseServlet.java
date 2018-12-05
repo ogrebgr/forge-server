@@ -19,11 +19,11 @@ import java.util.List;
 
 
 /**
- * Main (and only) servlet which is used to by the Forge server
+ * Base servlet which is used to by the Forge server
  * This class initializes all the modules (and respectively routes). Users must inherit it and implement
  * {@link #getModules()} in order to define their sites
  */
-abstract public class MainServlet extends HttpServlet {
+abstract public class BaseServlet extends HttpServlet {
     private static final String DEFAULT_MODULE_NAME = "default_module";
     private final org.slf4j.Logger logger = LoggerFactory.getLogger(this.getClass());
     private final RouteRegister routeRegister = new RouteRegisterImpl();
@@ -33,13 +33,13 @@ abstract public class MainServlet extends HttpServlet {
     private final RouteHandler internalServerError;
 
 
-    public MainServlet() {
+    public BaseServlet() {
         this.notFoundHandler = null;
         this.internalServerError = null;
     }
 
 
-    public MainServlet(RouteHandler notFoundHandler, RouteHandler internalServerError) {
+    public BaseServlet(RouteHandler notFoundHandler, RouteHandler internalServerError) {
         this.notFoundHandler = notFoundHandler;
         this.internalServerError = internalServerError;
     }
