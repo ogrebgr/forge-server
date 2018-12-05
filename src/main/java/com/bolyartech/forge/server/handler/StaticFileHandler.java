@@ -18,7 +18,6 @@ import java.io.File;
 public class StaticFileHandler implements RouteHandler {
 
     private final String sourceDir;
-    private final Response notFoundResponse;
     private final MimeTypeResolver mimeTypeResolver;
     private final boolean enableGzip;
 
@@ -27,31 +26,28 @@ public class StaticFileHandler implements RouteHandler {
      * Creates StaticFileHandler
      *
      * @param sourceDir        Source directory relative to the class path
-     * @param notFoundResponse Not found response object which will be used if no static file matching the request is found
      * @param mimeTypeResolver MIME type resolver
      * @param enableGzip       if true Gzip compression will be used if the client supports it
      */
     public StaticFileHandler(String sourceDir,
-                             Response notFoundResponse,
                              MimeTypeResolver mimeTypeResolver,
                              boolean enableGzip) {
 
         this.sourceDir = sourceDir;
 
-        this.notFoundResponse = notFoundResponse;
         this.enableGzip = enableGzip;
         this.mimeTypeResolver = mimeTypeResolver;
     }
 
 
     @Override
-    public Response handle(RequestContext ctx) {
+    public Response handle(RequestContext ctx) throws ResourceNotFoundException {
         File file = new File(sourceDir + ctx.getPathInfoString());
         if (file.isFile()) {
             boolean actualEnableGzip = enableGzip && GzipUtils.supportsGzip(ctx);
             return new StaticFileResponse(mimeTypeResolver, file, actualEnableGzip);
         } else {
-            return notFoundResponse;
+            throw new ResourceNotFoundException("Cannot find file " + ctx.getPathInfoString());
         }
     }
 }

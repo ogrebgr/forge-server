@@ -1,6 +1,7 @@
 package com.bolyartech.forge.server.route;
 
 import com.bolyartech.forge.server.HttpMethod;
+import com.bolyartech.forge.server.handler.ResourceNotFoundException;
 import com.bolyartech.forge.server.response.ResponseException;
 
 import javax.servlet.http.HttpServletRequest;
@@ -32,5 +33,5 @@ public interface Route {
      * @param response HTTP servlet response
      * @throws ResponseException if there is a problem handling the request
      */
-    void handle(HttpServletRequest req, HttpServletResponse response) throws ResponseException;
+    void handle(HttpServletRequest req, HttpServletResponse response) throws ResponseException, ResourceNotFoundException;
 }
