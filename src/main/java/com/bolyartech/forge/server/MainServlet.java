@@ -121,7 +121,7 @@ abstract public class MainServlet extends HttpServlet {
                     e1.printStackTrace();
                 }
             } else {
-                Response resp = notFoundHandler.handle(new RequestContextImpl(req, req.getPathInfo()));
+                Response resp = internalServerError.handle(new RequestContextImpl(req, req.getPathInfo()));
                 resp.toServletResponse(httpResp);
             }
         }
