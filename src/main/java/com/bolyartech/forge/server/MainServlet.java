@@ -24,7 +24,6 @@ import java.util.List;
  * {@link #getModules()} in order to define their sites
  */
 abstract public class MainServlet extends HttpServlet {
-    private static final String LOGBACK_CONFIG_FILE = "logback.xml";
     private static final String DEFAULT_MODULE_NAME = "default_module";
     private final org.slf4j.Logger logger = LoggerFactory.getLogger(this.getClass());
     private final RouteRegister routeRegister = new RouteRegisterImpl();
