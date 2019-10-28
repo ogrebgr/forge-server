@@ -168,7 +168,8 @@ public class BaseServletDefaultImpl extends HttpServlet implements BaseServlet {
 
 
     private void processRequest(HttpServletRequest req, HttpServletResponse httpResp) throws IOException {
-        Route route = httpModuleRegister.match(HttpMethod.POST, req.getPathInfo());
+        HttpMethod method = HttpMethod.valueOf(req.getMethod());
+        Route route = httpModuleRegister.match(method, req.getPathInfo());
 
         if (route != null) {
             handle(req, httpResp, route);
