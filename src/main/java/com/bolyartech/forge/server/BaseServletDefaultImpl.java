@@ -58,7 +58,7 @@ public class BaseServletDefaultImpl extends HttpServlet implements BaseServlet {
             for (HttpModule mod : modules) {
                 httpModuleRegister.registerModule(mod);
             }
-            logger.info("Forge server initialized and started.");
+            logger.info("Server initialized and started.");
         } else {
             logger.error("getModules() returned empty list of modules, so no endpoints are registered.");
         }
