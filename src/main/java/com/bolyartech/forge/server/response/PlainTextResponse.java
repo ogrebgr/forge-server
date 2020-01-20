@@ -1,5 +1,8 @@
 package com.bolyartech.forge.server.response;
 
+import javax.annotation.Nonnull;
+
+
 /**
  * Plain text string response (UTF-8 encoded)
  */
@@ -23,7 +26,7 @@ public class PlainTextResponse extends AbstractStringResponse {
      * @param string            Content of the response, i.e. the text
      * @param enableGzipSupport if true Gzip compression will be used if the client supports it
      */
-    public PlainTextResponse(String string, boolean enableGzipSupport) {
+    public PlainTextResponse(@Nonnull String string, boolean enableGzipSupport) {
         super(string, enableGzipSupport);
     }
 

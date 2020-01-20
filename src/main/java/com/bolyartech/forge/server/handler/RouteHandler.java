@@ -5,6 +5,8 @@ import com.bolyartech.forge.server.response.ResponseException;
 import com.bolyartech.forge.server.route.RequestContext;
 import com.bolyartech.forge.server.route.Route;
 
+import javax.annotation.Nonnull;
+
 
 /**
  * RouteHandler of HTTP request
@@ -23,5 +25,5 @@ public interface RouteHandler {
      * @return Response
      * @throws ResponseException if there is problem handling the request
      */
-    Response handle(RequestContext ctx) throws ResponseException, ResourceNotFoundException;
+    Response handle(@Nonnull RequestContext ctx) throws ResponseException, ResourceNotFoundException;
 }

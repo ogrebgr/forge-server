@@ -4,6 +4,7 @@ import com.bolyartech.forge.server.HttpMethod;
 import com.bolyartech.forge.server.handler.ResourceNotFoundException;
 import com.bolyartech.forge.server.response.ResponseException;
 
+import javax.annotation.Nonnull;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -33,5 +34,6 @@ public interface Route {
      * @param response HTTP servlet response
      * @throws ResponseException if there is a problem handling the request
      */
-    void handle(HttpServletRequest req, HttpServletResponse response) throws ResponseException, ResourceNotFoundException;
+    void handle(@Nonnull HttpServletRequest req, @Nonnull HttpServletResponse response)
+            throws ResponseException, ResourceNotFoundException;
 }

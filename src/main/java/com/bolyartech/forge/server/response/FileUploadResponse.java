@@ -3,6 +3,7 @@ package com.bolyartech.forge.server.response;
 import com.google.common.base.Strings;
 import com.google.common.io.ByteStreams;
 
+import javax.annotation.Nonnull;
 import javax.servlet.http.HttpServletResponse;
 import java.io.*;
 import java.text.MessageFormat;
@@ -23,7 +24,7 @@ public class FileUploadResponse implements Response {
      * @param filePath   Path to the file which will be uploaded
      * @param enableGzip if true Gzip compression will be used if supported by the client
      */
-    public FileUploadResponse(String filePath, boolean enableGzip) {
+    public FileUploadResponse(@Nonnull String filePath, boolean enableGzip) {
         if (Strings.isNullOrEmpty(filePath)) {
             throw new IllegalArgumentException("filePath null or empty");
         }
@@ -38,7 +39,7 @@ public class FileUploadResponse implements Response {
 
 
     @Override
-    public void toServletResponse(HttpServletResponse resp) {
+    public void toServletResponse(@Nonnull HttpServletResponse resp) {
         resp.setContentType(HttpHeaders.CONTENT_TYPE_OCTET);
         resp.setHeader(HttpHeaders.CONTENT_DISPOSITION,
                 MessageFormat.format(HttpHeaders.CONTENT_DISPOSITION_ATTACHMENT, file.getName()));

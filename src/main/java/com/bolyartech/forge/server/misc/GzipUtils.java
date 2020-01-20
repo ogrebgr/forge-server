@@ -3,6 +3,7 @@ package com.bolyartech.forge.server.misc;
 import com.bolyartech.forge.server.response.HttpHeaders;
 import com.bolyartech.forge.server.route.RequestContext;
 
+import javax.annotation.Nonnull;
 import java.util.List;
 
 
@@ -22,7 +23,7 @@ public class GzipUtils {
      * @param ctx Request context
      * @return true if client supports Gzip encoding
      */
-    public static boolean supportsGzip(RequestContext ctx) {
+    public static boolean supportsGzip(@Nonnull RequestContext ctx) {
         List<String> values = ctx.getHeaderValues(HttpHeaders.ACCEPT_ENCODING);
         if (values != null) {
             for (String val : values) {

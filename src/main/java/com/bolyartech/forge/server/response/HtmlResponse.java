@@ -1,5 +1,8 @@
 package com.bolyartech.forge.server.response;
 
+import javax.annotation.Nonnull;
+
+
 /**
  * HTML string response
  */
@@ -12,7 +15,7 @@ public class HtmlResponse extends AbstractStringResponse {
      *
      * @param string HTML of the response
      */
-    public HtmlResponse(String string) {
+    public HtmlResponse(@Nonnull String string) {
         super(string);
     }
 
@@ -23,7 +26,7 @@ public class HtmlResponse extends AbstractStringResponse {
      * @param string            HTML of the response
      * @param enableGzipSupport if true Gzip compression will be used if the client supports it
      */
-    public HtmlResponse(String string, boolean enableGzipSupport) {
+    public HtmlResponse(@Nonnull String string, boolean enableGzipSupport) {
         super(string, enableGzipSupport);
     }
 

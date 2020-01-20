@@ -3,6 +3,8 @@ package com.bolyartech.forge.server.route;
 import com.bolyartech.forge.server.HttpMethod;
 import com.bolyartech.forge.server.handler.RouteHandler;
 
+import javax.annotation.Nonnull;
+
 
 /**
  * Route that uses HTTP POST method
@@ -14,7 +16,7 @@ public class PostRoute extends RouteImpl {
      * @param path         URL path of the route
      * @param routeHandler Route handler
      */
-    public PostRoute(String path, RouteHandler routeHandler) {
+    public PostRoute(@Nonnull String path, @Nonnull RouteHandler routeHandler) {
         super(HttpMethod.POST, path, routeHandler);
     }
 }

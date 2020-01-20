@@ -1,5 +1,6 @@
 package com.bolyartech.forge.server.response;
 
+import javax.annotation.Nonnull;
 import javax.servlet.http.HttpServletResponse;
 
 
@@ -16,7 +17,7 @@ public class RedirectResponseMovedTemporarily implements RedirectResponse {
      *
      * @param location Target location
      */
-    public RedirectResponseMovedTemporarily(String location) {
+    public RedirectResponseMovedTemporarily(@Nonnull String location) {
         this.location = location;
     }
 
@@ -28,7 +29,7 @@ public class RedirectResponseMovedTemporarily implements RedirectResponse {
 
 
     @Override
-    public void toServletResponse(HttpServletResponse resp) {
+    public void toServletResponse(@Nonnull HttpServletResponse resp) {
         resp.setStatus(HttpServletResponse.SC_MOVED_TEMPORARILY);
         resp.setHeader(HEADER_LOCATION, location);
     }

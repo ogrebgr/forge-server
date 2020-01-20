@@ -2,6 +2,7 @@ package com.bolyartech.forge.server.misc;
 
 import com.google.common.io.ByteStreams;
 
+import javax.annotation.Nonnull;
 import java.io.*;
 
 
@@ -22,7 +23,7 @@ public class DownloadUtils {
      * @param destination file path to be used
      * @throws IOException if there is an IO error
      */
-    public static void saveDownloadedFile(InputStream is, String destination) throws IOException {
+    public static void saveDownloadedFile(@Nonnull InputStream is, @Nonnull String destination) throws IOException {
         BufferedOutputStream out = null;
         try {
             out = new BufferedOutputStream(new FileOutputStream(new File(destination)));

@@ -1,5 +1,6 @@
 package com.bolyartech.forge.server.response;
 
+import javax.annotation.Nonnull;
 import javax.servlet.http.HttpServletResponse;
 
 
@@ -15,5 +16,5 @@ public interface Response {
      * @param resp HTTP servlet response
      * @throws ResponseException if there is a problem during converting
      */
-    void toServletResponse(HttpServletResponse resp) throws ResponseException;
+    void toServletResponse(@Nonnull HttpServletResponse resp) throws ResponseException;
 }

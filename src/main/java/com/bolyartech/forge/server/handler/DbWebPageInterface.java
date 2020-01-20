@@ -3,6 +3,7 @@ package com.bolyartech.forge.server.handler;
 import com.bolyartech.forge.server.misc.TemplateEngine;
 import com.bolyartech.forge.server.route.RequestContext;
 
+import javax.annotation.Nonnull;
 import java.sql.Connection;
 
 
@@ -20,5 +21,5 @@ public interface DbWebPageInterface extends RouteHandler {
      * @return Produced HTML
      */
     @SuppressWarnings("EmptyMethod")
-    String produceHtml(RequestContext ctx, TemplateEngine tple, Connection dbc);
+    String produceHtml(@Nonnull RequestContext ctx, @Nonnull TemplateEngine tple, @Nonnull Connection dbc);
 }

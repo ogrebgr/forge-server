@@ -3,6 +3,8 @@ package com.bolyartech.forge.server.route;
 import com.bolyartech.forge.server.HttpMethod;
 import com.google.common.base.Strings;
 
+import javax.annotation.Nonnull;
+
 
 /**
  * Register for routes
@@ -23,7 +25,7 @@ public interface RouteRegister {
      * @param route Route
      * @return true if route is registered, false otherwise
      */
-    boolean isRegistered(Route route);
+    boolean isRegistered(@Nonnull Route route);
 
     /**
      * Returns route registration
@@ -31,7 +33,7 @@ public interface RouteRegister {
      * @param route Route object
      * @return Registration of the route
      */
-    Registration getRegistration(Route route);
+    Registration getRegistration(@Nonnull Route route);
 
     /**
      * Matches Route against HTTP method and URL path
@@ -40,7 +42,7 @@ public interface RouteRegister {
      * @param path   URL Path
      * @return matched route or null if no route is matched
      */
-    Route match(HttpMethod method, String path);
+    Route match(@Nonnull HttpMethod method, @Nonnull String path);
 
 
     class Registration {
@@ -48,7 +50,7 @@ public interface RouteRegister {
         public final Route mRoute;
 
 
-        Registration(String moduleName, Route route) {
+        Registration(@Nonnull String moduleName, @Nonnull Route route) {
             if (Strings.isNullOrEmpty(moduleName)) {
                 throw new IllegalArgumentException("moduleName is empty");
             }

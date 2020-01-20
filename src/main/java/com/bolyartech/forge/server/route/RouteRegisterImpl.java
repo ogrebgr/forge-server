@@ -4,6 +4,7 @@ import com.bolyartech.forge.server.HttpMethod;
 import com.google.common.base.CharMatcher;
 import org.slf4j.LoggerFactory;
 
+import javax.annotation.Nonnull;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -26,7 +27,7 @@ public class RouteRegisterImpl implements RouteRegister {
     }
 
 
-    static String removeLastPathSegment(String path) {
+    static String removeLastPathSegment(@Nonnull String path) {
         if (path.endsWith("/")) {
             return path.substring(0, path.lastIndexOf('/'));
         } else {
@@ -36,7 +37,7 @@ public class RouteRegisterImpl implements RouteRegister {
 
 
     @Override
-    public void register(String moduleName, Route route) {
+    public void register(@Nonnull String moduleName, @Nonnull Route route) {
         if (route == null) {
             throw new NullPointerException("route is null");
         }
@@ -61,7 +62,7 @@ public class RouteRegisterImpl implements RouteRegister {
 
 
     @Override
-    public boolean isRegistered(Route route) {
+    public boolean isRegistered(@Nonnull Route route) {
         switch (route.getHttpMethod()) {
             case GET:
                 return endpointsGet.containsKey(route.getPath());
@@ -78,7 +79,7 @@ public class RouteRegisterImpl implements RouteRegister {
 
 
     @Override
-    public Registration getRegistration(Route route) {
+    public Registration getRegistration(@Nonnull Route route) {
         switch (route.getHttpMethod()) {
             case GET:
                 return endpointsGet.get(route.getPath());
@@ -103,7 +104,7 @@ public class RouteRegisterImpl implements RouteRegister {
      * @return matched route or null if no route is matched
      */
     @Override
-    public Route match(HttpMethod method, String path) {
+    public Route match(@Nonnull HttpMethod method, @Nonnull String path) {
         path = RouteImpl.normalizePath(path);
 
         switch (method) {
@@ -121,7 +122,7 @@ public class RouteRegisterImpl implements RouteRegister {
     }
 
 
-    private void register(Map<String, Registration> endpoints, String moduleName, Route route) {
+    private void register(@Nonnull Map<String, Registration> endpoints, @Nonnull String moduleName, Route route) {
         if (!endpoints.containsKey(route.getPath())) {
             endpoints.put(route.getPath(), new Registration(moduleName, route));
             logger.info("Registered route {} {}", route.getHttpMethod(), route.getPath());
@@ -131,7 +132,7 @@ public class RouteRegisterImpl implements RouteRegister {
     }
 
 
-    private Route match(Map<String, Registration> endpoints, String path) {
+    private Route match(@Nonnull Map<String, Registration> endpoints, @Nonnull String path) {
         Registration reg = endpoints.get(path);
         if (reg != null) {
             return reg.mRoute;

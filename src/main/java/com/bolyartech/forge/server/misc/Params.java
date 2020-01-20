@@ -5,6 +5,8 @@ import com.bolyartech.forge.server.route.MissingParameterValue;
 import com.bolyartech.forge.server.route.RequestContext;
 import com.google.common.base.Strings;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.util.Optional;
 
 import static com.bolyartech.forge.server.misc.ForgeMessageFormat.format;
@@ -59,7 +61,7 @@ public class Params {
      * @throws MissingParameterValue if there is no value for this parameter
      * @throws InvalidParameterValue if the value is present but cannot be parsed as long
      */
-    public static long extractLongFromPost(@NonNull RequestContext ctx, @NonNull String parameterName)
+    public static long extractLongFromPost(@Nonnull RequestContext ctx, @Nonnull String parameterName)
             throws MissingParameterValue, InvalidParameterValue {
 
         String s = ctx.getFromPost(parameterName);
@@ -77,7 +79,7 @@ public class Params {
      * @throws MissingParameterValue if there is no value for this parameter
      * @throws InvalidParameterValue if the value is present but cannot be parsed as long
      */
-    public static long extractLongFromGet(@NonNull RequestContext ctx, @NonNull String parameterName)
+    public static long extractLongFromGet(@Nonnull RequestContext ctx, @Nonnull String parameterName)
             throws MissingParameterValue, InvalidParameterValue {
 
         String s = ctx.getFromGet(parameterName);
@@ -86,9 +88,9 @@ public class Params {
     }
 
 
-    private static long extractLongHelper(@NonNull String parameterName,
+    private static long extractLongHelper(@Nonnull String parameterName,
                                           @Nullable String value,
-                                          @NonNull String type)
+                                          @Nonnull String type)
             throws MissingParameterValue, InvalidParameterValue {
 
         if (value == null) {
@@ -113,7 +115,7 @@ public class Params {
      * @throws MissingParameterValue if there is no value for this parameter
      * @throws InvalidParameterValue if the value is present but cannot be parsed as int
      */
-    public static int extractIntFromPost(@NonNull RequestContext ctx, @NonNull String parameterName)
+    public static int extractIntFromPost(@Nonnull RequestContext ctx, @Nonnull String parameterName)
             throws MissingParameterValue, InvalidParameterValue {
 
         String s = ctx.getFromPost(parameterName);
@@ -131,7 +133,7 @@ public class Params {
      * @throws MissingParameterValue if there is no value for this parameter
      * @throws InvalidParameterValue if the value is present but cannot be parsed as int
      */
-    public static int extractIntFromGet(@NonNull RequestContext ctx, @NonNull String parameterName)
+    public static int extractIntFromGet(@Nonnull RequestContext ctx, @Nonnull String parameterName)
             throws MissingParameterValue, InvalidParameterValue {
 
         String s = ctx.getFromGet(parameterName);
@@ -140,9 +142,9 @@ public class Params {
     }
 
 
-    private static int extractIntHelper(@NonNull String parameterName,
+    private static int extractIntHelper(@Nonnull String parameterName,
                                         @Nullable String value,
-                                        @NonNull String type)
+                                        @Nonnull String type)
             throws MissingParameterValue, InvalidParameterValue {
 
         if (value == null) {
@@ -158,7 +160,7 @@ public class Params {
     }
 
 
-    public static Optional<Integer> optIntFromPost(@NonNull RequestContext ctx, @NonNull String parameterName)
+    public static Optional<Integer> optIntFromPost(@Nonnull RequestContext ctx, @Nonnull String parameterName)
             throws InvalidParameterValue {
 
         String s = ctx.getFromPost(parameterName);
@@ -167,7 +169,7 @@ public class Params {
     }
 
 
-    private static Optional<Integer> optIntHelper(@NonNull String parameterName, @Nullable String value, @NonNull String type)
+    private static Optional<Integer> optIntHelper(@Nonnull String parameterName, @Nullable String value, @Nonnull String type)
             throws InvalidParameterValue {
 
         if (value == null) {

@@ -7,6 +7,7 @@ import com.bolyartech.forge.server.session.SessionImpl;
 import com.google.common.base.Strings;
 import com.google.common.io.CharStreams;
 
+import javax.annotation.Nonnull;
 import javax.servlet.ServletException;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
@@ -49,7 +50,7 @@ public class RequestContextImpl implements RequestContext {
      * @param routePath route path
      * @throws IOException if there is a problem creating the context
      */
-    public RequestContextImpl(HttpServletRequest httpReq, String routePath) throws IOException {
+    public RequestContextImpl(@Nonnull HttpServletRequest httpReq, @Nonnull String routePath) throws IOException {
         this.httpReq = httpReq;
 
         extractParameters(httpReq.getQueryString(), getParams);
@@ -79,11 +80,10 @@ public class RequestContextImpl implements RequestContext {
                 pathInfoParams.add(s);
             }
         }
-
     }
 
 
-    static void extractParameters(String queryString, Map<String, String> to) {
+    static void extractParameters(@Nonnull String queryString, @Nonnull Map<String, String> to) {
         if (!Strings.isNullOrEmpty(queryString)) {
             try {
                 String decoded = URLDecoder.decode(queryString, "UTF-8");
@@ -114,13 +114,13 @@ public class RequestContextImpl implements RequestContext {
 
 
     @Override
-    public String getFromGet(String parameterName) {
+    public String getFromGet(@Nonnull String parameterName) {
         return getParams.get(parameterName);
     }
 
 
     @Override
-    public String getFromPost(String parameterName) {
+    public String getFromPost(@Nonnull String parameterName) {
         return postParams.get(parameterName);
     }
 
@@ -150,7 +150,7 @@ public class RequestContextImpl implements RequestContext {
 
 
     @Override
-    public Part getPart(String partName) throws IOException, ServletException {
+    public Part getPart(@Nonnull String partName) throws IOException, ServletException {
         return httpReq.getPart(partName);
     }
 
@@ -162,7 +162,7 @@ public class RequestContextImpl implements RequestContext {
 
 
     @Override
-    public Cookie getCookie(String cookieName) {
+    public Cookie getCookie(@Nonnull String cookieName) {
         if (!cookiesInitialized) {
             Cookie[] cs = httpReq.getCookies();
             for (Cookie c : cs) {
@@ -176,7 +176,7 @@ public class RequestContextImpl implements RequestContext {
 
 
     @Override
-    public String optFromGet(String parameterName, String defaultValue) {
+    public String optFromGet(@Nonnull String parameterName, @Nonnull String defaultValue) {
         String ret = getFromGet(parameterName);
         if (ret == null) {
             ret = defaultValue;
@@ -187,7 +187,7 @@ public class RequestContextImpl implements RequestContext {
 
 
     @Override
-    public String optFromPost(String parameterName, String defaultValue) {
+    public String optFromPost(@Nonnull String parameterName, @Nonnull String defaultValue) {
         String ret = getFromPost(parameterName);
         if (ret == null) {
             ret = defaultValue;
@@ -198,13 +198,13 @@ public class RequestContextImpl implements RequestContext {
 
 
     @Override
-    public String getHeader(String headerName) {
+    public String getHeader(@Nonnull String headerName) {
         return httpReq.getHeader(headerName);
     }
 
 
     @Override
-    public List<String> getHeaderValues(String headerName) {
+    public List<String> getHeaderValues(@Nonnull String headerName) {
         Enumeration<String> values = httpReq.getHeaders(headerName);
         if (values != null) {
             return Collections.list(values);
@@ -244,7 +244,7 @@ public class RequestContextImpl implements RequestContext {
 
 
     @Override
-    public boolean isMethod(HttpMethod method) {
+    public boolean isMethod(@Nonnull HttpMethod method) {
         return httpReq.getMethod().toLowerCase().equals(method.getLiteral().toLowerCase());
     }
 

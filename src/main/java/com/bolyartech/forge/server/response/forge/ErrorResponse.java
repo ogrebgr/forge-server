@@ -1,5 +1,8 @@
 package com.bolyartech.forge.server.response.forge;
 
+import javax.annotation.Nonnull;
+
+
 /**
  * Error response
  * <p>
@@ -19,7 +22,7 @@ public class ErrorResponse extends ForgeResponse {
      *
      * @param string text to be shown
      */
-    public ErrorResponse(String string) {
+    public ErrorResponse(@Nonnull String string) {
         super(BasicResponseCodes.Errors.ERROR, string);
     }
 }

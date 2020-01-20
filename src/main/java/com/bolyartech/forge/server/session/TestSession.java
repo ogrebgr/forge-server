@@ -1,5 +1,6 @@
 package com.bolyartech.forge.server.session;
 
+import javax.annotation.Nonnull;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
@@ -29,7 +30,7 @@ public class TestSession implements Session {
      *
      * @param id ID to be used
      */
-    public TestSession(String id) {
+    public TestSession(@Nonnull String id) {
         this.id = id;
     }
 
@@ -41,20 +42,20 @@ public class TestSession implements Session {
 
 
     @Override
-    public <T> T getVar(String varName) {
+    public <T> T getVar(@Nonnull String varName) {
         //noinspection unchecked - user must take care to get same type
         return (T) vars.get(varName);
     }
 
 
     @Override
-    public void setVar(String varName, Object value) {
+    public void setVar(@Nonnull String varName, @Nonnull Object value) {
         vars.put(varName, value);
     }
 
 
     @Override
-    public void removeVar(String varName) {
+    public void removeVar(@Nonnull String varName) {
         vars.remove(varName);
     }
 

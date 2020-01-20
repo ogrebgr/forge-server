@@ -3,6 +3,7 @@ package com.bolyartech.forge.server.route;
 import com.bolyartech.forge.server.HttpMethod;
 import com.bolyartech.forge.server.session.Session;
 
+import javax.annotation.Nonnull;
 import javax.servlet.ServletException;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.Part;
@@ -28,7 +29,7 @@ public interface RequestContext {
      * @param parameterName Parameter name
      * @return Parameter value
      */
-    String getFromGet(String parameterName);
+    String getFromGet(@Nonnull String parameterName);
 
     /**
      * Gets a variable form POST parameters
@@ -36,7 +37,7 @@ public interface RequestContext {
      * @param parameterName Parameter name
      * @return Parameter value
      */
-    String getFromPost(String parameterName);
+    String getFromPost(@Nonnull String parameterName);
 
     /**
      * @return List containing path info parameters ordered from left to right
@@ -72,7 +73,7 @@ public interface RequestContext {
      * @throws IOException      if there is problem retrieving the content
      * @throws ServletException if there is problem retrieving the content
      */
-    Part getPart(String partName) throws IOException, ServletException;
+    Part getPart(@Nonnull String partName) throws IOException, ServletException;
 
     /**
      * Returns the Path info string, i.e. the path part after the route path
@@ -89,7 +90,7 @@ public interface RequestContext {
      * @param cookieName Cookie name
      * @return Cookie
      */
-    Cookie getCookie(String cookieName);
+    Cookie getCookie(@Nonnull String cookieName);
 
     /**
      * Optionally gets from GET parameters if parameter is present
@@ -98,7 +99,7 @@ public interface RequestContext {
      * @param defaultValue  Default value to be returned if parameter is not present
      * @return Parameter value or the default value if not present
      */
-    String optFromGet(String parameterName, String defaultValue);
+    String optFromGet(@Nonnull String parameterName, @Nonnull String defaultValue);
 
     /**
      * Optionally gets from POST parameters if parameter is present
@@ -107,7 +108,7 @@ public interface RequestContext {
      * @param defaultValue  Default value to be returned if parameter is not present
      * @return Parameter value or the default value if not present
      */
-    String optFromPost(String parameterName, String defaultValue);
+    String optFromPost(@Nonnull String parameterName, @Nonnull String defaultValue);
 
     /**
      * Returns the value of the specified request header as a String. If the request did not include a header of the
@@ -119,7 +120,7 @@ public interface RequestContext {
      * @return a String containing the value of the requested header, or null if the request does not have a header
      * of that name
      */
-    String getHeader(String headerName);
+    String getHeader(@Nonnull String headerName);
 
     /**
      * Returns all values for a given header (if it is present multiple times)
@@ -127,7 +128,7 @@ public interface RequestContext {
      * @param headerName Header name
      * @return List of header values
      */
-    List<String> getHeaderValues(@SuppressWarnings("SameParameterValue") String headerName);
+    List<String> getHeaderValues(@SuppressWarnings("SameParameterValue") @Nonnull String headerName);
 
     /**
      * Returns true if the request is multipart, false otherwise
@@ -156,7 +157,7 @@ public interface RequestContext {
      * @param method Specified method
      * @return true if the HTTP method matches the specified, false otherwise
      */
-    boolean isMethod(HttpMethod method);
+    boolean isMethod(@Nonnull HttpMethod method);
 
     /**
      * Returns server data

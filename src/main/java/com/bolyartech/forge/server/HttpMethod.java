@@ -1,5 +1,8 @@
 package com.bolyartech.forge.server;
 
+import javax.annotation.Nonnull;
+
+
 /**
  * Enum for HTTP methods
  */
@@ -32,7 +35,7 @@ public enum HttpMethod {
      *
      * @param literal String representation of the HTTP method
      */
-    HttpMethod(String literal) {
+    HttpMethod(@Nonnull String literal) {
         mLiteral = literal;
     }
 

@@ -10,6 +10,7 @@ import com.bolyartech.forge.server.response.ResponseException;
 import com.bolyartech.forge.server.route.*;
 import org.slf4j.LoggerFactory;
 
+import javax.annotation.Nonnull;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -33,16 +34,16 @@ public class BaseServletDefaultImpl extends HttpServlet implements BaseServlet {
     private final RouteHandler internalServerError;
 
 
-    public BaseServletDefaultImpl(List<HttpModule> modules) {
+    public BaseServletDefaultImpl(@Nonnull List<HttpModule> modules) {
         this.modules = modules;
         this.notFoundHandler = null;
         this.internalServerError = null;
     }
 
 
-    public BaseServletDefaultImpl(List<HttpModule> modules,
-                                  RouteHandler notFoundHandler,
-                                  RouteHandler internalServerError) {
+    public BaseServletDefaultImpl(@Nonnull List<HttpModule> modules,
+                                  @Nonnull RouteHandler notFoundHandler,
+                                  @Nonnull RouteHandler internalServerError) {
 
         this.modules = modules;
         this.notFoundHandler = notFoundHandler;
@@ -73,7 +74,7 @@ public class BaseServletDefaultImpl extends HttpServlet implements BaseServlet {
      * @param route Route to be added
      */
     @Override
-    public void addRoute(Route route) {
+    public void addRoute(@Nonnull Route route) {
         routeRegister.register(DEFAULT_MODULE_NAME, route);
     }
 
@@ -87,24 +88,24 @@ public class BaseServletDefaultImpl extends HttpServlet implements BaseServlet {
      * @see #addRoute(Route)
      */
     @Override
-    public void addRoute(HttpMethod httpMethod, String path, RouteHandler routeHandler) {
+    public void addRoute(@Nonnull HttpMethod httpMethod, @Nonnull String path, @Nonnull RouteHandler routeHandler) {
         routeRegister.register(DEFAULT_MODULE_NAME, new RouteImpl(httpMethod, path, routeHandler));
     }
 
 
     @Override
-    protected void doGet(HttpServletRequest req, HttpServletResponse httpResp) throws IOException {
+    protected void doGet(@Nonnull HttpServletRequest req, @Nonnull HttpServletResponse httpResp) throws IOException {
         processRequest(req, httpResp);
     }
 
 
     @Override
-    protected void doPost(HttpServletRequest req, HttpServletResponse httpResp) throws IOException {
+    protected void doPost(@Nonnull HttpServletRequest req, @Nonnull HttpServletResponse httpResp) throws IOException {
         processRequest(req, httpResp);
     }
 
 
-    private void handle(HttpServletRequest req, HttpServletResponse httpResp, Route route) throws IOException {
+    private void handle(@Nonnull HttpServletRequest req, @Nonnull HttpServletResponse httpResp, @Nonnull Route route) throws IOException {
         try {
             route.handle(req, httpResp);
         } catch (ResponseException e) {
@@ -128,7 +129,7 @@ public class BaseServletDefaultImpl extends HttpServlet implements BaseServlet {
     }
 
 
-    private void notFound(HttpServletRequest req, HttpServletResponse httpResp) throws IOException {
+    private void notFound(@Nonnull HttpServletRequest req, @Nonnull HttpServletResponse httpResp) throws IOException {
         logger.trace("Not found: {} {}", req.getMethod(), req.getPathInfo());
         if (notFoundHandler != null) {
             try {
@@ -145,7 +146,7 @@ public class BaseServletDefaultImpl extends HttpServlet implements BaseServlet {
     }
 
 
-    private void stockNotFound(HttpServletRequest req, HttpServletResponse httpResp) throws IOException {
+    private void stockNotFound(@Nonnull HttpServletRequest req, @Nonnull HttpServletResponse httpResp) throws IOException {
         httpResp.setStatus(HttpServletResponse.SC_NOT_FOUND);
         PrintWriter pw = httpResp.getWriter();
         pw.print("Not found");
@@ -154,7 +155,7 @@ public class BaseServletDefaultImpl extends HttpServlet implements BaseServlet {
     }
 
 
-    private void stockInternalServerError(HttpServletResponse httpResp) {
+    private void stockInternalServerError(@Nonnull HttpServletResponse httpResp) {
         httpResp.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
         try {
             PrintWriter pw = httpResp.getWriter();
@@ -167,7 +168,7 @@ public class BaseServletDefaultImpl extends HttpServlet implements BaseServlet {
     }
 
 
-    private void processRequest(HttpServletRequest req, HttpServletResponse httpResp) throws IOException {
+    private void processRequest(@Nonnull HttpServletRequest req, @Nonnull HttpServletResponse httpResp) throws IOException {
         Route route = httpModuleRegister.match(HttpMethod.POST, req.getPathInfo());
 
         if (route != null) {

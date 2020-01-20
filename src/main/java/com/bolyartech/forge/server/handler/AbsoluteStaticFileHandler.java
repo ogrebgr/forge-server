@@ -6,6 +6,7 @@ import com.bolyartech.forge.server.response.Response;
 import com.bolyartech.forge.server.response.StaticFileResponse;
 import com.bolyartech.forge.server.route.RequestContext;
 
+import javax.annotation.Nonnull;
 import java.io.File;
 
 
@@ -28,8 +29,8 @@ public class AbsoluteStaticFileHandler implements RouteHandler {
      * @param mimeTypeResolver MIME type resolver
      * @param enableGzip       true to enable Gzip compression (please note that client have to declare if it supports Gzip in order Gzip compression to take place)
      */
-    public AbsoluteStaticFileHandler(String sourceDir, Response notFoundResponse,
-                                     MimeTypeResolver mimeTypeResolver, boolean enableGzip) {
+    public AbsoluteStaticFileHandler(@Nonnull String sourceDir, @Nonnull Response notFoundResponse,
+                                     @Nonnull MimeTypeResolver mimeTypeResolver, boolean enableGzip) {
         this(new File(sourceDir), notFoundResponse, mimeTypeResolver, enableGzip);
     }
 
@@ -42,8 +43,8 @@ public class AbsoluteStaticFileHandler implements RouteHandler {
      * @param mimeTypeResolver MIME type resolver
      * @param enableGzip       true to enable Gzip compression (please note that client have to declare if it supports Gzip in order Gzip compression to take place)
      */
-    public AbsoluteStaticFileHandler(File sourceDir, Response notFoundResponse,
-                                     MimeTypeResolver mimeTypeResolver, boolean enableGzip) {
+    public AbsoluteStaticFileHandler(@Nonnull File sourceDir, @Nonnull Response notFoundResponse,
+                                     @Nonnull MimeTypeResolver mimeTypeResolver, boolean enableGzip) {
 
         if (!sourceDir.isDirectory()) {
             throw new IllegalArgumentException("sourceDir is not a directory");
@@ -60,7 +61,7 @@ public class AbsoluteStaticFileHandler implements RouteHandler {
 
 
     @Override
-    public Response handle(RequestContext ctx) {
+    public Response handle(@Nonnull RequestContext ctx) {
         File file = new File(sourceDir, ctx.getPathInfoString());
         if (file.exists() && file.isFile()) {
             boolean actualEnableGzip = enableGzip && GzipUtils.supportsGzip(ctx);
@@ -68,6 +69,5 @@ public class AbsoluteStaticFileHandler implements RouteHandler {
         } else {
             return notFoundResponse;
         }
-
     }
 }

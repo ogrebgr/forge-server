@@ -2,6 +2,7 @@ package com.bolyartech.forge.server.misc;
 
 import com.google.common.base.Strings;
 
+import javax.annotation.Nonnull;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -76,7 +77,7 @@ public class MimeTypeResolverImpl implements MimeTypeResolver {
 
 
     @Override
-    public String resolveForFilename(String fileName) {
+    public String resolveForFilename(@Nonnull String fileName) {
         String fileExtension = fileName.replaceAll("^.*\\.(.*)$", "$1").trim();
 
         String ret = FALLBACK_MIME;

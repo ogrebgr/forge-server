@@ -1,5 +1,8 @@
 package com.bolyartech.forge.server.config;
 
+import javax.annotation.Nonnull;
+
+
 /**
  * Thrown when there is a problem with the configuration data
  */
@@ -9,22 +12,22 @@ public class ForgeConfigurationException extends Exception {
     }
 
 
-    public ForgeConfigurationException(String message) {
+    public ForgeConfigurationException(@Nonnull String message) {
         super(message);
     }
 
 
-    public ForgeConfigurationException(String message, Throwable cause) {
+    public ForgeConfigurationException(@Nonnull String message, @Nonnull Throwable cause) {
         super(message, cause);
     }
 
 
-    public ForgeConfigurationException(Throwable cause) {
+    public ForgeConfigurationException(@Nonnull Throwable cause) {
         super(cause);
     }
 
 
-    public ForgeConfigurationException(String message, Throwable cause, boolean enableSuppression, boolean writableStackTrace) {
+    public ForgeConfigurationException(@Nonnull String message, @Nonnull Throwable cause, @Nonnull boolean enableSuppression, @Nonnull boolean writableStackTrace) {
         super(message, cause, enableSuppression, writableStackTrace);
     }
 }

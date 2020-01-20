@@ -2,6 +2,7 @@ package com.bolyartech.forge.server.response;
 
 import com.google.common.io.ByteStreams;
 
+import javax.annotation.Nonnull;
 import javax.servlet.http.HttpServletResponse;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
@@ -23,7 +24,7 @@ abstract public class AbstractStringResponse implements StringResponse {
      *
      * @param string String of the response
      */
-    public AbstractStringResponse(String string) {
+    public AbstractStringResponse(@Nonnull String string) {
         this.string = string;
         enableGzipSupport = false;
     }
@@ -35,7 +36,7 @@ abstract public class AbstractStringResponse implements StringResponse {
      * @param string            String of the response
      * @param enableGzipSupport if true Gzip compression will be used if the client supports it
      */
-    public AbstractStringResponse(String string, boolean enableGzipSupport) {
+    public AbstractStringResponse(@Nonnull String string, boolean enableGzipSupport) {
         this.string = string;
         this.enableGzipSupport = enableGzipSupport;
     }
@@ -48,7 +49,7 @@ abstract public class AbstractStringResponse implements StringResponse {
 
 
     @Override
-    public void toServletResponse(HttpServletResponse resp) {
+    public void toServletResponse(@Nonnull HttpServletResponse resp) {
         resp.setStatus(HttpServletResponse.SC_OK);
         resp.setContentType(getContentType());
 

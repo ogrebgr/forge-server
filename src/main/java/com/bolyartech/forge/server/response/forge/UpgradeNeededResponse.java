@@ -1,6 +1,9 @@
 package com.bolyartech.forge.server.response.forge;
 
 
+import javax.annotation.Nonnull;
+
+
 /**
  * Response with code <code>BasicResponseCodes.Errors.UPGRADE_NEEDED</code>
  */
@@ -18,7 +21,7 @@ public class UpgradeNeededResponse extends ForgeResponse {
      *
      * @param string Here you can specify more info about what version is needed or how to upgrade
      */
-    public UpgradeNeededResponse(String string) {
+    public UpgradeNeededResponse(@Nonnull String string) {
         super(BasicResponseCodes.Errors.UPGRADE_NEEDED, string);
     }
 }

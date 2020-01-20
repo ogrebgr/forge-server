@@ -12,6 +12,7 @@ import java.sql.Connection;
 
 /**
  * Web page that must be accessed via HTTPS and use database connection to process the request
+ * @deprecated If you need to prevent http access just disable it in jetty.conf (http_port=0)
  */
 abstract public class SecureDbWebPage extends DbWebPage {
     /**

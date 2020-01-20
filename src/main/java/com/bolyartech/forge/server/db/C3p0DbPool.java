@@ -2,6 +2,7 @@ package com.bolyartech.forge.server.db;
 
 import com.mchange.v2.c3p0.ComboPooledDataSource;
 
+import javax.annotation.Nonnull;
 import java.sql.Connection;
 import java.sql.SQLException;
 
@@ -18,7 +19,7 @@ public final class C3p0DbPool implements DbPool {
      *
      * @param dataSource data source to be used
      */
-    public C3p0DbPool(ComboPooledDataSource dataSource) {
+    public C3p0DbPool(@Nonnull ComboPooledDataSource dataSource) {
         this.dataSource = dataSource;
     }
 

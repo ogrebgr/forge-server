@@ -1,5 +1,6 @@
 package com.bolyartech.forge.server.session;
 
+import javax.annotation.Nonnull;
 import javax.servlet.http.HttpSession;
 
 
@@ -15,7 +16,7 @@ public class SessionImpl implements Session {
      *
      * @param httpSession HTTP session
      */
-    public SessionImpl(HttpSession httpSession) {
+    public SessionImpl(@Nonnull HttpSession httpSession) {
         this.httpSession = httpSession;
     }
 
@@ -27,20 +28,20 @@ public class SessionImpl implements Session {
 
 
     @Override
-    public <T> T getVar(String varName) {
+    public <T> T getVar(@Nonnull String varName) {
         //noinspection unchecked
         return (T) httpSession.getAttribute(varName);
     }
 
 
     @Override
-    public void setVar(String varName, Object value) {
+    public void setVar(@Nonnull String varName, @Nonnull Object value) {
         httpSession.setAttribute(varName, value);
     }
 
 
     @Override
-    public void removeVar(String varName) {
+    public void removeVar(@Nonnull String varName) {
         httpSession.removeAttribute(varName);
     }
 

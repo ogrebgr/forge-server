@@ -1,5 +1,8 @@
 package com.bolyartech.forge.server.route;
 
+import javax.annotation.Nonnull;
+
+
 /**
  * This exception is thrown when one or more parameters are missing from GET/POST/etc HTTP request
  */
@@ -16,7 +19,7 @@ public class MissingParameterValue extends Exception {
      *
      * @param parameterName Name of the parameter
      */
-    public MissingParameterValue(String parameterName) {
+    public MissingParameterValue(@Nonnull String parameterName) {
         super("Missing value for parameter " + parameterName);
     }
 }

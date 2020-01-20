@@ -7,6 +7,8 @@ import com.bolyartech.forge.server.response.Response;
 import com.bolyartech.forge.server.response.ResponseException;
 import com.bolyartech.forge.server.route.RequestContext;
 
+import javax.annotation.Nonnull;
+
 
 /**
  * Handler that produces HTML content, i.e. web page
@@ -21,7 +23,7 @@ abstract public class WebPage implements RouteHandler {
      *
      * @param templateEngineFactory Template engine factory
      */
-    public WebPage(TemplateEngineFactory templateEngineFactory) {
+    public WebPage(@Nonnull TemplateEngineFactory templateEngineFactory) {
         this.templateEngineFactory = templateEngineFactory;
         enableGzipSupport = false;
     }
@@ -33,7 +35,7 @@ abstract public class WebPage implements RouteHandler {
      * @param templateEngineFactory Template engine factory
      * @param enableGzipSupport     if true Gzip compression will be used (if supported by the client)
      */
-    public WebPage(TemplateEngineFactory templateEngineFactory, boolean enableGzipSupport) {
+    public WebPage(@Nonnull TemplateEngineFactory templateEngineFactory, boolean enableGzipSupport) {
         this.templateEngineFactory = templateEngineFactory;
         this.enableGzipSupport = enableGzipSupport;
     }
@@ -51,7 +53,7 @@ abstract public class WebPage implements RouteHandler {
 
 
     @Override
-    public Response handle(RequestContext ctx) {
+    public Response handle(@Nonnull RequestContext ctx) {
         String content = produceHtml(ctx, templateEngineFactory.createNew());
 
         return new HtmlResponse(content, enableGzipSupport);

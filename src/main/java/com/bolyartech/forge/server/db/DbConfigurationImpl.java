@@ -1,6 +1,9 @@
 package com.bolyartech.forge.server.db;
 
 
+import javax.annotation.Nonnull;
+
+
 /**
  * DB configuration
  */
@@ -32,9 +35,9 @@ public class DbConfigurationImpl implements DbConfiguration {
      * @param testConnectionOnCheckIn  setting for testing connection on check-in
      * @param testConnectionOnCheckout setting for testing connection on checkout
      */
-    public DbConfigurationImpl(String dbDsn,
-                               String dbUsername,
-                               String dbPassword,
+    public DbConfigurationImpl(@Nonnull String dbDsn,
+                               @Nonnull String dbUsername,
+                               @Nonnull String dbPassword,
                                int cacheMaxStatements,
                                int initialPoolSize,
                                int minPoolSize,

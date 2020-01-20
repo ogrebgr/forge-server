@@ -2,6 +2,7 @@ package com.bolyartech.forge.server.db;
 
 import com.mchange.v2.c3p0.ComboPooledDataSource;
 
+import javax.annotation.Nonnull;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.Properties;
@@ -22,7 +23,7 @@ public class DbUtils {
      * @param dbc DB connection
      * @throws SQLException if DB error occur
      */
-    public static void ensureOperationalDbc(Connection dbc) throws SQLException {
+    public static void ensureOperationalDbc(@Nonnull Connection dbc) throws SQLException {
         if (dbc != null) {
             if (dbc.isClosed()) {
                 throw new IllegalArgumentException("DB connection is closed.");
@@ -50,7 +51,7 @@ public class DbUtils {
      * @param conf DB configuration
      * @return DB connection pool
      */
-    public static DbPool createC3P0DbPool(DbConfiguration conf) {
+    public static DbPool createC3P0DbPool(@Nonnull DbConfiguration conf) {
         Properties p = new Properties(System.getProperties());
         //noinspection SpellCheckingInspection
         p.put("com.mchange.v2.log.MLog", "com.mchange.v2.log.FallbackMLog");

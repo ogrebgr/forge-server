@@ -2,6 +2,8 @@ package com.bolyartech.forge.server.misc;
 
 import org.slf4j.helpers.MessageFormatter;
 
+import javax.annotation.Nonnull;
+
 
 /**
  * Utility class for formatting messages
@@ -14,7 +16,7 @@ public class ForgeMessageFormat {
      * @param params parameters to be used to fill the placeholders
      * @return formatted message
      */
-    public static String format(String msg, Object... params) {
+    public static String format(@Nonnull String msg, Object... params) {
         if (params.length == 1) {
             return MessageFormatter.format(msg, params[0]).getMessage();
         } else if (params.length > 1) {

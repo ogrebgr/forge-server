@@ -5,6 +5,8 @@ import com.bolyartech.forge.server.response.FileUploadResponse;
 import com.bolyartech.forge.server.response.Response;
 import com.bolyartech.forge.server.route.RequestContext;
 
+import javax.annotation.Nonnull;
+
 
 /**
  * Handler for file uploads (from server point of view)
@@ -25,7 +27,7 @@ abstract public class FileUploadHandler implements RouteHandler {
 
 
     @Override
-    public Response handle(RequestContext ctx) {
+    public Response handle(@Nonnull RequestContext ctx) {
         boolean actualEnableGzip = enableGzip && GzipUtils.supportsGzip(ctx);
         return handleFileUpload(ctx, actualEnableGzip);
     }
@@ -47,5 +49,5 @@ abstract public class FileUploadHandler implements RouteHandler {
      * @param actualEnableGzip true if Gzip compression is requested AND available
      * @return File upload response
      */
-    abstract FileUploadResponse handleFileUpload(RequestContext ctx, boolean actualEnableGzip);
+    abstract FileUploadResponse handleFileUpload(@Nonnull RequestContext ctx, boolean actualEnableGzip);
 }

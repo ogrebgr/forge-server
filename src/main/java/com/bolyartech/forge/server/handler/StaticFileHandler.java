@@ -6,6 +6,7 @@ import com.bolyartech.forge.server.response.Response;
 import com.bolyartech.forge.server.response.StaticFileResponse;
 import com.bolyartech.forge.server.route.RequestContext;
 
+import javax.annotation.Nonnull;
 import java.io.File;
 
 
@@ -29,8 +30,8 @@ public class StaticFileHandler implements RouteHandler {
      * @param mimeTypeResolver MIME type resolver
      * @param enableGzip       if true Gzip compression will be used if the client supports it
      */
-    public StaticFileHandler(String sourceDir,
-                             MimeTypeResolver mimeTypeResolver,
+    public StaticFileHandler(@Nonnull String sourceDir,
+                             @Nonnull MimeTypeResolver mimeTypeResolver,
                              boolean enableGzip) {
 
         this.sourceDir = sourceDir;
@@ -41,7 +42,7 @@ public class StaticFileHandler implements RouteHandler {
 
 
     @Override
-    public Response handle(RequestContext ctx) throws ResourceNotFoundException {
+    public Response handle(@Nonnull RequestContext ctx) throws ResourceNotFoundException {
         File file = new File(sourceDir + ctx.getPathInfoString());
         if (file.isFile()) {
             boolean actualEnableGzip = enableGzip && GzipUtils.supportsGzip(ctx);

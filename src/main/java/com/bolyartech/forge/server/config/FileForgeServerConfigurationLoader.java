@@ -2,6 +2,7 @@ package com.bolyartech.forge.server.config;
 
 import org.slf4j.LoggerFactory;
 
+import javax.annotation.Nonnull;
 import java.io.*;
 import java.text.MessageFormat;
 import java.util.Properties;
@@ -24,7 +25,7 @@ public class FileForgeServerConfigurationLoader implements ForgeServerConfigurat
      *
      * @param configDir Path to the directory that contains the configuration files
      */
-    public FileForgeServerConfigurationLoader(String configDir) {
+    public FileForgeServerConfigurationLoader(@Nonnull String configDir) {
         this.configDir = configDir;
     }
 

@@ -1,5 +1,8 @@
 package com.bolyartech.forge.server.misc;
 
+import javax.annotation.Nonnull;
+
+
 /**
  * MIME type resolver interface
  */
@@ -10,5 +13,5 @@ public interface MimeTypeResolver {
      * @param fileName File name
      * @return MIME type literal
      */
-    String resolveForFilename(String fileName);
+    String resolveForFilename(@Nonnull String fileName);
 }

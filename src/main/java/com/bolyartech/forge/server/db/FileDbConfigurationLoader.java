@@ -3,6 +3,7 @@ package com.bolyartech.forge.server.db;
 import com.bolyartech.forge.server.config.ForgeConfigurationException;
 import org.slf4j.LoggerFactory;
 
+import javax.annotation.Nonnull;
 import java.io.*;
 import java.text.MessageFormat;
 import java.util.Properties;
@@ -32,7 +33,7 @@ public class FileDbConfigurationLoader implements DbConfigurationLoader {
      *
      * @param configDir Configuration directory
      */
-    public FileDbConfigurationLoader(String configDir) {
+    public FileDbConfigurationLoader(@Nonnull String configDir) {
         this.configDir = configDir;
     }
 

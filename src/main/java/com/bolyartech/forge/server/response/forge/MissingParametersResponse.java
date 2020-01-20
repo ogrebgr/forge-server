@@ -1,5 +1,8 @@
 package com.bolyartech.forge.server.response.forge;
 
+import javax.annotation.Nonnull;
+
+
 /**
  * Response indicating missing required parameters
  */
@@ -20,7 +23,7 @@ public class MissingParametersResponse extends ForgeResponse {
      *
      * @param string Text. Here you may provide more details which parameters are missing
      */
-    public MissingParametersResponse(String string) {
+    public MissingParametersResponse(@Nonnull String string) {
         super(BasicResponseCodes.Errors.MISSING_PARAMETERS, string);
     }
 

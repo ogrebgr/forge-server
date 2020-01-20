@@ -7,6 +7,7 @@ import com.bolyartech.forge.server.response.Response;
 import com.bolyartech.forge.server.response.ResponseException;
 import com.bolyartech.forge.server.route.RequestContext;
 
+import javax.annotation.Nonnull;
 import java.sql.Connection;
 import java.sql.SQLException;
 
@@ -27,7 +28,10 @@ abstract public class DbWebPage implements DbWebPageInterface {
      * @param enableGzipSupport     if true Gzip compression will be used (if supported by the client)
      * @param dbPool                DB pool
      */
-    public DbWebPage(TemplateEngineFactory templateEngineFactory, boolean enableGzipSupport, DbPool dbPool) {
+    public DbWebPage(@Nonnull TemplateEngineFactory templateEngineFactory,
+                     boolean enableGzipSupport,
+                     @Nonnull DbPool dbPool) {
+
         this.templateEngineFactory = templateEngineFactory;
         this.enableGzipSupport = enableGzipSupport;
         this.dbPool = dbPool;
@@ -36,16 +40,17 @@ abstract public class DbWebPage implements DbWebPageInterface {
 
     /**
      * Creates new DbWebPage
+     *
      * @param templateEngineFactory template engine factory to be used
-     * @param dbPool DB pool
+     * @param dbPool                DB pool
      */
-    public DbWebPage(TemplateEngineFactory templateEngineFactory, DbPool dbPool) {
+    public DbWebPage(@Nonnull TemplateEngineFactory templateEngineFactory, @Nonnull DbPool dbPool) {
         this(templateEngineFactory, false, dbPool);
     }
 
 
     @Override
-    public Response handle(RequestContext ctx) throws ResponseException {
+    public Response handle(@Nonnull RequestContext ctx) throws ResponseException {
         try {
             Connection dbc = dbPool.getConnection();
             String content = produceHtml(ctx, templateEngineFactory.createNew(), dbc);

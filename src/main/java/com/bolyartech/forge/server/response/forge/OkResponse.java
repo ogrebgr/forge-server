@@ -1,5 +1,8 @@
 package com.bolyartech.forge.server.response.forge;
 
+import javax.annotation.Nonnull;
+
+
 /**
  * Response with code BasicResponseCodes.Oks.OK
  */
@@ -20,7 +23,7 @@ public class OkResponse extends ForgeResponse {
      *
      * @param string Text
      */
-    public OkResponse(String string) {
+    public OkResponse(@Nonnull String string) {
         super(BasicResponseCodes.Oks.OK, string);
     }
 

@@ -2,6 +2,7 @@ package com.bolyartech.forge.server.response.forge;
 
 import com.bolyartech.forge.server.response.JsonResponse;
 
+import javax.annotation.Nonnull;
 import javax.servlet.http.HttpServletResponse;
 
 
@@ -38,7 +39,7 @@ public class ForgeResponse extends JsonResponse {
      *
      * @param resultCode Result code
      */
-    public ForgeResponse(ForgeResponseCode resultCode) {
+    public ForgeResponse(@Nonnull ForgeResponseCode resultCode) {
         super("");
         this.resultCode = resultCode.getCode();
     }
@@ -50,7 +51,7 @@ public class ForgeResponse extends JsonResponse {
      * @param resultCode Result code
      * @param string     Data
      */
-    public ForgeResponse(int resultCode, String string) {
+    public ForgeResponse(int resultCode, @Nonnull String string) {
         super(string);
         this.resultCode = resultCode;
     }
@@ -63,7 +64,7 @@ public class ForgeResponse extends JsonResponse {
      * @param string            Data
      * @param enableGzipSupport if true Gzip compression will be used if the client supports it
      */
-    public ForgeResponse(int resultCode, String string, boolean enableGzipSupport) {
+    public ForgeResponse(int resultCode, @Nonnull String string, boolean enableGzipSupport) {
         super(string, enableGzipSupport);
         this.resultCode = resultCode;
     }
@@ -75,7 +76,7 @@ public class ForgeResponse extends JsonResponse {
      * @param resultCode Result code
      * @param string     Data
      */
-    public ForgeResponse(ForgeResponseCode resultCode, String string) {
+    public ForgeResponse(@Nonnull ForgeResponseCode resultCode, @Nonnull String string) {
         super(string);
         this.resultCode = resultCode.getCode();
     }
@@ -88,14 +89,14 @@ public class ForgeResponse extends JsonResponse {
      * @param string            Data
      * @param enableGzipSupport if true Gzip compression will be used if the client supports it
      */
-    public ForgeResponse(ForgeResponseCode resultCode, String string, boolean enableGzipSupport) {
+    public ForgeResponse(@Nonnull ForgeResponseCode resultCode, @Nonnull String string, boolean enableGzipSupport) {
         super(string, enableGzipSupport);
         this.resultCode = resultCode.getCode();
     }
 
 
     @Override
-    public void toServletResponse(HttpServletResponse resp) {
+    public void toServletResponse(@Nonnull HttpServletResponse resp) {
         resp.setHeader(FORGE_RESULT_CODE_HEADER, Integer.toString(resultCode));
         super.toServletResponse(resp);
     }

@@ -4,6 +4,7 @@ import com.bolyartech.forge.server.HttpMethod;
 import com.bolyartech.forge.server.route.Route;
 import com.bolyartech.forge.server.route.RouteRegister;
 
+import javax.annotation.Nonnull;
 import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.List;
@@ -23,13 +24,13 @@ public class HttpModuleRegisterImpl implements HttpModuleRegister {
      *
      * @param routeRegister Route register
      */
-    public HttpModuleRegisterImpl(RouteRegister routeRegister) {
+    public HttpModuleRegisterImpl(@Nonnull RouteRegister routeRegister) {
         this.routeRegister = routeRegister;
     }
 
 
     @Override
-    public void registerModule(HttpModule mod) {
+    public void registerModule(@Nonnull HttpModule mod) {
         if (!isModuleRegistered(mod)) {
             modules.add(mod);
             for (Route ep : mod.createRoutes()) {
@@ -50,7 +51,7 @@ public class HttpModuleRegisterImpl implements HttpModuleRegister {
 
 
     @Override
-    public boolean isModuleRegistered(HttpModule mod) {
+    public boolean isModuleRegistered(@Nonnull HttpModule mod) {
         boolean ret = false;
 
         for (HttpModule m : modules) {
@@ -65,7 +66,7 @@ public class HttpModuleRegisterImpl implements HttpModuleRegister {
 
 
     @Override
-    public Route match(HttpMethod method, String path) {
+    public Route match(@Nonnull HttpMethod method, @Nonnull String path) {
         return routeRegister.match(method, path);
     }
 }

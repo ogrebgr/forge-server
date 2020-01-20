@@ -3,6 +3,7 @@ package com.bolyartech.forge.server.response;
 import com.bolyartech.forge.server.misc.MimeTypeResolver;
 import com.google.common.io.ByteStreams;
 
+import javax.annotation.Nonnull;
 import javax.servlet.http.HttpServletResponse;
 import java.io.*;
 import java.time.Instant;
@@ -29,7 +30,7 @@ public class StaticFileResponse implements Response {
      * @param file             File to be used as content
      * @param enableGzip       if true Gzip compression will be used if the client supports it
      */
-    public StaticFileResponse(MimeTypeResolver mimeTypeResolver, File file, boolean enableGzip) {
+    public StaticFileResponse(@Nonnull MimeTypeResolver mimeTypeResolver, @Nonnull File file, boolean enableGzip) {
         this.file = file;
         this.enableGzip = enableGzip;
 
@@ -44,7 +45,7 @@ public class StaticFileResponse implements Response {
      * @param enableGzip if true Gzip compression will be used if the client supports it
      * @param mimeType   MIME type to be used
      */
-    public StaticFileResponse(File file, boolean enableGzip, String mimeType) {
+    public StaticFileResponse(@Nonnull File file, boolean enableGzip, @Nonnull String mimeType) {
         this.file = file;
         this.enableGzip = enableGzip;
         this.mimeType = mimeType;
@@ -52,7 +53,7 @@ public class StaticFileResponse implements Response {
 
 
     @Override
-    public void toServletResponse(HttpServletResponse resp) {
+    public void toServletResponse(@Nonnull HttpServletResponse resp) {
         try {
             resp.setContentType(mimeType);
 

@@ -6,6 +6,7 @@ import com.bolyartech.forge.server.response.Response;
 import com.bolyartech.forge.server.response.ResponseException;
 import org.slf4j.LoggerFactory;
 
+import javax.annotation.Nonnull;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.util.regex.Pattern;
@@ -29,7 +30,7 @@ public class RouteImpl implements Route {
      * @param path         Path of the route
      * @param routeHandler Route handler
      */
-    public RouteImpl(HttpMethod httpMethod, String path, RouteHandler routeHandler) {
+    public RouteImpl(@Nonnull HttpMethod httpMethod, @Nonnull String path, @Nonnull RouteHandler routeHandler) {
         if (httpMethod == null) {
             throw new NullPointerException("httpMethod is null");
         }
@@ -45,7 +46,7 @@ public class RouteImpl implements Route {
     }
 
 
-    static String normalizePath(String path) {
+    static String normalizePath(@Nonnull String path) {
         path = path.toLowerCase();
 
         if (path.length() > 1) {
@@ -71,7 +72,7 @@ public class RouteImpl implements Route {
 
 
     @Override
-    public void handle(HttpServletRequest httpReq, HttpServletResponse httpResp) {
+    public void handle(@Nonnull HttpServletRequest httpReq, @Nonnull HttpServletResponse httpResp) {
         try {
             logger.trace("{} {} IP: {}", httpMethod, path, httpReq.getRemoteAddr());
             Response resp = routeHandler.handle(new RequestContextImpl(httpReq, path));
@@ -88,7 +89,7 @@ public class RouteImpl implements Route {
     }
 
 
-    private boolean isValidPath(String path) {
+    private boolean isValidPath(@Nonnull String path) {
         if (path == null) {
             return false;
         }
@@ -109,7 +110,7 @@ public class RouteImpl implements Route {
     }
 
 
-    private int countToken(String token, String target) {
+    private int countToken(@Nonnull String token, @Nonnull String target) {
         int tokenIndex = 0;
         int count = 0;
         while (tokenIndex != -1) {

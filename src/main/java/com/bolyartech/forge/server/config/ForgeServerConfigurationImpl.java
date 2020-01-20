@@ -1,6 +1,7 @@
 package com.bolyartech.forge.server.config;
 
 
+import javax.annotation.Nonnull;
 import java.io.File;
 
 
@@ -18,7 +19,7 @@ public class ForgeServerConfigurationImpl implements ForgeServerConfiguration {
      * @param serverLogName  Prefix for log files for this server
      * @param staticFilesDir Path to the directory for static files like js, css, images
      */
-    public ForgeServerConfigurationImpl(String serverLogName, String staticFilesDir) {
+    public ForgeServerConfigurationImpl(@Nonnull String serverLogName, @Nonnull String staticFilesDir) {
         this.serverLogName = serverLogName;
         if (!staticFilesDir.endsWith(File.separator)) {
             staticFilesDir += File.separator;

@@ -1,5 +1,8 @@
 package com.bolyartech.forge.server.session;
 
+import javax.annotation.Nonnull;
+
+
 /**
  * Session
  */
@@ -17,7 +20,7 @@ public interface Session {
      * @param <T>     Type of the value (inferred)
      * @return Value of the session variable or null if not set
      */
-    <T> T getVar(String varName);
+    <T> T getVar(@Nonnull String varName);
 
     /**
      * Sets session variable
@@ -25,14 +28,14 @@ public interface Session {
      * @param varName Variable name
      * @param value   Value of the variable
      */
-    void setVar(String varName, Object value);
+    void setVar(@Nonnull String varName, @Nonnull Object value);
 
     /**
      * Removes the object bound with the specified variable name from this session. If the session does not have an
      * object bound with the specified name, this method does nothing.
      * @param varName name of the variable to be removed
      */
-    void removeVar(String varName);
+    void removeVar(@Nonnull String varName);
 
     /**
      * Returns max inactive interval of the session.

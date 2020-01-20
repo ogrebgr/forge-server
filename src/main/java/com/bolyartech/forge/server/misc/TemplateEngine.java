@@ -1,5 +1,8 @@
 package com.bolyartech.forge.server.misc;
 
+import javax.annotation.Nonnull;
+
+
 /**
  * Template engine interface
  */
@@ -10,7 +13,7 @@ public interface TemplateEngine {
      * @param varName Variable name
      * @param object  Value
      */
-    void assign(String varName, Object object);
+    void assign(@Nonnull String varName, @Nonnull Object object);
 
     /**
      * Renders a template to string
@@ -18,5 +21,5 @@ public interface TemplateEngine {
      * @param templateName Template name
      * @return Rendered string, usually HTML
      */
-    String render(String templateName);
+    String render(@Nonnull String templateName);
 }
