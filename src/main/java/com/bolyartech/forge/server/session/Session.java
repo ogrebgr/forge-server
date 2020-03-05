@@ -1,6 +1,7 @@
 package com.bolyartech.forge.server.session;
 
 import javax.annotation.Nonnull;
+import java.io.Serializable;
 
 
 /**
@@ -28,7 +29,7 @@ public interface Session {
      * @param varName Variable name
      * @param value   Value of the variable
      */
-    void setVar(@Nonnull String varName, @Nonnull Object value);
+    <T extends Serializable> void setVar(@Nonnull String varName, @Nonnull T value);
 
     /**
      * Removes the object bound with the specified variable name from this session. If the session does not have an

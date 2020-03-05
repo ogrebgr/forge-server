@@ -1,6 +1,7 @@
 package com.bolyartech.forge.server.session;
 
 import javax.annotation.Nonnull;
+import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
@@ -49,7 +50,7 @@ public class TestSession implements Session {
 
 
     @Override
-    public void setVar(@Nonnull String varName, @Nonnull Object value) {
+    public <T extends Serializable> void setVar(@Nonnull String varName, @Nonnull T value) {
         vars.put(varName, value);
     }
 
