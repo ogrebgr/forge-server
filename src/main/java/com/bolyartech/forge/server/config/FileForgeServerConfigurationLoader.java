@@ -46,11 +46,23 @@ public class FileForgeServerConfigurationLoader implements ForgeServerConfigurat
             }
 
             try {
-                return new ForgeServerConfigurationImpl(prop.getProperty(PROP_SERVER_LOG_NAME),
-                        prop.getProperty(PROP_STATIC_FILES_DIR));
+                String logName = prop.getProperty(PROP_SERVER_LOG_NAME);
+                if (logName == null) {
+                    logger.error("Missing {} in forge.conf", PROP_SERVER_LOG_NAME);
+                }
 
+                String staticDir = prop.getProperty(PROP_STATIC_FILES_DIR);
+                if (staticDir == null) {
+                    logger.error("Missing {} in forge.conf", PROP_STATIC_FILES_DIR);
+                }
+
+                if (logName == null || staticDir == null) {
+                    throw new ForgeConfigurationException("Missing properties");
+                }
+
+                return new ForgeServerConfigurationImpl(logName, staticDir);
             } catch (Exception e) {
-                logger.error("Error populating configuration", e);
+                logger.error("Error populating configuration");
                 throw new ForgeConfigurationException(e);
             }
         } else {
