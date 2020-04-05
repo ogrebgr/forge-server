@@ -6,6 +6,7 @@ import javax.annotation.Nonnull;
 /**
  * Response indicating missing required parameters
  */
+@Deprecated
 public class MissingParametersResponse extends ForgeResponse {
     private static final MissingParametersResponse instance = new MissingParametersResponse();
 

@@ -6,6 +6,7 @@ import javax.annotation.Nonnull;
 /**
  * Invalid parameter value response
  */
+@Deprecated
 public class InvalidParameterValueResponse extends ForgeResponse {
     private static final InvalidParameterValueResponse instance = new InvalidParameterValueResponse();
 
