@@ -27,6 +27,18 @@ public class Params {
         throw new AssertionError();
     }
 
+    public static void allPresentOrDie(String... pars) throws MissingParameterValue {
+        if (pars == null || pars.length == 0) {
+            throw new IllegalArgumentException("pars is empty");
+        }
+
+        for (String par : pars) {
+            if (Strings.isNullOrEmpty(par)) {
+                throw new MissingParameterValue(par);
+            }
+        }
+    }
+
 
     /**
      * Checks if all strings are non-null and non-empty
@@ -94,14 +106,13 @@ public class Params {
             throws MissingParameterValue, InvalidParameterValue {
 
         if (value == null) {
-            throw new MissingParameterValue("Missing " + type + " value for parameter " + parameterName);
+            throw new MissingParameterValue(parameterName);
         }
 
         try {
             return Long.parseLong(value);
         } catch (NumberFormatException e) {
-            throw new InvalidParameterValue(format("Invalid value {} for parameter {}",
-                    value, parameterName));
+            throw new InvalidParameterValue(parameterName);
         }
     }
 
@@ -148,14 +159,13 @@ public class Params {
             throws MissingParameterValue, InvalidParameterValue {
 
         if (value == null) {
-            throw new MissingParameterValue("Missing " + type + " value for parameter " + parameterName);
+            throw new MissingParameterValue(parameterName);
         }
 
         try {
             return Integer.parseInt(value);
         } catch (NumberFormatException e) {
-            throw new InvalidParameterValue(format("Invalid value {} for parameter {}",
-                    value, parameterName));
+            throw new InvalidParameterValue(parameterName);
         }
     }
 
@@ -179,8 +189,7 @@ public class Params {
         try {
             return Optional.of(Integer.parseInt(value));
         } catch (NumberFormatException e) {
-            throw new InvalidParameterValue(format("Invalid value {} for parameter {}",
-                    value, parameterName));
+            throw new InvalidParameterValue(parameterName);
         }
     }
 }

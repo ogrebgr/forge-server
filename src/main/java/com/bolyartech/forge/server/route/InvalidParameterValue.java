@@ -23,7 +23,7 @@ public class InvalidParameterValue extends Exception {
      * @param parameterValue Value of the parameter
      */
     public InvalidParameterValue(@Nonnull String parameterName, @Nonnull String parameterValue) {
-        super(format("Invalid parameter value {} for parameter {}",
+        super(format("Invalid parameter value \"{}\" for parameter \"{}\"",
                 parameterValue, parameterName));
     }
 
@@ -34,7 +34,7 @@ public class InvalidParameterValue extends Exception {
      * @param parameterName Value of the parameter
      */
     public InvalidParameterValue(@Nonnull String parameterName) {
-        super(format("Invalid parameter value for parameter {}",
+        super(format("Invalid parameter value for parameter \"{}\"",
                 parameterName));
 
     }
