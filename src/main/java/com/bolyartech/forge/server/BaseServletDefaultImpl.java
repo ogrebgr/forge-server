@@ -122,7 +122,7 @@ public class BaseServletDefaultImpl extends HttpServlet implements BaseServlet {
             }
 
             logger.error("Error handling {}, Error: {}", route, e.getMessage());
-            logger.debug("Exception: ", e);
+            logger.error("Exception: ", e);
 
             if (internalServerError == null) {
                 stockInternalServerError(httpResp);
