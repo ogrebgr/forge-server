@@ -2,6 +2,7 @@ package com.bolyartech.forge.server.session;
 
 import javax.annotation.Nonnull;
 import javax.servlet.http.HttpSession;
+import java.io.Serializable;
 
 
 /**
@@ -35,7 +36,7 @@ public class SessionImpl implements Session {
 
 
     @Override
-    public void setVar(@Nonnull String varName, @Nonnull Object value) {
+    public <T extends Serializable> void setVar(@Nonnull String varName, @Nonnull T value) {
         httpSession.setAttribute(varName, value);
     }
 

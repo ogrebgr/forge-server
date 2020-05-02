@@ -109,8 +109,20 @@ public class BaseServletDefaultImpl extends HttpServlet implements BaseServlet {
         try {
             route.handle(req, httpResp);
         } catch (ResponseException e) {
+            if (e.getCause() instanceof MissingParameterValue) {
+                logger.warn("Missing parameter(s) in \"{}\": {}", route.getPath(), e.getCause().getMessage());
+                badRequest(httpResp);
+                return;
+            }
+
+            if (e.getCause() instanceof InvalidParameterValue) {
+                logger.warn("Invalid parameter value in \"{}\": {}", route.getPath(), e.getCause().getMessage());
+                badRequest(httpResp);
+                return;
+            }
+
             logger.error("Error handling {}, Error: {}", route, e.getMessage());
-            logger.debug("Exception: ", e);
+            logger.error("Exception: ", e);
 
             if (internalServerError == null) {
                 stockInternalServerError(httpResp);
@@ -160,6 +172,18 @@ public class BaseServletDefaultImpl extends HttpServlet implements BaseServlet {
         try {
             PrintWriter pw = httpResp.getWriter();
             pw.print("Internal server error");
+            pw.flush();
+            pw.close();
+        } catch (IOException e1) {
+            e1.printStackTrace();
+        }
+    }
+
+    private void badRequest(@Nonnull HttpServletResponse httpResp) {
+        httpResp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+        try {
+            PrintWriter pw = httpResp.getWriter();
+            pw.print("Bad request");
             pw.flush();
             pw.close();
         } catch (IOException e1) {

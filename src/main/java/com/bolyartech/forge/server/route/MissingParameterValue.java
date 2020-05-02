@@ -20,6 +20,6 @@ public class MissingParameterValue extends Exception {
      * @param parameterName Name of the parameter
      */
     public MissingParameterValue(@Nonnull String parameterName) {
-        super("Missing value for parameter " + parameterName);
+        super("Missing value for parameter \"" + parameterName + "\"");
     }
 }
