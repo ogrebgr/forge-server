@@ -42,6 +42,8 @@ public class RequestContextImpl implements RequestContext {
     private ServerData serverData;
     private String body;
 
+    private boolean arePostParametersExtracted = false;
+
 
     /**
      * Creates new RequestContextImpl
@@ -50,22 +52,10 @@ public class RequestContextImpl implements RequestContext {
      * @param routePath route path
      * @throws IOException if there is a problem creating the context
      */
-    public RequestContextImpl(@Nonnull HttpServletRequest httpReq, @Nonnull String routePath) throws IOException {
+    public RequestContextImpl(@Nonnull HttpServletRequest httpReq, @Nonnull String routePath) {
         this.httpReq = httpReq;
 
         extractParameters(httpReq.getQueryString(), getParams);
-
-        body = CharStreams.toString(httpReq.getReader());
-        if (httpReq.getMethod().equalsIgnoreCase(HttpMethod.POST.getLiteral())) {
-            String contentType = httpReq.getHeader(HEADER_CONTENT_TYPE);
-            if (contentType != null) {
-                if (contentType.toLowerCase().contains(CONTENT_TYPE_FORM_ENCODED.toLowerCase())) {
-                    extractParameters(body, postParams);
-                } else if (contentType.toLowerCase().contains(CONTENT_TYPE_MULTIPART.toLowerCase())) {
-                    isMultipart = true;
-                }
-            }
-        }
 
         this.routePath = routePath;
         pathInfoString = this.httpReq.getPathInfo().substring(routePath.length());
@@ -121,7 +111,32 @@ public class RequestContextImpl implements RequestContext {
 
     @Override
     public String getFromPost(@Nonnull String parameterName) {
+        if (!arePostParametersExtracted) {
+            try {
+                extractPostParameters();
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+        }
+
         return postParams.get(parameterName);
+    }
+
+
+    private void extractPostParameters() throws IOException {
+        body = CharStreams.toString(httpReq.getReader());
+        if (httpReq.getMethod().equalsIgnoreCase(HttpMethod.POST.getLiteral())) {
+            String contentType = httpReq.getHeader(HEADER_CONTENT_TYPE);
+            if (contentType != null) {
+                if (contentType.toLowerCase().contains(CONTENT_TYPE_FORM_ENCODED.toLowerCase())) {
+                    extractParameters(body, postParams);
+                } else if (contentType.toLowerCase().contains(CONTENT_TYPE_MULTIPART.toLowerCase())) {
+                    isMultipart = true;
+                }
+            }
+        }
+
+        arePostParametersExtracted = true;
     }
 
 
@@ -151,6 +166,9 @@ public class RequestContextImpl implements RequestContext {
 
     @Override
     public Part getPart(@Nonnull String partName) throws IOException, ServletException {
+        if (arePostParametersExtracted) {
+            throw new IllegalStateException("You can either user getFromPost() or getPart() in handling a request but not both");
+        }
         return httpReq.getPart(partName);
     }
 
