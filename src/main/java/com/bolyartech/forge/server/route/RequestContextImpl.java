@@ -42,7 +42,9 @@ public class RequestContextImpl implements RequestContext {
     private ServerData serverData;
     private String body;
 
+    private boolean areGetParametersExtracted = false;
     private boolean arePostParametersExtracted = false;
+    private boolean arePiParametersExtracted = false;
 
 
     /**
@@ -55,28 +57,15 @@ public class RequestContextImpl implements RequestContext {
     public RequestContextImpl(@Nonnull HttpServletRequest httpReq, @Nonnull String routePath) {
         this.httpReq = httpReq;
 
-        extractParameters(httpReq.getQueryString(), getParams);
-
         this.routePath = routePath;
-        pathInfoString = this.httpReq.getPathInfo().substring(routePath.length());
-        //protection against directory traversal. Jetty never sends '..' here but other containers may do so...
-        if (pathInfoParams.contains("..")) {
-            throw new IllegalStateException("Path info contains '..'");
-        }
 
-        String[] piRaw = pathInfoString.split("/");
-        for (String s : piRaw) {
-            if (s.trim().length() > 0) {
-                pathInfoParams.add(s);
-            }
-        }
+        pathInfoString = this.httpReq.getPathInfo().substring(routePath.length());
     }
 
 
     static void extractParameters(@Nonnull String queryString, @Nonnull Map<String, String> to) {
         if (!Strings.isNullOrEmpty(queryString)) {
             try {
-                String decoded = URLDecoder.decode(queryString, "UTF-8");
                 String[] split = queryString.split("&");
                 for (String aSplit : split) {
                     String[] keyValue = aSplit.split("=");
@@ -105,6 +94,10 @@ public class RequestContextImpl implements RequestContext {
 
     @Override
     public String getFromGet(@Nonnull String parameterName) {
+        if (!areGetParametersExtracted) {
+            extractParameters(httpReq.getQueryString(), getParams);
+            areGetParametersExtracted = true;
+        }
         return getParams.get(parameterName);
     }
 
@@ -142,12 +135,35 @@ public class RequestContextImpl implements RequestContext {
 
     @Override
     public List<String> getPathInfoParameters() {
+        if (!arePiParametersExtracted) {
+            extractPiParameters();
+        }
         return pathInfoParams;
+    }
+
+
+    private void extractPiParameters() {
+        //protection against directory traversal. Jetty never sends '..' here but other containers may do so...
+        if (pathInfoParams.contains("..")) {
+            throw new IllegalStateException("Path info contains '..'");
+        }
+
+        String[] piRaw = pathInfoString.split("/");
+        for (String s : piRaw) {
+            if (s.trim().length() > 0) {
+                pathInfoParams.add(s);
+            }
+        }
+
+        arePiParametersExtracted = true;
     }
 
 
     @Override
     public List<String> getPi() {
+        if (!arePiParametersExtracted) {
+            extractPiParameters();
+        }
         return getPathInfoParameters();
     }
 
