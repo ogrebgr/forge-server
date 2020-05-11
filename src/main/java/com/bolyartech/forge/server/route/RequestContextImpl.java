@@ -42,6 +42,7 @@ public class RequestContextImpl implements RequestContext {
     private ServerData serverData;
     private String body;
 
+    private boolean isBodyConsumed = false;
     private boolean areGetParametersExtracted = false;
     private boolean arePostParametersExtracted = false;
     private boolean arePiParametersExtracted = false;
@@ -117,7 +118,7 @@ public class RequestContextImpl implements RequestContext {
 
 
     private void extractPostParameters() throws IOException {
-        body = CharStreams.toString(httpReq.getReader());
+        String body = getBody();
         if (httpReq.getMethod().equalsIgnoreCase(HttpMethod.POST.getLiteral())) {
             String contentType = httpReq.getHeader(HEADER_CONTENT_TYPE);
             if (contentType != null) {
@@ -312,7 +313,16 @@ public class RequestContextImpl implements RequestContext {
 
 
     @Override
-    public String getBody() {
+    public String getBody()  {
+        if (!isBodyConsumed) {
+            try {
+                body = CharStreams.toString(httpReq.getReader());
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+
+            isBodyConsumed = true;
+        }
         return body;
     }
 }
