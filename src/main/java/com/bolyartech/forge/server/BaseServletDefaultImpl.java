@@ -26,28 +26,34 @@ import java.util.List;
 public class BaseServletDefaultImpl extends HttpServlet implements BaseServlet {
     private static final String DEFAULT_MODULE_NAME = "default_module";
     private final org.slf4j.Logger logger = LoggerFactory.getLogger(this.getClass());
-    private final RouteRegister routeRegister = new RouteRegisterImpl();
-    private final HttpModuleRegister httpModuleRegister = new HttpModuleRegisterImpl(routeRegister);
+    private final RouteRegister routeRegister;
+    private final HttpModuleRegister httpModuleRegister;
 
     private final List<HttpModule> modules;
     private final RouteHandler notFoundHandler;
     private final RouteHandler internalServerError;
 
 
-    public BaseServletDefaultImpl(@Nonnull List<HttpModule> modules) {
+    public BaseServletDefaultImpl(@Nonnull List<HttpModule> modules, boolean isPathInfoEnabled, int maxPathSegments) {
         this.modules = modules;
         this.notFoundHandler = null;
         this.internalServerError = null;
+        this.routeRegister = new RouteRegisterImpl(isPathInfoEnabled, maxPathSegments);
+        httpModuleRegister = new HttpModuleRegisterImpl(routeRegister);
     }
 
 
     public BaseServletDefaultImpl(@Nonnull List<HttpModule> modules,
+                                  boolean isPathInfoEnabled,
+                                  int maxPathSegments,
                                   @Nonnull RouteHandler notFoundHandler,
                                   @Nonnull RouteHandler internalServerError) {
 
         this.modules = modules;
         this.notFoundHandler = notFoundHandler;
         this.internalServerError = internalServerError;
+        this.routeRegister = new RouteRegisterImpl(isPathInfoEnabled, maxPathSegments);
+        httpModuleRegister = new HttpModuleRegisterImpl(routeRegister);
     }
 
 
@@ -178,6 +184,7 @@ public class BaseServletDefaultImpl extends HttpServlet implements BaseServlet {
             e1.printStackTrace();
         }
     }
+
 
     private void badRequest(@Nonnull HttpServletResponse httpResp) {
         httpResp.setStatus(HttpServletResponse.SC_BAD_REQUEST);

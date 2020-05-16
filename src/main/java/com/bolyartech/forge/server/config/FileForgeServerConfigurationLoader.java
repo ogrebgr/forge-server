@@ -15,6 +15,8 @@ public class FileForgeServerConfigurationLoader implements ForgeServerConfigurat
     private static final String FILENAME = "forge.conf";
     private static final String PROP_SERVER_LOG_NAME = "server_log_name";
     private static final String PROP_STATIC_FILES_DIR = "static_files_dir";
+    private static final String PROP_PATH_INFO_ENABLED = "path_info_enabled";
+    private static final String PROP_MAX_SLASHES_IN_PATH_INFO = "max_slashes_in_path_info";
     private final org.slf4j.Logger logger = LoggerFactory.getLogger(this.getClass());
 
     private final String configDir;
@@ -60,7 +62,23 @@ public class FileForgeServerConfigurationLoader implements ForgeServerConfigurat
                     throw new ForgeConfigurationException("Missing properties");
                 }
 
-                return new ForgeServerConfigurationImpl(logName, staticDir);
+                String isPathInfoEnabledRaw = prop.getProperty(PROP_PATH_INFO_ENABLED);
+                boolean isPathInfoEnabled = ForgeServerConfiguration.DEFAULT_IS_PATH_INFO_ENABLED;
+                if (isPathInfoEnabledRaw != null) {
+                    String tmp = isPathInfoEnabledRaw.trim().toLowerCase();
+                    isPathInfoEnabled = tmp.equals("true") || tmp.equals("1");
+                }
+
+                String maxSlashesRaw = prop.getProperty(PROP_MAX_SLASHES_IN_PATH_INFO);
+
+                int maxSlashes = ForgeServerConfiguration.DEFAULT_MAX_SLASHES_IN_PATH_INFO;
+                try {
+                    maxSlashes = Integer.parseInt(maxSlashesRaw);
+                } catch(NumberFormatException e) {
+                    logger.error("Invalid value for {}. Must be integer", PROP_MAX_SLASHES_IN_PATH_INFO);
+                }
+
+                return new ForgeServerConfigurationImpl(logName, staticDir, isPathInfoEnabled, maxSlashes);
             } catch (Exception e) {
                 logger.error("Error populating configuration");
                 throw new ForgeConfigurationException(e);

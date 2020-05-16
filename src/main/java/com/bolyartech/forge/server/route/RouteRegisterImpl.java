@@ -20,7 +20,8 @@ public class RouteRegisterImpl implements RouteRegister {
     private final Map<String, Registration> endpointsDelete = new ConcurrentHashMap<>();
     private final Map<String, Registration> endpointsPut = new ConcurrentHashMap<>();
 
-    private int maxPathSegments = 0;
+    private final boolean isPathInfoEnabled;
+    private final int maxPathSegments;
 
     static int countSlashes(String str) {
         return CharMatcher.is('/').countIn(str);
@@ -33,6 +34,12 @@ public class RouteRegisterImpl implements RouteRegister {
         } else {
             return path.substring(0, path.lastIndexOf('/') + 1);
         }
+    }
+
+
+    public RouteRegisterImpl(boolean isPathInfoEnabled, int maxPathSegments) {
+        this.isPathInfoEnabled = isPathInfoEnabled;
+        this.maxPathSegments = maxPathSegments;
     }
 
 
@@ -56,8 +63,6 @@ public class RouteRegisterImpl implements RouteRegister {
                 register(endpointsDelete, moduleName, route);
                 break;
         }
-
-        maxPathSegments = Math.max(maxPathSegments, countSlashes(route.getPath()));
     }
 
 
@@ -137,11 +142,19 @@ public class RouteRegisterImpl implements RouteRegister {
         if (reg != null) {
             return reg.mRoute;
         } else {
-            int count = countSlashes(path);
-            // maxPathSegments prevents DDOS attacks with intentionally maliciously composed urls that contain multiple slashes like
-            // "/a/a/a/a/b/b/a/d/" in order to slow down the matching (because matching is rather expensive operation)
-            if (count > 1 && count <= maxPathSegments) {
-                return match(endpoints, removeLastPathSegment(path));
+            if (isPathInfoEnabled) {
+                // maxPathSegments prevents DDOS attacks with intentionally maliciously composed urls that contain multiple slashes like
+                // "/a/a/a/a/b/b/a/d/" in order to slow down the matching (because matching is rather expensive operation)
+                if (maxPathSegments == 0) {
+                    return match(endpoints, removeLastPathSegment(path));
+                } else {
+                    int count = countSlashes(path);
+                    if (count > 1 && count <= maxPathSegments) {
+                        return match(endpoints, removeLastPathSegment(path));
+                    } else {
+                        return null;
+                    }
+                }
             } else {
                 return null;
             }

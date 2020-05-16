@@ -21,4 +21,19 @@ public interface ForgeServerConfiguration {
      * @return path to the static files directory
      */
     String getStaticFilesDir();
+
+    /**
+     * Returns if PATH_INFO functionality is enabled
+     * @return
+     */
+    boolean isPathInfoEnabled();
+
+    /**
+     * Max number of slashes in path
+     * @return
+     */
+    int getMaxSlashesInPathInfo();
+
+    boolean DEFAULT_IS_PATH_INFO_ENABLED = true;
+    int DEFAULT_MAX_SLASHES_IN_PATH_INFO = 10;
 }

@@ -162,9 +162,6 @@ public class RequestContextImpl implements RequestContext {
 
     @Override
     public List<String> getPi() {
-        if (!arePiParametersExtracted) {
-            extractPiParameters();
-        }
         return getPathInfoParameters();
     }
 
