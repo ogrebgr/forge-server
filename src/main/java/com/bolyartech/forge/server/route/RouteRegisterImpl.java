@@ -149,7 +149,7 @@ public class RouteRegisterImpl implements RouteRegister {
                     return match(endpoints, removeLastPathSegment(path));
                 } else {
                     int count = countSlashes(path);
-                    if (count > 1 && count <= maxPathSegments) {
+                    if (count >= 1 && count <= maxPathSegments) {
                         return match(endpoints, removeLastPathSegment(path));
                     } else {
                         return null;
