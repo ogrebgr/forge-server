@@ -104,6 +104,12 @@ public class RequestContextImpl implements RequestContext {
 
 
     @Override
+    public String getFromQuery(@Nonnull String parameterName) {
+        return getFromGet(parameterName);
+    }
+
+
+    @Override
     public String getFromPost(@Nonnull String parameterName) {
         if (!arePostParametersExtracted) {
             try {
@@ -215,6 +221,12 @@ public class RequestContextImpl implements RequestContext {
         }
 
         return ret;
+    }
+
+
+    @Override
+    public String optFromQuery(@Nonnull String parameterName, @Nonnull String defaultValue) {
+        return optFromGet(parameterName, defaultValue);
     }
 
 

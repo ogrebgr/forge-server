@@ -175,11 +175,18 @@ public class Params {
 
         String s = ctx.getFromPost(parameterName);
 
-        return optIntHelper(parameterName, s, POST);
+        return optIntHelper(parameterName, s);
     }
 
+    public static Optional<Integer> optIntFromGet(@Nonnull RequestContext ctx, @Nonnull String parameterName)
+            throws InvalidParameterValue {
 
-    private static Optional<Integer> optIntHelper(@Nonnull String parameterName, @Nullable String value, @Nonnull String type)
+        String s = ctx.getFromGet(parameterName);
+
+        return optIntHelper(parameterName, s);
+    }
+
+    private static Optional<Integer> optIntHelper(@Nonnull String parameterName, @Nullable String value)
             throws InvalidParameterValue {
 
         if (value == null) {

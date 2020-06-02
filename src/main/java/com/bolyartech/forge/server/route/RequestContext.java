@@ -24,12 +24,20 @@ public interface RequestContext {
     Session getSession();
 
     /**
-     * Gets a variable form GET parameters
+     * Gets a variable form query parameters
      *
      * @param parameterName Parameter name
      * @return Parameter value
      */
     String getFromGet(@Nonnull String parameterName);
+
+    /**
+     * Gets a variable form query parameters. Alias of {@link #getFromGet(String)}
+     *
+     * @param parameterName Parameter name
+     * @return Parameter value
+     */
+    String getFromQuery(@Nonnull String parameterName);
 
     /**
      * Gets a variable form POST parameters
@@ -93,13 +101,22 @@ public interface RequestContext {
     Cookie getCookie(@Nonnull String cookieName);
 
     /**
-     * Optionally gets from GET parameters if parameter is present
+     * Optionally gets from query parameters if parameter is present
      *
      * @param parameterName Parameter name
      * @param defaultValue  Default value to be returned if parameter is not present
      * @return Parameter value or the default value if not present
      */
     String optFromGet(@Nonnull String parameterName, @Nonnull String defaultValue);
+
+    /**
+     * Optionally gets from query parameters if parameter is present. Alias of {@link #optFromGet(String, String)}
+     *
+     * @param parameterName Parameter name
+     * @param defaultValue  Default value to be returned if parameter is not present
+     * @return Parameter value or the default value if not present
+     */
+    String optFromQuery(@Nonnull String parameterName, @Nonnull String defaultValue);
 
     /**
      * Optionally gets from POST parameters if parameter is present
