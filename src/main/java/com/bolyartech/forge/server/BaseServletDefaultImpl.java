@@ -1,6 +1,6 @@
 package com.bolyartech.forge.server;
 
-import com.bolyartech.forge.server.handler.ResourceNotFoundException;
+import com.bolyartech.forge.server.handler.StaticResourceNotFoundException;
 import com.bolyartech.forge.server.handler.RouteHandler;
 import com.bolyartech.forge.server.module.HttpModule;
 import com.bolyartech.forge.server.module.HttpModuleRegister;
@@ -31,13 +31,13 @@ public class BaseServletDefaultImpl extends HttpServlet implements BaseServlet {
 
     private final List<HttpModule> modules;
     private final RouteHandler notFoundHandler;
-    private final RouteHandler internalServerError;
+    private final RouteHandler internalServerErrorHandler;
 
 
     public BaseServletDefaultImpl(@Nonnull List<HttpModule> modules, boolean isPathInfoEnabled, int maxPathSegments) {
         this.modules = modules;
         this.notFoundHandler = null;
-        this.internalServerError = null;
+        this.internalServerErrorHandler = null;
         this.routeRegister = new RouteRegisterImpl(isPathInfoEnabled, maxPathSegments);
         httpModuleRegister = new HttpModuleRegisterImpl(routeRegister);
     }
@@ -47,11 +47,11 @@ public class BaseServletDefaultImpl extends HttpServlet implements BaseServlet {
                                   boolean isPathInfoEnabled,
                                   int maxPathSegments,
                                   @Nonnull RouteHandler notFoundHandler,
-                                  @Nonnull RouteHandler internalServerError) {
+                                  @Nonnull RouteHandler internalServerErrorHandler) {
 
         this.modules = modules;
         this.notFoundHandler = notFoundHandler;
-        this.internalServerError = internalServerError;
+        this.internalServerErrorHandler = internalServerErrorHandler;
         this.routeRegister = new RouteRegisterImpl(isPathInfoEnabled, maxPathSegments);
         httpModuleRegister = new HttpModuleRegisterImpl(routeRegister);
     }
@@ -127,22 +127,25 @@ public class BaseServletDefaultImpl extends HttpServlet implements BaseServlet {
                 return;
             }
 
+            if (e.getCause() instanceof StaticResourceNotFoundException) {
+                notFound(req, httpResp);
+                return;
+            }
+
             logger.error("Error handling {}, Error: {}", route, e.getMessage());
             logger.error("Exception: ", e);
 
-            if (internalServerError == null) {
+            if (internalServerErrorHandler == null) {
                 stockInternalServerError(httpResp);
             } else {
                 try {
-                    Response resp = internalServerError.handle(new RequestContextImpl(req, req.getPathInfo()));
+                    Response resp = internalServerErrorHandler.handle(new RequestContextImpl(req, req.getPathInfo()));
                     resp.toServletResponse(httpResp);
-                } catch (ResourceNotFoundException e1) {
+                } catch (StaticResourceNotFoundException e1) {
                     logger.warn("Your custom internalServerError threw ResourceNotFoundException: {}", e.getMessage());
                     stockInternalServerError(httpResp);
                 }
             }
-        } catch (ResourceNotFoundException e) {
-            notFound(req, httpResp);
         }
     }
 
@@ -153,7 +156,7 @@ public class BaseServletDefaultImpl extends HttpServlet implements BaseServlet {
             try {
                 Response resp = notFoundHandler.handle(new RequestContextImpl(req, req.getPathInfo()));
                 resp.toServletResponse(httpResp);
-            } catch (ResourceNotFoundException e) {
+            } catch (StaticResourceNotFoundException e) {
                 logger.warn("Your custom  notFoundHandler threw ResourceNotFoundException: {}", e.getMessage());
                 stockNotFound(req, httpResp);
             }
