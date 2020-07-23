@@ -25,5 +25,5 @@ public interface RouteHandler {
      * @return Response
      * @throws ResponseException if there is problem handling the request
      */
-    Response handle(@Nonnull RequestContext ctx) throws ResponseException, ResourceNotFoundException;
+    Response handle(@Nonnull RequestContext ctx) throws ResponseException, StaticResourceNotFoundException;
 }

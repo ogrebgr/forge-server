@@ -42,13 +42,13 @@ public class StaticFileHandler implements RouteHandler {
 
 
     @Override
-    public Response handle(@Nonnull RequestContext ctx) throws ResourceNotFoundException {
+    public Response handle(@Nonnull RequestContext ctx) throws StaticResourceNotFoundException {
         File file = new File(sourceDir + ctx.getPathInfoString());
         if (file.isFile()) {
             boolean actualEnableGzip = enableGzip && GzipUtils.supportsGzip(ctx);
             return new StaticFileResponse(mimeTypeResolver, file, actualEnableGzip);
         } else {
-            throw new ResourceNotFoundException("Cannot find file " + ctx.getPathInfoString());
+            throw new StaticResourceNotFoundException("Cannot find file " + ctx.getPathInfoString());
         }
     }
 }
