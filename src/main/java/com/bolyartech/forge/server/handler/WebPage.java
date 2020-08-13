@@ -11,7 +11,7 @@ import javax.annotation.Nonnull;
 
 
 /**
- * Handler that produces HTML content, i.e. web page
+ * Handler that produces HTML content, i.e. simple web page
  */
 abstract public class WebPage implements RouteHandler {
     private final TemplateEngineFactory templateEngineFactory;
