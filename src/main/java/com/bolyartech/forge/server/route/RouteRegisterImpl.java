@@ -15,6 +15,7 @@ import java.util.concurrent.ConcurrentHashMap;
 public class RouteRegisterImpl implements RouteRegister {
     private final org.slf4j.Logger logger = LoggerFactory.getLogger(this.getClass());
 
+    private final Map<String, Registration> endpointsStatics = new ConcurrentHashMap<>();
     private final Map<String, Registration> endpointsGet = new ConcurrentHashMap<>();
     private final Map<String, Registration> endpointsPost = new ConcurrentHashMap<>();
     private final Map<String, Registration> endpointsDelete = new ConcurrentHashMap<>();
@@ -22,6 +23,7 @@ public class RouteRegisterImpl implements RouteRegister {
 
     private final boolean isPathInfoEnabled;
     private final int maxPathSegments;
+
 
     static int countSlashes(String str) {
         return CharMatcher.is('/').countIn(str);
@@ -67,6 +69,12 @@ public class RouteRegisterImpl implements RouteRegister {
 
 
     @Override
+    public void registerStatics(String moduleSystemName, Route route) {
+        register(endpointsStatics, moduleSystemName, route);
+    }
+
+
+    @Override
     public boolean isRegistered(@Nonnull Route route) {
         switch (route.getHttpMethod()) {
             case GET:
@@ -80,6 +88,12 @@ public class RouteRegisterImpl implements RouteRegister {
             default:
                 return false;
         }
+    }
+
+
+    @Override
+    public boolean isRegisteredStatics(@Nonnull Route route) {
+        return endpointsStatics.containsKey(route.getPath());
     }
 
 
@@ -100,6 +114,12 @@ public class RouteRegisterImpl implements RouteRegister {
     }
 
 
+    @Override
+    public Registration getRegistrationStatics(@Nonnull Route route) {
+        return endpointsStatics.get(route.getPath());
+    }
+
+
     /**
      * Matches Route against HTTP method and URL path
      * If the path contains more than 15 slashes it will not be matched
@@ -114,13 +134,18 @@ public class RouteRegisterImpl implements RouteRegister {
 
         switch (method) {
             case GET:
-                return match(endpointsGet, path);
+            Route tmp = match(endpointsGet, path, false);
+            if (tmp == null) {
+                tmp = match(endpointsStatics, path, false);
+            }
+
+            return tmp;
             case POST:
-                return match(endpointsPost, path);
+                return match(endpointsPost, path, false);
             case PUT:
-                return match(endpointsPut, path);
+                return match(endpointsPut, path, false);
             case DELETE:
-                return match(endpointsDelete, path);
+                return match(endpointsDelete, path, false);
             default:
                 return null;
         }
@@ -137,20 +162,29 @@ public class RouteRegisterImpl implements RouteRegister {
     }
 
 
-    private Route match(@Nonnull Map<String, Registration> endpoints, @Nonnull String path) {
+    private Route match(@Nonnull Map<String, Registration> endpoints, @Nonnull String path, boolean pathInfoMode) {
         Registration reg = endpoints.get(path);
         if (reg != null) {
-            return reg.mRoute;
+            Route tmp = reg.mRoute;
+            if (pathInfoMode) {
+                if (tmp.isSupportingPathInfo()) {
+                    return tmp;
+                } else {
+                    return null;
+                }
+            } else {
+                return tmp;
+            }
         } else {
             if (isPathInfoEnabled) {
                 // maxPathSegments prevents DDOS attacks with intentionally maliciously composed urls that contain multiple slashes like
                 // "/a/a/a/a/b/b/a/d/" in order to slow down the matching (because matching is rather expensive operation)
                 if (maxPathSegments == 0) {
-                    return match(endpoints, removeLastPathSegment(path));
+                    return match(endpoints, removeLastPathSegment(path), true);
                 } else {
                     int count = countSlashes(path);
                     if (count >= 1 && count <= maxPathSegments) {
-                        return match(endpoints, removeLastPathSegment(path));
+                        return match(endpoints, removeLastPathSegment(path), true);
                     } else {
                         return null;
                     }

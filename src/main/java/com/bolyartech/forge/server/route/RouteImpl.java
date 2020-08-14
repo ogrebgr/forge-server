@@ -21,16 +21,21 @@ public class RouteImpl implements Route {
     private final HttpMethod httpMethod;
     private final String path;
     private final RouteHandler routeHandler;
+    private final boolean isSupportingPathInfo;
 
-
-    /**
-     * Creates new RouteImpl
-     *
-     * @param httpMethod   HTTP method
-     * @param path         Path of the route
-     * @param routeHandler Route handler
-     */
     public RouteImpl(@Nonnull HttpMethod httpMethod, @Nonnull String path, @Nonnull RouteHandler routeHandler) {
+        this(httpMethod, path, routeHandler, false);
+    }
+
+        /**
+         * Creates new RouteImpl
+         *  @param httpMethod   HTTP method
+         * @param path         Path of the route
+         * @param routeHandler Route handler
+         * @param isSupportingPathInfo
+         */
+    public RouteImpl(@Nonnull HttpMethod httpMethod, @Nonnull String path, @Nonnull RouteHandler routeHandler, boolean isSupportingPathInfo) {
+        this.isSupportingPathInfo = isSupportingPathInfo;
         if (httpMethod == null) {
             throw new NullPointerException("httpMethod is null");
         }
@@ -80,6 +85,12 @@ public class RouteImpl implements Route {
         } catch (Exception e) {
             throw new ResponseException(e);
         }
+    }
+
+
+    @Override
+    public boolean isSupportingPathInfo() {
+        return isSupportingPathInfo;
     }
 
 

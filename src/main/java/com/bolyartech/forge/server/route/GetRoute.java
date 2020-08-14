@@ -16,7 +16,11 @@ public class GetRoute extends RouteImpl {
      * @param path         URL path of the route
      * @param routeHandler Route handler
      */
+    public GetRoute(@Nonnull String path, @Nonnull RouteHandler routeHandler, boolean isSupportingPathInfo) {
+        super(HttpMethod.GET, path, routeHandler, isSupportingPathInfo);
+    }
+
     public GetRoute(@Nonnull String path, @Nonnull RouteHandler routeHandler) {
-        super(HttpMethod.GET, path, routeHandler);
+        this(path, routeHandler, false);
     }
 }

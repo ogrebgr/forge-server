@@ -16,7 +16,11 @@ public class PostRoute extends RouteImpl {
      * @param path         URL path of the route
      * @param routeHandler Route handler
      */
+    public PostRoute(@Nonnull String path, @Nonnull RouteHandler routeHandler, boolean isSupportingPathInfo) {
+        super(HttpMethod.POST, path, routeHandler, isSupportingPathInfo);
+    }
+
     public PostRoute(@Nonnull String path, @Nonnull RouteHandler routeHandler) {
-        super(HttpMethod.POST, path, routeHandler);
+        this(path, routeHandler, false);
     }
 }

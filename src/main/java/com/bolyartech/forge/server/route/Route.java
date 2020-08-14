@@ -36,4 +36,10 @@ public interface Route {
      */
     void handle(@Nonnull HttpServletRequest req, @Nonnull HttpServletResponse response)
             throws ResponseException;
+
+    /**
+     * Returns if the route supports path info
+     * @return
+     */
+    boolean isSupportingPathInfo();
 }

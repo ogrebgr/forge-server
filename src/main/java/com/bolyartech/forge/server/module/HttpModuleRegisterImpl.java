@@ -1,6 +1,7 @@
 package com.bolyartech.forge.server.module;
 
 import com.bolyartech.forge.server.HttpMethod;
+import com.bolyartech.forge.server.route.GetRouteStatics;
 import com.bolyartech.forge.server.route.Route;
 import com.bolyartech.forge.server.route.RouteRegister;
 
@@ -34,14 +35,26 @@ public class HttpModuleRegisterImpl implements HttpModuleRegister {
         if (!isModuleRegistered(mod)) {
             modules.add(mod);
             for (Route ep : mod.createRoutes()) {
-                if (!routeRegister.isRegistered(ep)) {
-                    routeRegister.register(mod.getSystemName() + " (" + mod.getVersionName() + ")", ep);
+                if (ep instanceof GetRouteStatics) {
+                    if (!routeRegister.isRegisteredStatics(ep)) {
+                        routeRegister.registerStatics(mod.getSystemName() + " (" + mod.getVersionName() + ")", ep);
+                    } else {
+                        RouteRegister.Registration reg = routeRegister.getRegistrationStatics(ep);
+                        throw new IllegalStateException(
+                                MessageFormat.format("Path {0} already registered in statics for module {1}",
+                                        reg.mRoute.getPath(),
+                                        reg.moduleName));
+                    }
                 } else {
-                    RouteRegister.Registration reg = routeRegister.getRegistration(ep);
-                    throw new IllegalStateException(
-                            MessageFormat.format("Path {0} already registered for module {1}",
-                                    reg.mRoute.getPath(),
-                                    reg.moduleName));
+                    if (!routeRegister.isRegistered(ep)) {
+                        routeRegister.register(mod.getSystemName() + " (" + mod.getVersionName() + ")", ep);
+                    } else {
+                        RouteRegister.Registration reg = routeRegister.getRegistration(ep);
+                        throw new IllegalStateException(
+                                MessageFormat.format("Path {0} already registered for module {1}",
+                                        reg.mRoute.getPath(),
+                                        reg.moduleName));
+                    }
                 }
             }
         } else {
