@@ -203,12 +203,16 @@ public class BaseServletDefaultImpl extends HttpServlet implements BaseServlet {
 
 
     private void processRequest(@Nonnull HttpServletRequest req, @Nonnull HttpServletResponse httpResp) throws IOException {
-        HttpMethod method = HttpMethod.valueOf(req.getMethod());
-        Route route = httpModuleRegister.match(method, req.getPathInfo());
+        try {
+            HttpMethod method = HttpMethod.valueOf(req.getMethod());
+            Route route = httpModuleRegister.match(method, req.getPathInfo());
 
-        if (route != null) {
-            handle(req, httpResp, route);
-        } else {
+            if (route != null) {
+                handle(req, httpResp, route);
+            } else {
+                notFound(req, httpResp);
+            }
+        } catch (IllegalArgumentException e) {
             notFound(req, httpResp);
         }
     }
