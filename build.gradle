@@ -1,5 +1,5 @@
 ext {
-    forge_server_version = '7.8.0'
+    forge_server_version = '7.9.0'
 }
 
 group 'com.bolyartech.forge'
