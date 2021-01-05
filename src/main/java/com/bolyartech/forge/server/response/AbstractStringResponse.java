@@ -1,6 +1,7 @@
 package com.bolyartech.forge.server.response;
 
 import com.google.common.io.ByteStreams;
+import com.google.common.io.CountingOutputStream;
 
 import javax.annotation.Nonnull;
 import javax.servlet.http.HttpServletResponse;
@@ -58,7 +59,7 @@ abstract public class AbstractStringResponse implements StringResponse {
             OutputStream out;
             if (enableGzipSupport) {
                 resp.setHeader(HttpHeaders.CONTENT_ENCODING, HttpHeaders.CONTENT_ENCODING_GZIP);
-                out = new GZIPOutputStream(resp.getOutputStream(), true);
+                out = new CountingOutputStream(new GZIPOutputStream(resp.getOutputStream(), true));
             } else {
                 resp.setContentLength(string.getBytes().length);
                 out = resp.getOutputStream();
@@ -66,8 +67,15 @@ abstract public class AbstractStringResponse implements StringResponse {
 
             InputStream is = new ByteArrayInputStream(string.getBytes("UTF-8"));
             ByteStreams.copy(is, out);
+
+            if (enableGzipSupport) {
+                resp.setContentLength((int) ((CountingOutputStream) out).getCount());
+            }
+
             out.flush();
             out.close();
+
+
         } catch (IOException e) {
             throw new ResponseException(e);
         }

@@ -7,12 +7,16 @@ import com.bolyartech.forge.server.response.ResponseException;
 import javax.annotation.Nonnull;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.time.ZonedDateTime;
+import java.time.format.DateTimeFormatter;
 
 
 /**
  * HTTP route
  */
 public interface Route {
+    static final DateTimeFormatter dateTimeFormatterWebServer = DateTimeFormatter.ofPattern("dd/MMM/yyyy:HH:mm:ss Z");
+
     /**
      * Returns HTTP method
      *

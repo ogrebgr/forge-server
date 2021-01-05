@@ -2,6 +2,7 @@ package com.bolyartech.forge.server.route;
 
 import com.bolyartech.forge.server.HttpMethod;
 import com.bolyartech.forge.server.handler.RouteHandler;
+import com.bolyartech.forge.server.handler.StaticResourceNotFoundException;
 import com.bolyartech.forge.server.response.Response;
 import com.bolyartech.forge.server.response.ResponseException;
 import org.slf4j.LoggerFactory;
@@ -9,6 +10,7 @@ import org.slf4j.LoggerFactory;
 import javax.annotation.Nonnull;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.time.ZonedDateTime;
 import java.util.regex.Pattern;
 
 
@@ -17,23 +19,26 @@ import java.util.regex.Pattern;
  */
 public class RouteImpl implements Route {
     private static final Pattern PATH_PATTERN = Pattern.compile("^(/[-\\w:@&?=+,.!/~*'%$_;]*)?$");
-    private final org.slf4j.Logger logger = LoggerFactory.getLogger(this.getClass());
+    private final org.slf4j.Logger loggerWs = LoggerFactory.getLogger("com.bolyartech.forge.server.webserverlog");
     private final HttpMethod httpMethod;
     private final String path;
     private final RouteHandler routeHandler;
     private final boolean isSupportingPathInfo;
 
+
     public RouteImpl(@Nonnull HttpMethod httpMethod, @Nonnull String path, @Nonnull RouteHandler routeHandler) {
         this(httpMethod, path, routeHandler, false);
     }
 
-        /**
-         * Creates new RouteImpl
-         *  @param httpMethod   HTTP method
-         * @param path         Path of the route
-         * @param routeHandler Route handler
-         * @param isSupportingPathInfo
-         */
+
+    /**
+     * Creates new RouteImpl
+     *
+     * @param httpMethod           HTTP method
+     * @param path                 Path of the route
+     * @param routeHandler         Route handler
+     * @param isSupportingPathInfo
+     */
     public RouteImpl(@Nonnull HttpMethod httpMethod, @Nonnull String path, @Nonnull RouteHandler routeHandler, boolean isSupportingPathInfo) {
         this.isSupportingPathInfo = isSupportingPathInfo;
         if (httpMethod == null) {
@@ -78,11 +83,76 @@ public class RouteImpl implements Route {
 
     @Override
     public void handle(@Nonnull HttpServletRequest httpReq, @Nonnull HttpServletResponse httpResp) {
+        String ref = "\"-\"";
+        if (httpReq.getHeader("referer") != null) {
+            String refRaw = httpReq.getHeader("referer");
+            if (refRaw.length() > 255) {
+                ref = refRaw.substring(0, 255);
+            } else {
+                ref = refRaw;
+            }
+        }
+
+        String ua = "\"-\"";
+        if (httpReq.getHeader("User-Agent") != null) {
+            String uaRaw = httpReq.getHeader("User-Agent");
+
+            if (uaRaw.length() > 255) {
+                ua = uaRaw.substring(0, 255);
+            } else {
+                ua = uaRaw;
+            }
+        }
+
+        String contentLength = "-";
+
         try {
-            logger.trace("{} {} IP: {}", httpMethod, path, httpReq.getRemoteAddr());
             Response resp = routeHandler.handle(new RequestContextImpl(httpReq, path));
             resp.toServletResponse(httpResp);
+
+            if (httpResp.getHeader("Content-Length") != null) {
+                contentLength =httpResp.getHeader("Content-Length");
+            }
+
+            loggerWs.trace("{} - - [{}] \"{} {}\" {} {} {} {}",
+                    httpReq.getRemoteAddr(),
+                    ZonedDateTime.now().format(dateTimeFormatterWebServer),
+                    httpMethod,
+                    httpReq.getPathInfo(),
+                    httpResp.getStatus(),
+                    contentLength,
+                    ref,
+                    ua
+            );
         } catch (Exception e) {
+            if (httpResp.getHeader("Content-Length") != null) {
+                contentLength =httpResp.getHeader("Content-Length");
+            }
+
+            if (e instanceof StaticResourceNotFoundException) {
+                loggerWs.trace("{} - - [{}] \"{} {}\" {} {} {} {}",
+                        httpReq.getRemoteAddr(),
+                        ZonedDateTime.now().format(dateTimeFormatterWebServer),
+                        httpMethod,
+                        httpReq.getPathInfo(),
+                        "404",
+                        contentLength,
+                        ref,
+                        ua
+                );
+            } else {
+                loggerWs.trace("{} - - [{}] \"{} {}\" {} {} {} {}",
+                        httpReq.getRemoteAddr(),
+                        ZonedDateTime.now().format(dateTimeFormatterWebServer),
+                        httpMethod,
+                        httpReq.getPathInfo(),
+                        httpResp.getStatus(),
+                        contentLength,
+                        ref,
+                        ua
+                );
+            }
+
             throw new ResponseException(e);
         }
     }

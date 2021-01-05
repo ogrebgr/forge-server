@@ -2,6 +2,7 @@ package com.bolyartech.forge.server.response;
 
 import com.google.common.base.Strings;
 import com.google.common.io.ByteStreams;
+import com.google.common.io.CountingOutputStream;
 
 import javax.annotation.Nonnull;
 import javax.servlet.http.HttpServletResponse;
@@ -50,12 +51,17 @@ public class FileUploadResponse implements Response {
             OutputStream out;
             if (enableGzip) {
                 resp.setHeader(HttpHeaders.CONTENT_ENCODING, HttpHeaders.CONTENT_ENCODING_GZIP);
-                out = new GZIPOutputStream(resp.getOutputStream(), true);
+                out = new CountingOutputStream(new GZIPOutputStream(resp.getOutputStream(), true));
             } else {
                 resp.setContentLength((int) file.length());
                 out = resp.getOutputStream();
             }
             ByteStreams.copy(is, out);
+
+            if (enableGzip) {
+                resp.setContentLength((int) ((CountingOutputStream) out).getCount());
+            }
+
             out.flush();
             out.close();
         } catch (IOException e) {
