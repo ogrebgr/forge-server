@@ -115,7 +115,7 @@ public class RouteImpl implements Route {
                 contentLength =httpResp.getHeader("Content-Length");
             }
 
-            logger.trace("{}: {} {}", httpResp.getStatus(), httpMethod, httpReq.getPathInfo());
+            logger.trace("{} -> {}: {} {}", httpReq.getRemoteAddr(), httpResp.getStatus(), httpMethod, httpReq.getPathInfo());
 
             loggerWs.trace("{} - - [{}] \"{} {}\" {} {} {} {}",
                     httpReq.getRemoteAddr(),
@@ -133,7 +133,7 @@ public class RouteImpl implements Route {
             }
 
             if (e instanceof StaticResourceNotFoundException) {
-                logger.trace("404: {} {}", httpMethod, httpReq.getPathInfo());
+                logger.trace("{} -> 404: {} {}", httpReq.getRemoteAddr(), httpMethod, httpReq.getPathInfo());
                 loggerWs.trace("{} - - [{}] \"{} {}\" {} {} {} {}",
                         httpReq.getRemoteAddr(),
                         ZonedDateTime.now().format(dateTimeFormatterWebServer),
@@ -145,7 +145,7 @@ public class RouteImpl implements Route {
                         ua
                 );
             } else {
-                logger.trace("{}: {} {}", httpResp.getStatus(), httpMethod, httpReq.getPathInfo());
+                logger.trace("{} -> {}: {} {}", httpReq.getRemoteAddr(), httpResp.getStatus(), httpMethod, httpReq.getPathInfo());
                 loggerWs.trace("{} - - [{}] \"{} {}\" {} {} {} {}",
                         httpReq.getRemoteAddr(),
                         ZonedDateTime.now().format(dateTimeFormatterWebServer),
