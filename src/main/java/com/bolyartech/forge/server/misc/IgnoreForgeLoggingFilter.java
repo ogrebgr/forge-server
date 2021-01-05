@@ -5,7 +5,7 @@ import ch.qos.logback.core.filter.Filter;
 import ch.qos.logback.core.spi.FilterReply;
 
 
-class IgnoreForgeLoggingFilter extends Filter<ILoggingEvent> {
+public class IgnoreForgeLoggingFilter extends Filter<ILoggingEvent> {
 
     @Override
     public FilterReply decide(ILoggingEvent event) {

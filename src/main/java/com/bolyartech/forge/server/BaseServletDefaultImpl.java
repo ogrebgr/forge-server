@@ -151,7 +151,6 @@ public class BaseServletDefaultImpl extends HttpServlet implements BaseServlet {
 
 
     private void notFound(@Nonnull HttpServletRequest req, @Nonnull HttpServletResponse httpResp) throws IOException {
-        logger.trace("Not found: {} {}", req.getMethod(), req.getPathInfo());
         if (notFoundHandler != null) {
             try {
                 Response resp = notFoundHandler.handle(new RequestContextImpl(req, req.getPathInfo()));

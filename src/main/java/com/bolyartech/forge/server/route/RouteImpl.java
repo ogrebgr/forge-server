@@ -19,6 +19,7 @@ import java.util.regex.Pattern;
  */
 public class RouteImpl implements Route {
     private static final Pattern PATH_PATTERN = Pattern.compile("^(/[-\\w:@&?=+,.!/~*'%$_;]*)?$");
+    private final org.slf4j.Logger logger = LoggerFactory.getLogger(this.getClass());
     private final org.slf4j.Logger loggerWs = LoggerFactory.getLogger("com.bolyartech.forge.server.webserverlog");
     private final HttpMethod httpMethod;
     private final String path;
@@ -114,6 +115,8 @@ public class RouteImpl implements Route {
                 contentLength =httpResp.getHeader("Content-Length");
             }
 
+            logger.trace("{}: {} {}", httpResp.getStatus(), httpMethod, httpReq.getPathInfo());
+
             loggerWs.trace("{} - - [{}] \"{} {}\" {} {} {} {}",
                     httpReq.getRemoteAddr(),
                     ZonedDateTime.now().format(dateTimeFormatterWebServer),
@@ -130,6 +133,7 @@ public class RouteImpl implements Route {
             }
 
             if (e instanceof StaticResourceNotFoundException) {
+                logger.trace("404: {} {}", httpMethod, httpReq.getPathInfo());
                 loggerWs.trace("{} - - [{}] \"{} {}\" {} {} {} {}",
                         httpReq.getRemoteAddr(),
                         ZonedDateTime.now().format(dateTimeFormatterWebServer),
@@ -141,6 +145,7 @@ public class RouteImpl implements Route {
                         ua
                 );
             } else {
+                logger.trace("{}: {} {}", httpResp.getStatus(), httpMethod, httpReq.getPathInfo());
                 loggerWs.trace("{} - - [{}] \"{} {}\" {} {} {} {}",
                         httpReq.getRemoteAddr(),
                         ZonedDateTime.now().format(dateTimeFormatterWebServer),
