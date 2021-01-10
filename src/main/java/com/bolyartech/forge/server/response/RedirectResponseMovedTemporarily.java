@@ -29,8 +29,10 @@ public class RedirectResponseMovedTemporarily implements RedirectResponse {
 
 
     @Override
-    public void toServletResponse(@Nonnull HttpServletResponse resp) {
+    public long toServletResponse(@Nonnull HttpServletResponse resp) {
         resp.setStatus(HttpServletResponse.SC_MOVED_TEMPORARILY);
         resp.setHeader(HEADER_LOCATION, location);
+
+        return 0;
     }
 }

@@ -96,9 +96,9 @@ public class ForgeResponse extends JsonResponse {
 
 
     @Override
-    public void toServletResponse(@Nonnull HttpServletResponse resp) {
+    public long toServletResponse(@Nonnull HttpServletResponse resp) {
         resp.setHeader(FORGE_RESULT_CODE_HEADER, Integer.toString(resultCode));
-        super.toServletResponse(resp);
+        return super.toServletResponse(resp);
     }
 
 

@@ -50,32 +50,34 @@ abstract public class AbstractStringResponse implements StringResponse {
 
 
     @Override
-    public void toServletResponse(@Nonnull HttpServletResponse resp) {
+    public long toServletResponse(@Nonnull HttpServletResponse resp) {
         resp.setStatus(HttpServletResponse.SC_OK);
         resp.setContentType(getContentType());
 
+        long cl = 0;
 
         try {
             OutputStream out;
-            if (enableGzipSupport) {
+            if (enableGzipSupport && cl > Response.MIN_SIZE_FOR_GZIP) {
                 resp.setHeader(HttpHeaders.CONTENT_ENCODING, HttpHeaders.CONTENT_ENCODING_GZIP);
                 out = new CountingOutputStream(new GZIPOutputStream(resp.getOutputStream(), true));
             } else {
                 resp.setContentLength(string.getBytes().length);
                 out = resp.getOutputStream();
+                cl = string.getBytes().length;
             }
 
             InputStream is = new ByteArrayInputStream(string.getBytes("UTF-8"));
             ByteStreams.copy(is, out);
 
-            if (enableGzipSupport) {
-                resp.setContentLength((int) ((CountingOutputStream) out).getCount());
+            if (enableGzipSupport && cl > Response.MIN_SIZE_FOR_GZIP) {
+                cl = ((CountingOutputStream) out).getCount();
             }
 
             out.flush();
             out.close();
 
-
+            return cl;
         } catch (IOException e) {
             throw new ResponseException(e);
         }

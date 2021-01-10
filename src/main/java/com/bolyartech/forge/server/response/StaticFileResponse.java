@@ -54,7 +54,7 @@ public class StaticFileResponse implements Response {
 
 
     @Override
-    public void toServletResponse(@Nonnull HttpServletResponse resp) {
+    public long toServletResponse(@Nonnull HttpServletResponse resp) {
         try {
             resp.setContentType(mimeType);
 
@@ -63,23 +63,28 @@ public class StaticFileResponse implements Response {
             String lm = java.time.format.DateTimeFormatter.RFC_1123_DATE_TIME.format(ts);
             resp.setHeader(HttpHeaders.LAST_MODIFIED, lm);
 
+            long cl = 0;
+
             InputStream is = new BufferedInputStream(new FileInputStream(file));
             try {
                 OutputStream out;
-                if (enableGzip) {
+                if (enableGzip && cl > Response.MIN_SIZE_FOR_GZIP) {
                     resp.setHeader(HttpHeaders.CONTENT_ENCODING, HttpHeaders.CONTENT_ENCODING_GZIP);
                     out = new CountingOutputStream(new GZIPOutputStream(resp.getOutputStream(), true));
                 } else {
                     out = resp.getOutputStream();
+                    cl = file.length();
                 }
                 ByteStreams.copy(is, out);
 
-                if (enableGzip) {
-                    resp.setContentLength((int) ((CountingOutputStream) out).getCount());
+                if (enableGzip && cl > Response.MIN_SIZE_FOR_GZIP) {
+                    cl = ((CountingOutputStream) out).getCount();
                 }
 
                 out.flush();
                 out.close();
+
+                return cl;
             } catch (IOException e) {
                 throw new ResponseException(e);
             }

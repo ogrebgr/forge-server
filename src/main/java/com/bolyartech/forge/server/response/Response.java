@@ -10,11 +10,13 @@ import javax.servlet.http.HttpServletResponse;
  * Route handlers handle HTTP requests and produce result of type Response
  */
 public interface Response {
+    int MIN_SIZE_FOR_GZIP = 500;
+
     /**
      * Converts Response to HttpServletResponse
      *
      * @param resp HTTP servlet response
      * @throws ResponseException if there is a problem during converting
      */
-    void toServletResponse(@Nonnull HttpServletResponse resp) throws ResponseException;
+    long toServletResponse(@Nonnull HttpServletResponse resp) throws ResponseException;
 }

@@ -40,30 +40,36 @@ public class FileUploadResponse implements Response {
 
 
     @Override
-    public void toServletResponse(@Nonnull HttpServletResponse resp) {
+    public long toServletResponse(@Nonnull HttpServletResponse resp) {
         resp.setContentType(HttpHeaders.CONTENT_TYPE_OCTET);
         resp.setHeader(HttpHeaders.CONTENT_DISPOSITION,
                 MessageFormat.format(HttpHeaders.CONTENT_DISPOSITION_ATTACHMENT, file.getName()));
+
+        long cl = 0L;
 
         InputStream is;
         try {
             is = new BufferedInputStream(new FileInputStream(file));
             OutputStream out;
-            if (enableGzip) {
+            if (enableGzip && cl > Response.MIN_SIZE_FOR_GZIP) {
                 resp.setHeader(HttpHeaders.CONTENT_ENCODING, HttpHeaders.CONTENT_ENCODING_GZIP);
                 out = new CountingOutputStream(new GZIPOutputStream(resp.getOutputStream(), true));
             } else {
                 resp.setContentLength((int) file.length());
                 out = resp.getOutputStream();
+                cl = file.length();
             }
             ByteStreams.copy(is, out);
 
-            if (enableGzip) {
-                resp.setContentLength((int) ((CountingOutputStream) out).getCount());
+            if (enableGzip && cl > Response.MIN_SIZE_FOR_GZIP) {
+                cl = ((CountingOutputStream) out).getCount();
             }
+
 
             out.flush();
             out.close();
+
+            return cl;
         } catch (IOException e) {
             throw new ResponseException(e);
         }

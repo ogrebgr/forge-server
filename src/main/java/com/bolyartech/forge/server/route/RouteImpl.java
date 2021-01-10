@@ -109,10 +109,9 @@ public class RouteImpl implements Route {
 
         try {
             Response resp = routeHandler.handle(new RequestContextImpl(httpReq, path));
-            resp.toServletResponse(httpResp);
-
-            if (httpResp.getHeader("Content-Length") != null) {
-                contentLength =httpResp.getHeader("Content-Length");
+            final long cl = resp.toServletResponse(httpResp);
+            if (cl > 0) {
+                contentLength = Long.toString(cl);
             }
 
             logger.trace("{} -> {}: {} {}", httpReq.getRemoteAddr(), httpResp.getStatus(), httpMethod, httpReq.getPathInfo());
@@ -129,7 +128,7 @@ public class RouteImpl implements Route {
             );
         } catch (Exception e) {
             if (httpResp.getHeader("Content-Length") != null) {
-                contentLength =httpResp.getHeader("Content-Length");
+                contentLength = httpResp.getHeader("Content-Length");
             }
 
             if (e instanceof StaticResourceNotFoundException) {
