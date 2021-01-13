@@ -59,7 +59,7 @@ public class FileUploadResponse implements Response {
                 out = resp.getOutputStream();
                 cl = file.length();
             }
-            ByteStreams.copy(is, out);
+            cl = ByteStreams.copy(is, out);
 
             if (enableGzip && cl > Response.MIN_SIZE_FOR_GZIP) {
                 cl = ((CountingOutputStream) out).getCount();
@@ -71,7 +71,8 @@ public class FileUploadResponse implements Response {
 
             return cl;
         } catch (IOException e) {
-            throw new ResponseException(e);
+            // ignore
+            return cl;
         }
     }
 }

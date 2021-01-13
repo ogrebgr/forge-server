@@ -55,6 +55,8 @@ public class StaticFileResponse implements Response {
 
     @Override
     public long toServletResponse(@Nonnull HttpServletResponse resp) {
+        long cl = 0;
+
         try {
             resp.setContentType(mimeType);
 
@@ -62,8 +64,6 @@ public class StaticFileResponse implements Response {
                     ZonedDateTime.ofInstant(Instant.ofEpochMilli(file.lastModified()), ZoneId.of("UTC"));
             String lm = java.time.format.DateTimeFormatter.RFC_1123_DATE_TIME.format(ts);
             resp.setHeader(HttpHeaders.LAST_MODIFIED, lm);
-
-            long cl = 0;
 
             InputStream is = new BufferedInputStream(new FileInputStream(file));
             try {
@@ -75,7 +75,7 @@ public class StaticFileResponse implements Response {
                     out = resp.getOutputStream();
                     cl = file.length();
                 }
-                ByteStreams.copy(is, out);
+                cl = ByteStreams.copy(is, out);
 
                 if (enableGzip && cl > Response.MIN_SIZE_FOR_GZIP) {
                     cl = ((CountingOutputStream) out).getCount();
@@ -89,7 +89,8 @@ public class StaticFileResponse implements Response {
                 throw new ResponseException(e);
             }
         } catch (FileNotFoundException e) {
-            throw new ResponseException(e);
+            // ignore
+            return cl;
         }
     }
 

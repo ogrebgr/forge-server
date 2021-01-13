@@ -68,7 +68,7 @@ abstract public class AbstractStringResponse implements StringResponse {
             }
 
             InputStream is = new ByteArrayInputStream(string.getBytes("UTF-8"));
-            ByteStreams.copy(is, out);
+            cl = ByteStreams.copy(is, out);
 
             if (enableGzipSupport && cl > Response.MIN_SIZE_FOR_GZIP) {
                 cl = ((CountingOutputStream) out).getCount();
@@ -79,7 +79,8 @@ abstract public class AbstractStringResponse implements StringResponse {
 
             return cl;
         } catch (IOException e) {
-            throw new ResponseException(e);
+            // ignore
+            return cl;
         }
     }
 
