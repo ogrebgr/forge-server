@@ -5,6 +5,7 @@ import com.google.common.io.ByteStreams;
 import com.google.common.io.CountingOutputStream;
 
 import javax.annotation.Nonnull;
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletResponse;
 import java.io.*;
 import java.time.Instant;
@@ -17,7 +18,7 @@ import java.util.zip.GZIPOutputStream;
  * Response which uses static file as a content
  * Use this class for static HTML files, CSS or images (PNG, JPG, etc.)
  */
-public class StaticFileResponse implements Response {
+public class StaticFileResponse extends AbstractResponse {
 
     private final File file;
     private final boolean enableGzip;
@@ -68,7 +69,7 @@ public class StaticFileResponse implements Response {
             InputStream is = new BufferedInputStream(new FileInputStream(file));
             try {
                 OutputStream out;
-                if (enableGzip && cl > Response.MIN_SIZE_FOR_GZIP) {
+                if (enableGzip && file.length() > Response.MIN_SIZE_FOR_GZIP) {
                     resp.setHeader(HttpHeaders.CONTENT_ENCODING, HttpHeaders.CONTENT_ENCODING_GZIP);
                     out = new CountingOutputStream(new GZIPOutputStream(resp.getOutputStream(), true));
                 } else {
@@ -86,7 +87,8 @@ public class StaticFileResponse implements Response {
 
                 return cl;
             } catch (IOException e) {
-                throw new ResponseException(e);
+                // ignore
+                return cl;
             }
         } catch (FileNotFoundException e) {
             // ignore
