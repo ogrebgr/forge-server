@@ -6,6 +6,8 @@ import com.bolyartech.forge.server.response.*;
 import com.bolyartech.forge.server.route.RequestContext;
 
 import javax.annotation.Nonnull;
+import javax.servlet.http.Cookie;
+import java.util.List;
 
 
 /**
@@ -75,6 +77,17 @@ abstract public class WebPagePlus implements RouteHandler {
      */
     public HtmlResponse createHtmlResponse(String content) {
         return new HtmlResponse(content, enableGzipSupport);
+    }
+
+
+    /**
+     * Convenience method for creating HtmlResponse
+     * @param content
+     * @param cookiesToSet
+     * @return
+     */
+    public HtmlResponse createHtmlResponse(String content, List<Cookie> cookiesToSet) {
+        return new HtmlResponse(cookiesToSet, content, enableGzipSupport);
     }
 
 

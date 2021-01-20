@@ -1,6 +1,8 @@
 package com.bolyartech.forge.server.response;
 
 import javax.annotation.Nonnull;
+import javax.servlet.http.Cookie;
+import java.util.List;
 
 
 /**
@@ -17,6 +19,16 @@ public class PlainTextResponse extends AbstractStringResponse {
      */
     public PlainTextResponse(String string) {
         super(string);
+    }
+
+
+    public PlainTextResponse(List<Cookie> cookiesToSet, String string) {
+        super(cookiesToSet, string);
+    }
+
+
+    public PlainTextResponse(List<Cookie> cookiesToSet, String string, boolean enableGzipSupport) {
+        super(cookiesToSet, string, enableGzipSupport);
     }
 
 
