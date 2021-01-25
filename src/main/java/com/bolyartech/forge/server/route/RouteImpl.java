@@ -52,7 +52,7 @@ public class RouteImpl implements Route {
 
 
         this.httpMethod = httpMethod;
-        this.path = path;
+        this.path = normalizePath(path);
         this.routeHandler = routeHandler;
     }
 

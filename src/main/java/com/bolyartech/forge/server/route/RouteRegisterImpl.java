@@ -134,12 +134,13 @@ public class RouteRegisterImpl implements RouteRegister {
 
         switch (method) {
             case GET:
-            Route tmp = match(endpointsGet, path, false);
-            if (tmp == null) {
-                tmp = match(endpointsStatics, path, false);
-            }
+                Route tmp = match(endpointsStatics, path, false);
 
-            return tmp;
+                if (tmp == null) {
+                    tmp = match(endpointsGet, path, false);
+                }
+
+                return tmp;
             case POST:
                 return match(endpointsPost, path, false);
             case PUT:
