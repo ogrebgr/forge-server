@@ -204,8 +204,10 @@ public class RequestContextImpl implements RequestContext {
     public Cookie getCookie(@Nonnull String cookieName) {
         if (!cookiesInitialized) {
             Cookie[] cs = httpReq.getCookies();
-            for (Cookie c : cs) {
-                cookieParams.put(c.getName(), c);
+            if (cs != null) {
+                for (Cookie c : cs) {
+                    cookieParams.put(c.getName(), c);
+                }
             }
             cookiesInitialized = true;
         }
