@@ -35,8 +35,9 @@ abstract public class AbstractStringResponse extends AbstractResponse implements
 
     /**
      * Creates new AbstractStringResponse
+     *
      * @param cookiesToSet list of cookies to be set
-     * @param string String of the response
+     * @param string       String of the response
      */
     public AbstractStringResponse(List<Cookie> cookiesToSet, String string) {
         super(cookiesToSet);
@@ -46,10 +47,26 @@ abstract public class AbstractStringResponse extends AbstractResponse implements
 
 
     /**
-     *
      * Creates new AbstractStringResponse
-     * @param cookiesToSet list of cookies to be set
+     * @param cookiesToSet list of cookies to be set. Pass empty list if no cookies have to be added. Don't pass null because it will throw NullPointerException
+     * @param headersToAdd list of headers to be added. If the header already exists, it will be overwritten
      * @param string String of the response
+     * @param enableGzipSupport if true Gzip compression will be used if the client supports it
+     */
+    public AbstractStringResponse(List<Cookie> cookiesToSet, List<HttpHeader> headersToAdd, String string,
+                                  boolean enableGzipSupport) {
+
+        super(cookiesToSet, headersToAdd);
+        this.string = string;
+        this.enableGzipSupport = enableGzipSupport;
+    }
+
+
+    /**
+     * Creates new AbstractStringResponse
+     *
+     * @param cookiesToSet      list of cookies to be set
+     * @param string            String of the response
      * @param enableGzipSupport if true Gzip compression will be used if the client supports it
      */
     public AbstractStringResponse(List<Cookie> cookiesToSet, String string, boolean enableGzipSupport) {

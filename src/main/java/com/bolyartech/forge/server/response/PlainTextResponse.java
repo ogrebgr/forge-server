@@ -32,6 +32,11 @@ public class PlainTextResponse extends AbstractStringResponse {
     }
 
 
+    public PlainTextResponse(List<Cookie> cookiesToSet, List<HttpHeader> headersToAdd, String string, boolean enableGzipSupport) {
+        super(cookiesToSet, headersToAdd, string, enableGzipSupport);
+    }
+
+
     /**
      * Creates new PlainTextResponse
      *

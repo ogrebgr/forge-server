@@ -27,6 +27,11 @@ public class HtmlResponse extends AbstractStringResponse {
     }
 
 
+    public HtmlResponse(List<Cookie> cookiesToSet, List<HttpHeader> headersToAdd, String string, boolean enableGzipSupport) {
+        super(cookiesToSet, headersToAdd, string, enableGzipSupport);
+    }
+
+
     public HtmlResponse(List<Cookie> cookiesToSet, String string, boolean enableGzipSupport) {
         super(cookiesToSet, string, enableGzipSupport);
     }
