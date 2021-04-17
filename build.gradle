@@ -5,9 +5,11 @@ ext {
 group 'com.bolyartech.forge'
 version forge_server_version
 
+
 apply plugin: 'java-library'
+apply plugin: 'maven'
 apply plugin: 'maven-publish'
-apply plugin: 'com.jfrog.bintray'
+apply plugin: 'signing'
 sourceCompatibility = 1.8
 
 repositories {
@@ -19,15 +21,11 @@ buildscript {
         jcenter()
         mavenCentral()
     }
-    dependencies {
-        classpath 'com.jfrog.bintray.gradle:gradle-bintray-plugin:1.8.4'
-    }
 }
 
 dependencies {
     compile group: 'com.google.code.findbugs', name: 'jsr305', version: '3.0.2'
     compile 'jakarta.servlet:jakarta.servlet-api:4.0.2'
-//    compile 'org.eclipse.jetty.toolchain:jetty-jakarta-servlet-api:5.0.1'
     compile 'org.slf4j:slf4j-api:1.7.30'
     compile 'ch.qos.logback:logback-classic:1.3.0-alpha5'
     compile 'com.google.guava:guava:30.1-jre'
@@ -37,17 +35,25 @@ dependencies {
 }
 
 
-// custom tasks for creating source/javadoc jars
-task sourcesJar(type: Jar, dependsOn: classes) {
+
+task javadocJar(type: Jar) {
+    classifier = 'javadoc'
+    from javadoc
+}
+
+task sourcesJar(type: Jar) {
     classifier = 'sources'
     from sourceSets.main.allSource
 }
 
 artifacts {
-    archives sourcesJar//, javadocJar
+    archives javadocJar, sourcesJar
 }
 
-apply from: 'bintray-config.gradle'
+
+signing {
+    sign configurations.archives
+}
 
 publishing {
     publications {
@@ -62,21 +68,50 @@ publishing {
 }
 
 
-bintray {
-    configurations = ['archives']
-    pkg {
-        repo = 'maven'
-        name = 'forge-server'
-        userOrg = 'ogibankov'
-        licenses = ['Apache-2.0']
-        websiteUrl = 'https://github.com/ogrebgr/forge-server'
-        issueTrackerUrl = 'https://github.com/ogrebgr/forge-server/issues'
-        vcsUrl = 'git@github.com:ogrebgr/forge-server.git'
-        version {
-            name = forge_server_version
-            desc = 'Forge Server'
-            vcsTag = 'v' + forge_server_version
+uploadArchives {
+    repositories {
+        mavenDeployer {
+            beforeDeployment { MavenDeployment deployment -> signing.signPom(deployment) }
+
+            repository(url: "https://s01.oss.sonatype.org/service/local/staging/deploy/maven2/") {
+                authentication(userName: ossrhUsername, password: ossrhPassword)
+            }
+
+            snapshotRepository(url: "https://s01.oss.sonatype.org/content/repositories/snapshots/") {
+                authentication(userName: ossrhUsername, password: ossrhPassword)
+            }
+
+            pom.project {
+                name 'Forge Server'
+                packaging 'jar'
+                // optionally artifactId can be defined here
+                description 'Forge server is the base for the server part of the Forge framework'
+                url 'https://github.com/ogrebgr/forge-server'
+
+                scm {
+                    connection 'scm:git:https://github.com/ogrebgr/forge-server.git'
+                    developerConnection 'scm:git:https://github.com/ogrebgr/forge-server.git'
+                    url 'https://github.com/ogrebgr/forge-server'
+                }
+
+                licenses {
+                    license {
+                        name 'The Apache License, Version 2.0'
+                        url 'http://www.apache.org/licenses/LICENSE-2.0.txt'
+                    }
+                }
+
+                developers {
+                    developer {
+                        id 'ogremir'
+                        name 'Ognyan Bankov'
+                        email 'bankov@bolyartech.com'
+                    }
+                }
+            }
         }
     }
-    publications = ['MyPublication']
 }
+
+
+archivesBaseName = "forge-server"
