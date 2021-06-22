@@ -9,8 +9,6 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.Optional;
 
-import static com.bolyartech.forge.server.misc.ForgeMessageFormat.format;
-
 
 /**
  * Utility class for GET/POST/PI parameters
@@ -26,6 +24,7 @@ public class Params {
     private Params() {
         throw new AssertionError();
     }
+
 
     public static void allPresentOrDie(String... pars) throws MissingParameterValue {
         if (pars == null || pars.length == 0) {
@@ -83,7 +82,24 @@ public class Params {
 
 
     /**
-     * Extracts long parameter's value from GET parameters
+     * Extracts long parameter's value from query parameters
+     *
+     * @param ctx           Context from which the value will be extracted
+     * @param parameterName Parameter name
+     * @return extracted value
+     * @throws MissingParameterValue if there is no value for this parameter
+     * @throws InvalidParameterValue if the value is present but cannot be parsed as long
+     * @deprecated Use extractLongFromQuery
+     */
+    public static long extractLongFromGet(@Nonnull RequestContext ctx, @Nonnull String parameterName)
+            throws MissingParameterValue, InvalidParameterValue {
+
+        return extractLongFromQuery(ctx, parameterName);
+    }
+
+
+    /**
+     * Extracts long parameter's value from query parameters
      *
      * @param ctx           Context from which the value will be extracted
      * @param parameterName Parameter name
@@ -91,8 +107,8 @@ public class Params {
      * @throws MissingParameterValue if there is no value for this parameter
      * @throws InvalidParameterValue if the value is present but cannot be parsed as long
      */
-    public static long extractLongFromGet(@Nonnull RequestContext ctx, @Nonnull String parameterName)
-            throws MissingParameterValue, InvalidParameterValue {
+    public static long extractLongFromQuery(@Nonnull RequestContext ctx, @Nonnull String parameterName) throws
+            InvalidParameterValue, MissingParameterValue {
 
         String s = ctx.getFromGet(parameterName);
 
@@ -143,9 +159,24 @@ public class Params {
      * @return extracted value
      * @throws MissingParameterValue if there is no value for this parameter
      * @throws InvalidParameterValue if the value is present but cannot be parsed as int
+     * @deprecated Use extractIntFromQuery
      */
     public static int extractIntFromGet(@Nonnull RequestContext ctx, @Nonnull String parameterName)
             throws MissingParameterValue, InvalidParameterValue {
+
+        return extractIntFromQuery(ctx, parameterName);
+    }
+
+    /**
+     * Extracts integer parameter's value from GET parameters
+     *
+     * @param ctx           Context from which the value will be extracted
+     * @param parameterName Parameter name
+     * @return extracted value
+     * @throws MissingParameterValue if there is no value for this parameter
+     * @throws InvalidParameterValue if the value is present but cannot be parsed as int
+     */
+    public static int extractIntFromQuery(@Nonnull RequestContext ctx, @Nonnull String parameterName) throws InvalidParameterValue, MissingParameterValue {
 
         String s = ctx.getFromGet(parameterName);
 
@@ -178,6 +209,7 @@ public class Params {
         return optIntHelper(parameterName, s);
     }
 
+
     public static Optional<Integer> optIntFromGet(@Nonnull RequestContext ctx, @Nonnull String parameterName)
             throws InvalidParameterValue {
 
@@ -185,6 +217,7 @@ public class Params {
 
         return optIntHelper(parameterName, s);
     }
+
 
     private static Optional<Integer> optIntHelper(@Nonnull String parameterName, @Nullable String value)
             throws InvalidParameterValue {

@@ -76,15 +76,11 @@ public class FileUploadResponse extends AbstractResponse {
 
     @Override
     public long toServletResponse(@Nonnull HttpServletResponse resp) {
+        addCookiesAndHeaders(resp);
+
         resp.setContentType(HttpHeaders.CONTENT_TYPE_OCTET);
         resp.setHeader(HttpHeaders.CONTENT_DISPOSITION,
                 MessageFormat.format(HttpHeaders.CONTENT_DISPOSITION_ATTACHMENT, file.getName()));
-
-        if (getCookiesToSet() != null) {
-            for (Cookie c : getCookiesToSet()) {
-                resp.addCookie(c);
-            }
-        }
 
         long cl = 0;
 

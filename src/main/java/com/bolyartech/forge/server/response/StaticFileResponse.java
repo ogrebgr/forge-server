@@ -5,7 +5,6 @@ import com.google.common.io.ByteStreams;
 import com.google.common.io.CountingOutputStream;
 
 import javax.annotation.Nonnull;
-import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletResponse;
 import java.io.*;
 import java.time.Instant;
@@ -57,6 +56,8 @@ public class StaticFileResponse extends AbstractResponse {
     @Override
     public long toServletResponse(@Nonnull HttpServletResponse resp) {
         long cl = 0;
+
+        addCookiesAndHeaders(resp);
 
         try {
             resp.setContentType(mimeType);

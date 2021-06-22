@@ -96,14 +96,10 @@ abstract public class AbstractStringResponse extends AbstractResponse implements
 
     @Override
     public long toServletResponse(@Nonnull HttpServletResponse resp) {
+        addCookiesAndHeaders(resp);
+
         resp.setStatus(HttpServletResponse.SC_OK);
         resp.setContentType(getContentType());
-
-        if (getCookiesToSet() != null) {
-            for (Cookie c : getCookiesToSet()) {
-                resp.addCookie(c);
-            }
-        }
 
         long cl = 0;
 
