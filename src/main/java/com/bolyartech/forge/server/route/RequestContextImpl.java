@@ -162,7 +162,6 @@ public class RequestContextImpl implements RequestContext {
             }
         }
 
-        Collections.reverse(pathInfoParams);
         arePiParametersExtracted = true;
     }
 
