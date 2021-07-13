@@ -30,7 +30,7 @@ public class RequestContextImpl implements RequestContext {
 
 
     private final HttpServletRequest httpReq;
-    private final Map<String, String> getParams = new HashMap<>();
+    private final Map<String, String> queryParams = new HashMap<>();
     private final Map<String, String> postParams = new HashMap<>();
     private final Map<String, Cookie> cookieParams = new HashMap<>();
     private final List<String> pathInfoParams = new ArrayList<>();
@@ -96,10 +96,10 @@ public class RequestContextImpl implements RequestContext {
     @Override
     public String getFromGet(@Nonnull String parameterName) {
         if (!areGetParametersExtracted) {
-            extractParameters(httpReq.getQueryString(), getParams);
+            extractParameters(httpReq.getQueryString(), queryParams);
             areGetParametersExtracted = true;
         }
-        return getParams.get(parameterName);
+        return queryParams.get(parameterName);
     }
 
 
@@ -202,6 +202,12 @@ public class RequestContextImpl implements RequestContext {
 
     @Override
     public Cookie getCookie(@Nonnull String cookieName) {
+        initializeCookies();
+
+        return cookieParams.get(cookieName);
+    }
+
+    private void initializeCookies() {
         if (!cookiesInitialized) {
             Cookie[] cs = httpReq.getCookies();
             if (cs != null) {
@@ -211,10 +217,7 @@ public class RequestContextImpl implements RequestContext {
             }
             cookiesInitialized = true;
         }
-
-        return cookieParams.get(cookieName);
     }
-
 
     @Override
     public String optFromGet(@Nonnull String parameterName, @Nonnull String defaultValue) {
@@ -336,5 +339,47 @@ public class RequestContextImpl implements RequestContext {
             isBodyConsumed = true;
         }
         return body;
+    }
+
+
+    @Override
+    public String getRawQueryString() {
+        return httpReq.getQueryString();
+    }
+
+
+    @Override
+    public Map<String, String> getQueryStringParameters() {
+        if (!areGetParametersExtracted) {
+            extractParameters(httpReq.getQueryString(), queryParams);
+        }
+
+        return queryParams;
+    }
+
+
+    @Override
+    public List<Cookie> getCookies() {
+        List<Cookie> ret = new ArrayList<>();
+
+        Cookie[] cs = httpReq.getCookies();
+        if (cs != null) {
+            ret.addAll(Arrays.asList(cs));
+        }
+
+        return ret;
+    }
+
+
+    @Override
+    public Map<String, String> getHeaders() {
+        List<String> hs = Collections.list(httpReq.getHeaderNames());
+
+        Map<String, String> ret = new HashMap<>();
+        for (String h : hs) {
+            ret.put(h, httpReq.getHeader(h));
+        }
+
+        return ret;
     }
 }

@@ -9,6 +9,7 @@ import javax.servlet.http.Cookie;
 import javax.servlet.http.Part;
 import java.io.IOException;
 import java.util.List;
+import java.util.Map;
 
 
 /**
@@ -189,6 +190,30 @@ public interface RequestContext {
      * @return body of the request
      */
     String getBody();
+
+    /**
+     * Returns raw query string, e.g. param1=3&param2=ff
+     * @return Raw query string
+     */
+    String getRawQueryString();
+
+    /**
+     * Returns all query parameters with their string values
+     * @return All query parameters
+     */
+    Map<String, String> getQueryStringParameters();
+
+    /**
+     * Returns all cookies with their string values
+     * @return All cookies
+     */
+    List<Cookie> getCookies();
+
+    /**
+     *  Returns all headers with their string values
+     * @return
+     */
+    Map<String, String> getHeaders();
 
     final class ServerData {
         public final String serverAddress;
