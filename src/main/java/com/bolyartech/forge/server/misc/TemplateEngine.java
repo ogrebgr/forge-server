@@ -9,11 +9,29 @@ import javax.annotation.Nonnull;
 public interface TemplateEngine {
     /**
      * Assign value to a variable name
+     * If variable already assigned, value will be overwritten
      *
      * @param varName Variable name
      * @param object  Value
      */
     void assign(@Nonnull String varName, @Nonnull Object object);
+
+    /**
+     * Assigns boolean <code>true</code> to a variable
+     * If variable already assigned, value will be overwritten
+     * @param varName Variable name
+     */
+    void assign(@Nonnull String varName);
+
+    /**
+     * Alias of {@link #assign(String, Object)}
+     */
+    void export(@Nonnull String varName, @Nonnull Object object);
+
+    /**
+     * Alias of {@link #export(String)}
+     */
+    void export(@Nonnull String varName);
 
     /**
      * Renders a template to string
