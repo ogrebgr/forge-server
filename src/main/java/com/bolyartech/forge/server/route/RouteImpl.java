@@ -84,7 +84,7 @@ public class RouteImpl implements Route {
 
     @Override
     public void handle(@Nonnull HttpServletRequest httpReq, @Nonnull HttpServletResponse httpResp) {
-        String ref = "\"-\"";
+        String ref = "-";
         if (httpReq.getHeader("referer") != null) {
             String refRaw = httpReq.getHeader("referer");
             if (refRaw.length() > 255) {
@@ -94,7 +94,7 @@ public class RouteImpl implements Route {
             }
         }
 
-        String ua = "\"-\"";
+        String ua = "-";
         if (httpReq.getHeader("User-Agent") != null) {
             String uaRaw = httpReq.getHeader("User-Agent");
 
@@ -116,11 +116,12 @@ public class RouteImpl implements Route {
 
             logger.trace("{} -> {}: {} {}", httpReq.getRemoteAddr(), httpResp.getStatus(), httpMethod, httpReq.getPathInfo());
 
-            loggerWs.trace("{} - - [{}] \"{} {}\" {} {} {} {}",
+            loggerWs.trace("{} - - [{}] \"{} {} {}\" {} {} \"{}\" \"{}\"",
                     httpReq.getRemoteAddr(),
                     ZonedDateTime.now().format(dateTimeFormatterWebServer),
                     httpMethod,
                     httpReq.getPathInfo(),
+                    httpReq.getProtocol(),
                     httpResp.getStatus(),
                     contentLength,
                     ref,
@@ -133,11 +134,12 @@ public class RouteImpl implements Route {
 
             if (e instanceof StaticResourceNotFoundException) {
                 logger.trace("{} -> 404: {} {}", httpReq.getRemoteAddr(), httpMethod, httpReq.getPathInfo());
-                loggerWs.trace("{} - - [{}] \"{} {}\" {} {} {} {}",
+                loggerWs.trace("{} - - [{}] \"{} {} {}\" {} {} \"{}\" \"{}\"",
                         httpReq.getRemoteAddr(),
                         ZonedDateTime.now().format(dateTimeFormatterWebServer),
                         httpMethod,
                         httpReq.getPathInfo(),
+                        httpReq.getProtocol(),
                         "404",
                         contentLength,
                         ref,
@@ -145,11 +147,12 @@ public class RouteImpl implements Route {
                 );
             } else {
                 logger.trace("{} -> {}: {} {}", httpReq.getRemoteAddr(), httpResp.getStatus(), httpMethod, httpReq.getPathInfo());
-                loggerWs.trace("{} - - [{}] \"{} {}\" {} {} {} {}",
+                loggerWs.trace("{} - - [{}] \"{} {} {}\" {} {} \"{}\" \"{}\"",
                         httpReq.getRemoteAddr(),
                         ZonedDateTime.now().format(dateTimeFormatterWebServer),
                         httpMethod,
                         httpReq.getPathInfo(),
+                        httpReq.getProtocol(),
                         httpResp.getStatus(),
                         contentLength,
                         ref,
