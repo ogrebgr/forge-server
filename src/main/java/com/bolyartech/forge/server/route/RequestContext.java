@@ -2,11 +2,11 @@ package com.bolyartech.forge.server.route;
 
 import com.bolyartech.forge.server.HttpMethod;
 import com.bolyartech.forge.server.session.Session;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.Part;
 
 import javax.annotation.Nonnull;
-import javax.servlet.ServletException;
-import javax.servlet.http.Cookie;
-import javax.servlet.http.Part;
 import java.io.IOException;
 import java.util.List;
 import java.util.Map;
@@ -193,24 +193,28 @@ public interface RequestContext {
 
     /**
      * Returns raw query string, e.g. param1=3&param2=ff
+     *
      * @return Raw query string
      */
     String getRawQueryString();
 
     /**
      * Returns all query parameters with their string values
+     *
      * @return All query parameters
      */
     Map<String, String> getQueryStringParameters();
 
     /**
      * Returns all cookies with their string values
+     *
      * @return All cookies
      */
     List<Cookie> getCookies();
 
     /**
-     *  Returns all headers with their string values
+     * Returns all headers with their string values
+     *
      * @return
      */
     Map<String, String> getHeaders();

@@ -11,6 +11,7 @@ public class DeleteRoute extends RouteImpl {
         this(path, routeHandler, false);
     }
 
+
     public DeleteRoute(@Nonnull String path, @Nonnull RouteHandler routeHandler, boolean isSupportingPathInfo) {
         super(HttpMethod.DELETE, path, routeHandler, isSupportingPathInfo);
     }

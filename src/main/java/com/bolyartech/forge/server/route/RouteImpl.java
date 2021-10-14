@@ -5,11 +5,11 @@ import com.bolyartech.forge.server.handler.RouteHandler;
 import com.bolyartech.forge.server.handler.StaticResourceNotFoundException;
 import com.bolyartech.forge.server.response.Response;
 import com.bolyartech.forge.server.response.ResponseException;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import org.slf4j.LoggerFactory;
 
 import javax.annotation.Nonnull;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import java.time.ZonedDateTime;
 import java.util.regex.Pattern;
 

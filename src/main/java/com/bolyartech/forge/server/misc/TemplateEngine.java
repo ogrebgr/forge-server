@@ -19,6 +19,7 @@ public interface TemplateEngine {
     /**
      * Assigns boolean <code>true</code> to a variable
      * If variable already assigned, value will be overwritten
+     *
      * @param varName Variable name
      */
     void assign(@Nonnull String varName);

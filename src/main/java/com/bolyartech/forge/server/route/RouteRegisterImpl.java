@@ -25,6 +25,12 @@ public class RouteRegisterImpl implements RouteRegister {
     private final int maxPathSegments;
 
 
+    public RouteRegisterImpl(boolean isPathInfoEnabled, int maxPathSegments) {
+        this.isPathInfoEnabled = isPathInfoEnabled;
+        this.maxPathSegments = maxPathSegments;
+    }
+
+
     static int countSlashes(String str) {
         return CharMatcher.is('/').countIn(str);
     }
@@ -36,12 +42,6 @@ public class RouteRegisterImpl implements RouteRegister {
         } else {
             return path.substring(0, path.lastIndexOf('/') + 1);
         }
-    }
-
-
-    public RouteRegisterImpl(boolean isPathInfoEnabled, int maxPathSegments) {
-        this.isPathInfoEnabled = isPathInfoEnabled;
-        this.maxPathSegments = maxPathSegments;
     }
 
 

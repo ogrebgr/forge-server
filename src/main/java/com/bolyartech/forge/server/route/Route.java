@@ -1,13 +1,11 @@
 package com.bolyartech.forge.server.route;
 
 import com.bolyartech.forge.server.HttpMethod;
-import com.bolyartech.forge.server.handler.StaticResourceNotFoundException;
 import com.bolyartech.forge.server.response.ResponseException;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 
 import javax.annotation.Nonnull;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 
 
@@ -43,6 +41,7 @@ public interface Route {
 
     /**
      * Returns if the route supports path info
+     *
      * @return
      */
     boolean isSupportingPathInfo();

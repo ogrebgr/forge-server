@@ -74,7 +74,7 @@ public class FileForgeServerConfigurationLoader implements ForgeServerConfigurat
                 int maxSlashes = ForgeServerConfiguration.DEFAULT_MAX_SLASHES_IN_PATH_INFO;
                 try {
                     maxSlashes = Integer.parseInt(maxSlashesRaw);
-                } catch(NumberFormatException e) {
+                } catch (NumberFormatException e) {
                     logger.error("Invalid value for {}. Must be integer", PROP_MAX_SLASHES_IN_PATH_INFO);
                 }
 

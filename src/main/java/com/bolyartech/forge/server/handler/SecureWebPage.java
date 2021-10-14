@@ -10,6 +10,7 @@ import com.bolyartech.forge.server.route.RequestContext;
 
 /**
  * Web page that <b>must</b> be accessed via HTTPS
+ *
  * @deprecated If you need to prevent http access just disable it in jetty.conf (http_port=0)
  */
 abstract public class SecureWebPage implements RouteHandler {
@@ -31,6 +32,7 @@ abstract public class SecureWebPage implements RouteHandler {
 
     /**
      * Creates new SecureWebPage
+     *
      * @param templateEngineFactory Template engine factory
      */
     public SecureWebPage(TemplateEngineFactory templateEngineFactory) {

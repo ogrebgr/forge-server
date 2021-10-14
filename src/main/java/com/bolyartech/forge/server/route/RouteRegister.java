@@ -12,14 +12,16 @@ import javax.annotation.Nonnull;
 public interface RouteRegister {
     /**
      * Registers a route for "dynamic" endpoints, i.e. non-static files
-     * @see #registerStatics(String, Route)
+     *
      * @param moduleSystemName Module system name
      * @param route            Route
+     * @see #registerStatics(String, Route)
      */
     void register(String moduleSystemName, Route route);
 
     /**
      * Registers a route static files, i.e. html, images, css, js, etc.
+     *
      * @param moduleSystemName
      * @param route
      */
@@ -36,6 +38,7 @@ public interface RouteRegister {
 
     /**
      * Checks if a route is registered in statics, i.e. using {@link #registerStatics(String, Route)}
+     *
      * @param route
      * @return
      */
@@ -51,6 +54,7 @@ public interface RouteRegister {
 
     /**
      * Returns route registration in statics,i.e. registered with {@link #registerStatics(String, Route)}
+     *
      * @param route
      * @return
      */

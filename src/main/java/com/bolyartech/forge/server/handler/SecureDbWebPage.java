@@ -12,6 +12,7 @@ import java.sql.Connection;
 
 /**
  * Web page that must be accessed via HTTPS and use database connection to process the request
+ *
  * @deprecated If you need to prevent http access just disable it in jetty.conf (http_port=0)
  */
 abstract public class SecureDbWebPage extends DbWebPage {
@@ -43,9 +44,10 @@ abstract public class SecureDbWebPage extends DbWebPage {
 
     /**
      * Handles the HTTP request and produces HTML
-     * @param ctx Request context
+     *
+     * @param ctx  Request context
      * @param tple Template engine to be used
-     * @param dbc Database connection
+     * @param dbc  Database connection
      * @return produced HTML
      */
     abstract public String produceHtml(RequestContext ctx, TemplateEngine tple, Connection dbc);

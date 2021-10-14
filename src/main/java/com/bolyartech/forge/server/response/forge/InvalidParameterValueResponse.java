@@ -10,6 +10,7 @@ import javax.annotation.Nonnull;
 public class InvalidParameterValueResponse extends ForgeResponse {
     private static final InvalidParameterValueResponse instance = new InvalidParameterValueResponse();
 
+
     /**
      * Creates new InvalidParameterValueResponse
      */

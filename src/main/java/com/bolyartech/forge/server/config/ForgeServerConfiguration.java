@@ -5,6 +5,9 @@ package com.bolyartech.forge.server.config;
  * Defines interface for server configuration
  */
 public interface ForgeServerConfiguration {
+    boolean DEFAULT_IS_PATH_INFO_ENABLED = true;
+    int DEFAULT_MAX_SLASHES_IN_PATH_INFO = 10;
+
     /**
      * Returns server log name
      * Server log name will be used as prefix to log files. For example for 'myserver' log files will \
@@ -24,16 +27,15 @@ public interface ForgeServerConfiguration {
 
     /**
      * Returns if PATH_INFO functionality is enabled
+     *
      * @return
      */
     boolean isPathInfoEnabled();
 
     /**
      * Max number of slashes in path
+     *
      * @return
      */
     int getMaxSlashesInPathInfo();
-
-    boolean DEFAULT_IS_PATH_INFO_ENABLED = true;
-    int DEFAULT_MAX_SLASHES_IN_PATH_INFO = 10;
 }

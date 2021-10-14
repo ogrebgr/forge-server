@@ -20,6 +20,7 @@ public class GetRoute extends RouteImpl {
         super(HttpMethod.GET, path, routeHandler, isSupportingPathInfo);
     }
 
+
     public GetRoute(@Nonnull String path, @Nonnull RouteHandler routeHandler) {
         this(path, routeHandler, false);
     }

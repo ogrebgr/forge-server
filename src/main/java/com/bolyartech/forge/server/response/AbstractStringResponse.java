@@ -2,10 +2,10 @@ package com.bolyartech.forge.server.response;
 
 import com.google.common.io.ByteStreams;
 import com.google.common.io.CountingOutputStream;
+import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletResponse;
 
 import javax.annotation.Nonnull;
-import javax.servlet.http.Cookie;
-import javax.servlet.http.HttpServletResponse;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -48,9 +48,10 @@ abstract public class AbstractStringResponse extends AbstractResponse implements
 
     /**
      * Creates new AbstractStringResponse
-     * @param cookiesToSet list of cookies to be set. Pass empty list if no cookies have to be added. Don't pass null because it will throw NullPointerException
-     * @param headersToAdd list of headers to be added. If the header already exists, it will be overwritten
-     * @param string String of the response
+     *
+     * @param cookiesToSet      list of cookies to be set. Pass empty list if no cookies have to be added. Don't pass null because it will throw NullPointerException
+     * @param headersToAdd      list of headers to be added. If the header already exists, it will be overwritten
+     * @param string            String of the response
      * @param enableGzipSupport if true Gzip compression will be used if the client supports it
      */
     public AbstractStringResponse(List<Cookie> cookiesToSet, List<HttpHeader> headersToAdd, String string,

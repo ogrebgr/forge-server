@@ -9,7 +9,7 @@ import java.util.UUID;
 
 /**
  * Fake session meant to be used in unit tests
- *
+ * <p>
  * Please note that methods {@link #getCreationTime()}, {@link #getLastAccessedTime()} and
  * {@link #getMaxInactiveInterval()} always return 0, i.e. they have empty implementation
  */

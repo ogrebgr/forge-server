@@ -3,10 +3,10 @@ package com.bolyartech.forge.server.response;
 import com.google.common.base.Strings;
 import com.google.common.io.ByteStreams;
 import com.google.common.io.CountingOutputStream;
+import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletResponse;
 
 import javax.annotation.Nonnull;
-import javax.servlet.http.Cookie;
-import javax.servlet.http.HttpServletResponse;
 import java.io.*;
 import java.text.MessageFormat;
 import java.util.List;
@@ -42,9 +42,8 @@ public class FileUploadResponse extends AbstractResponse {
 
 
     /**
-     *
      * @param cookiesToSet list of cookies to be set
-     * @param @param filePath   Path to the file which will be uploaded
+     * @param @param       filePath   Path to the file which will be uploaded
      */
     public FileUploadResponse(List<Cookie> cookiesToSet, @Nonnull String filePath) {
         super(cookiesToSet);
@@ -59,10 +58,9 @@ public class FileUploadResponse extends AbstractResponse {
 
 
     /**
-     *
      * @param cookiesToSet list of cookies to be set
-     * @param filePath Path to the file which will be uploaded
-     * @param enableGzip if true Gzip compression will be used if supported by the client
+     * @param filePath     Path to the file which will be uploaded
+     * @param enableGzip   if true Gzip compression will be used if supported by the client
      */
     public FileUploadResponse(List<Cookie> cookiesToSet, @Nonnull String filePath, boolean enableGzip) {
         super(cookiesToSet);

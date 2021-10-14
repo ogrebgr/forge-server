@@ -1,9 +1,9 @@
 package com.bolyartech.forge.server.response.forge;
 
 import com.bolyartech.forge.server.response.JsonResponse;
+import jakarta.servlet.http.HttpServletResponse;
 
 import javax.annotation.Nonnull;
-import javax.servlet.http.HttpServletResponse;
 
 
 /**

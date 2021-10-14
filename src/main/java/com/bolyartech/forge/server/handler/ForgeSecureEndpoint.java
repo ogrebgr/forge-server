@@ -8,6 +8,7 @@ import com.bolyartech.forge.server.route.RequestContext;
 
 /**
  * Endpoint that requires request to be using HTTPS
+ *
  * @deprecated If you need to prevent http access just disable it in jetty.conf (http_port=0)
  */
 abstract public class ForgeSecureEndpoint extends ForgeEndpoint {

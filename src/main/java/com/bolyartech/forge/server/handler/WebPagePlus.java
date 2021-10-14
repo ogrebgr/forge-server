@@ -4,9 +4,9 @@ import com.bolyartech.forge.server.misc.TemplateEngine;
 import com.bolyartech.forge.server.misc.TemplateEngineFactory;
 import com.bolyartech.forge.server.response.*;
 import com.bolyartech.forge.server.route.RequestContext;
+import jakarta.servlet.http.Cookie;
 
 import javax.annotation.Nonnull;
-import javax.servlet.http.Cookie;
 import java.util.List;
 
 
@@ -72,6 +72,7 @@ abstract public class WebPagePlus implements RouteHandler {
 
     /**
      * Convenience method for creating HtmlResponse
+     *
      * @param content
      * @return
      */
@@ -82,6 +83,7 @@ abstract public class WebPagePlus implements RouteHandler {
 
     /**
      * Convenience method for creating HtmlResponse
+     *
      * @param content
      * @param cookiesToSet
      * @return
@@ -93,6 +95,7 @@ abstract public class WebPagePlus implements RouteHandler {
 
     /**
      * Convenience method for creating redirect response (302 Moved permanently/Found)
+     *
      * @param location
      * @return
      */

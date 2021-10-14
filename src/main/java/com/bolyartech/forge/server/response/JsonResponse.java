@@ -1,7 +1,8 @@
 package com.bolyartech.forge.server.response;
 
+import jakarta.servlet.http.Cookie;
+
 import javax.annotation.Nonnull;
-import javax.servlet.http.Cookie;
 import java.util.List;
 
 

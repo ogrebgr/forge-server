@@ -3,9 +3,9 @@ package com.bolyartech.forge.server.response;
 import com.bolyartech.forge.server.misc.MimeTypeResolver;
 import com.google.common.io.ByteStreams;
 import com.google.common.io.CountingOutputStream;
+import jakarta.servlet.http.HttpServletResponse;
 
 import javax.annotation.Nonnull;
-import javax.servlet.http.HttpServletResponse;
 import java.io.*;
 import java.time.Instant;
 import java.time.ZoneId;

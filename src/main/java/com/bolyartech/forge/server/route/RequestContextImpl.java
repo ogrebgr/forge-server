@@ -6,12 +6,12 @@ import com.bolyartech.forge.server.session.Session;
 import com.bolyartech.forge.server.session.SessionImpl;
 import com.google.common.base.Strings;
 import com.google.common.io.CharStreams;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.Part;
 
 import javax.annotation.Nonnull;
-import javax.servlet.ServletException;
-import javax.servlet.http.Cookie;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.Part;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
@@ -123,46 +123,12 @@ public class RequestContextImpl implements RequestContext {
     }
 
 
-    private void extractPostParameters() throws IOException {
-        String body = getBody();
-        if (httpReq.getMethod().equalsIgnoreCase(HttpMethod.POST.getLiteral())) {
-            String contentType = httpReq.getHeader(HEADER_CONTENT_TYPE);
-            if (contentType != null) {
-                if (contentType.toLowerCase().contains(CONTENT_TYPE_FORM_ENCODED.toLowerCase())) {
-                    extractParameters(body, postParams);
-                } else if (contentType.toLowerCase().contains(CONTENT_TYPE_MULTIPART.toLowerCase())) {
-                    isMultipart = true;
-                }
-            }
-        }
-
-        arePostParametersExtracted = true;
-    }
-
-
     @Override
     public List<String> getPathInfoParameters() {
         if (!arePiParametersExtracted) {
             extractPiParameters();
         }
         return pathInfoParams;
-    }
-
-
-    private void extractPiParameters() {
-        //protection against directory traversal. Jetty never sends '..' here but other containers may do so...
-        if (pathInfoParams.contains("..")) {
-            throw new IllegalStateException("Path info contains '..'");
-        }
-
-        String[] piRaw = pathInfoString.split("/");
-        for (String s : piRaw) {
-            if (s.trim().length() > 0) {
-                pathInfoParams.add(s);
-            }
-        }
-
-        arePiParametersExtracted = true;
     }
 
 
@@ -206,17 +172,6 @@ public class RequestContextImpl implements RequestContext {
         return cookieParams.get(cookieName);
     }
 
-    private void initializeCookies() {
-        if (!cookiesInitialized) {
-            Cookie[] cs = httpReq.getCookies();
-            if (cs != null) {
-                for (Cookie c : cs) {
-                    cookieParams.put(c.getName(), c);
-                }
-            }
-            cookiesInitialized = true;
-        }
-    }
 
     @Override
     public String optFromGet(@Nonnull String parameterName, @Nonnull String defaultValue) {
@@ -327,7 +282,7 @@ public class RequestContextImpl implements RequestContext {
 
 
     @Override
-    public String getBody()  {
+    public String getBody() {
         if (!isBodyConsumed) {
             try {
                 body = CharStreams.toString(httpReq.getReader());
@@ -380,5 +335,52 @@ public class RequestContextImpl implements RequestContext {
         }
 
         return ret;
+    }
+
+
+    private void extractPostParameters() throws IOException {
+        String body = getBody();
+        if (httpReq.getMethod().equalsIgnoreCase(HttpMethod.POST.getLiteral())) {
+            String contentType = httpReq.getHeader(HEADER_CONTENT_TYPE);
+            if (contentType != null) {
+                if (contentType.toLowerCase().contains(CONTENT_TYPE_FORM_ENCODED.toLowerCase())) {
+                    extractParameters(body, postParams);
+                } else if (contentType.toLowerCase().contains(CONTENT_TYPE_MULTIPART.toLowerCase())) {
+                    isMultipart = true;
+                }
+            }
+        }
+
+        arePostParametersExtracted = true;
+    }
+
+
+    private void extractPiParameters() {
+        //protection against directory traversal. Jetty never sends '..' here but other containers may do so...
+        if (pathInfoParams.contains("..")) {
+            throw new IllegalStateException("Path info contains '..'");
+        }
+
+        String[] piRaw = pathInfoString.split("/");
+        for (String s : piRaw) {
+            if (s.trim().length() > 0) {
+                pathInfoParams.add(s);
+            }
+        }
+
+        arePiParametersExtracted = true;
+    }
+
+
+    private void initializeCookies() {
+        if (!cookiesInitialized) {
+            Cookie[] cs = httpReq.getCookies();
+            if (cs != null) {
+                for (Cookie c : cs) {
+                    cookieParams.put(c.getName(), c);
+                }
+            }
+            cookiesInitialized = true;
+        }
     }
 }

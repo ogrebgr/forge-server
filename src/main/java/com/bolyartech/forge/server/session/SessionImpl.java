@@ -1,7 +1,8 @@
 package com.bolyartech.forge.server.session;
 
+import jakarta.servlet.http.HttpSession;
+
 import javax.annotation.Nonnull;
-import javax.servlet.http.HttpSession;
 import java.io.Serializable;
 
 
