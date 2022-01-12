@@ -10,6 +10,7 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.Part;
+import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nonnull;
 import java.io.IOException;
@@ -30,8 +31,8 @@ public class RequestContextImpl implements RequestContext {
 
 
     private final HttpServletRequest httpReq;
-    private final Map<String, String> queryParams = new HashMap<>();
-    private final Map<String, String> postParams = new HashMap<>();
+    private final Map<String, List<String>> queryParams = new HashMap<>();
+    private final Map<String, List<String>> postParams = new HashMap<>();
     private final Map<String, Cookie> cookieParams = new HashMap<>();
     private final List<String> pathInfoParams = new ArrayList<>();
     private final String routePath;
@@ -64,22 +65,33 @@ public class RequestContextImpl implements RequestContext {
     }
 
 
-    static void extractParameters(@Nonnull String queryString, @Nonnull Map<String, String> to) {
+    static void extractParameters(@Nonnull String queryString, @Nonnull Map<String, List<String>> to) {
         if (!Strings.isNullOrEmpty(queryString)) {
             try {
                 String[] split = queryString.split("&");
                 for (String aSplit : split) {
                     String[] keyValue = aSplit.split("=");
                     if (keyValue.length == 1) {
-                        to.put(URLDecoder.decode(keyValue[0], "UTF-8"), "");
+                        addParamValue(URLDecoder.decode(keyValue[0], "UTF-8"), "", to);
                     } else {
-                        to.put(URLDecoder.decode(keyValue[0], "UTF-8"), URLDecoder.decode(keyValue[1], "UTF-8"));
+                        addParamValue(URLDecoder.decode(keyValue[0], "UTF-8"), URLDecoder.decode(keyValue[1], "UTF-8"), to);
                     }
                 }
             } catch (UnsupportedEncodingException e) {
                 throw new RuntimeException(e);
             }
         }
+    }
+
+    private static void addParamValue(String key, String value, Map<String, List<String>> to) {
+        List<String> tmp = to.get(key);
+
+        if (tmp == null) {
+            tmp = new ArrayList<>();
+            to.put(key, tmp);
+        }
+
+        tmp.add(value);
     }
 
 
@@ -99,7 +111,13 @@ public class RequestContextImpl implements RequestContext {
             extractParameters(httpReq.getQueryString(), queryParams);
             areGetParametersExtracted = true;
         }
-        return queryParams.get(parameterName);
+
+        List<String> list = queryParams.get(parameterName);
+        if (list != null && list.size() > 0) {
+            return list.get(0);
+        } else {
+            return null;
+        }
     }
 
 
@@ -110,7 +128,37 @@ public class RequestContextImpl implements RequestContext {
 
 
     @Override
+    public List<String> getMultipleFromQuery(@NotNull String parameterName) {
+        if (!areGetParametersExtracted) {
+            extractParameters(httpReq.getQueryString(), queryParams);
+            areGetParametersExtracted = true;
+        }
+
+        return queryParams.get(parameterName);
+    }
+
+
+    @Override
     public String getFromPost(@Nonnull String parameterName) {
+        if (!arePostParametersExtracted) {
+            try {
+                extractPostParameters();
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+        }
+
+        List<String> list = postParams.get(parameterName);
+        if (list != null && list.size() > 0) {
+            return list.get(0);
+        } else {
+            return null;
+        }
+    }
+
+
+    @Override
+    public List<String> getMultipleFromPost(@NotNull String parameterName) {
         if (!arePostParametersExtracted) {
             try {
                 extractPostParameters();
@@ -299,16 +347,6 @@ public class RequestContextImpl implements RequestContext {
     @Override
     public String getRawQueryString() {
         return httpReq.getQueryString();
-    }
-
-
-    @Override
-    public Map<String, String> getQueryStringParameters() {
-        if (!areGetParametersExtracted) {
-            extractParameters(httpReq.getQueryString(), queryParams);
-        }
-
-        return queryParams;
     }
 
 

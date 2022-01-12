@@ -25,15 +25,16 @@ public interface RequestContext {
     Session getSession();
 
     /**
-     * Gets a variable form query parameters
+     * Returns the value of a query parameter as a String, or null if the parameter does not exist.
      *
      * @param parameterName Parameter name
      * @return Parameter value
+     * @deprecated use {@link #getFromQuery(String)}
      */
     String getFromGet(@Nonnull String parameterName);
 
     /**
-     * Gets a variable form query parameters. Alias of {@link #getFromGet(String)}
+     * Returns the value of a query parameter as a String, or null if the parameter does not exist. Alias of {@link #getFromGet(String)}
      *
      * @param parameterName Parameter name
      * @return Parameter value
@@ -41,12 +42,30 @@ public interface RequestContext {
     String getFromQuery(@Nonnull String parameterName);
 
     /**
-     * Gets a variable form POST parameters
+     * Returns multi value of a query parameter as a List<String>, or null if the parameter does not exist.
+     * Multi-values happen for example when several checkboxes with same name and different values are present in the form
+     *
+     * @param parameterName Parameter name
+     * @return List with values (if any)
+     */
+    List<String> getMultipleFromQuery(@Nonnull String parameterName);
+
+    /**
+     * Returns the value of a POST parameter as a String, or null if the parameter does not exist.
      *
      * @param parameterName Parameter name
      * @return Parameter value
      */
     String getFromPost(@Nonnull String parameterName);
+
+    /**
+     * Returns multi value of a query parameter as a List<String>, or null if the parameter does not exist.
+     * Multi-values happen for example when several checkboxes with same name and different values are present in the form
+     *
+     * @param parameterName Parameter name
+     * @return List with values (if any)
+     */
+    List<String> getMultipleFromPost(@Nonnull String parameterName);
 
     /**
      * @return List containing path info parameters ordered from left to right
@@ -197,13 +216,6 @@ public interface RequestContext {
      * @return Raw query string
      */
     String getRawQueryString();
-
-    /**
-     * Returns all query parameters with their string values
-     *
-     * @return All query parameters
-     */
-    Map<String, String> getQueryStringParameters();
 
     /**
      * Returns all cookies with their string values
