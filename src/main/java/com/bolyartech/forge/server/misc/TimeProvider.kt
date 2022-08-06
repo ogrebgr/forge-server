@@ -1,4 +1,4 @@
-package org.example.kforge.misc
+package com.bolyartech.forge.server.misc
 
 import java.time.LocalDateTime
 import java.time.ZoneOffset
