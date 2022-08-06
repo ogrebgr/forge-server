@@ -1,5 +1,5 @@
 ext {
-    forge_server_version = '12.0.2'
+    forge_server_version = '12.1.0'
 }
 
 group 'com.bolyartech.forge'
@@ -25,10 +25,11 @@ buildscript {
 dependencies {
     compile group: 'com.google.code.findbugs', name: 'jsr305', version: '3.0.2'
     compile 'jakarta.servlet:jakarta.servlet-api:5.0.0'
-    compile 'org.slf4j:slf4j-api:1.7.32'
+    compile 'org.slf4j:slf4j-api:1.7.36'
     compile 'ch.qos.logback:logback-classic:1.3.0-alpha5'
-    compile 'com.google.guava:guava:30.1.1-jre'
+    compile 'com.google.guava:guava:31.1-jre'
     compile  group: 'com.mchange', name: 'c3p0', version: '0.9.5.5'
+    implementation 'javax.inject:javax.inject:1'
 
     testCompile group: 'junit', name: 'junit', version: '4.11'
 }
