@@ -62,8 +62,8 @@ public class FileDbConfigurationLoader implements DbConfigurationLoader {
                         Integer.parseInt(prop.getProperty(PROP_C3P0_MIN_POOL_SIZE)),
                         Integer.parseInt(prop.getProperty(PROP_C3P0_MAX_POOL_SIZE)),
                         Integer.parseInt(prop.getProperty(PROP_C3P0_IDLE_CONNECTION_TEST_PERIOD)),
-                        Boolean.valueOf(prop.getProperty(PROP_C3P0_TEST_CONNECTION_ON_CHECK_IN)),
-                        Boolean.valueOf(prop.getProperty(PROP_C3P0_TEST_CONNECTION_ON_CHECKOUT))
+                        Boolean.parseBoolean(prop.getProperty(PROP_C3P0_TEST_CONNECTION_ON_CHECK_IN)),
+                        Boolean.parseBoolean(prop.getProperty(PROP_C3P0_TEST_CONNECTION_ON_CHECKOUT))
                 );
             } catch (Exception e) {
                 logger.error("Error populating configuration", e);
