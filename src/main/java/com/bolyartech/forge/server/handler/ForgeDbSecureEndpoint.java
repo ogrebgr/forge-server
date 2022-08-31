@@ -46,11 +46,12 @@ abstract public class ForgeDbSecureEndpoint extends ForgeSecureEndpoint {
     @Override
     public ForgeResponse handleForgeSecure(RequestContext ctx) {
         try {
-            Connection dbc = dbPool.getConnection();
-            ForgeResponse ret = handleForgeSecure(ctx, dbc);
-            dbc.close();
+            try (Connection dbc = dbPool.getConnection()) {
+                ForgeResponse ret = handleForgeSecure(ctx, dbc);
+                dbc.close();
 
-            return ret;
+                return ret;
+            }
         } catch (SQLException e) {
             throw new ResponseException(e);
         }

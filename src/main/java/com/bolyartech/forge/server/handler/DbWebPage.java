@@ -52,11 +52,11 @@ abstract public class DbWebPage implements DbWebPageInterface {
     @Override
     public Response handle(@Nonnull RequestContext ctx) throws ResponseException {
         try {
-            Connection dbc = dbPool.getConnection();
-            String content = produceHtml(ctx, templateEngineFactory.createNew(), dbc);
-            dbc.close();
+            try (Connection dbc = dbPool.getConnection()) {
+                String content = produceHtml(ctx, templateEngineFactory.createNew(), dbc);
 
-            return new HtmlResponse(content, enableGzipSupport);
+                return new HtmlResponse(content, enableGzipSupport);
+            }
         } catch (SQLException e) {
             throw new ResponseException(e);
         }

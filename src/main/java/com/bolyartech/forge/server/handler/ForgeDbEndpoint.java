@@ -46,11 +46,12 @@ abstract public class ForgeDbEndpoint extends ForgeEndpoint {
     @Override
     public ForgeResponse handleForge(@Nonnull RequestContext ctx) {
         try {
-            Connection dbc = dbPool.getConnection();
-            ForgeResponse ret = handleForge(ctx, dbc);
-            dbc.close();
+            try (Connection dbc = dbPool.getConnection()) {
+                ForgeResponse ret = handleForge(ctx, dbc);
+                dbc.close();
 
-            return ret;
+                return ret;
+            }
         } catch (SQLException e) {
             throw new ResponseException(e);
         }
