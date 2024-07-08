@@ -1,5 +1,6 @@
 package com.bolyartech.forge.server.db
 
+import org.slf4j.Logger
 import java.sql.Connection
 import java.sql.SQLException
 
@@ -97,6 +98,25 @@ fun simpleTrans(
 
         dbc.commit()
     } catch (e: Exception) {
+        dbc.rollback()
+        throw e
+    } finally {
+        dbc.autoCommit = true
+    }
+}
+
+fun executeInTrans(
+    dbc: Connection,
+    logger: Logger,
+    f: () -> Unit) {
+    try {
+        dbc.autoCommit = false
+
+        f()
+
+        dbc.commit()
+    } catch (e: Exception) {
+        logger.error("Error in DB trans", e)
         dbc.rollback()
         throw e
     } finally {
