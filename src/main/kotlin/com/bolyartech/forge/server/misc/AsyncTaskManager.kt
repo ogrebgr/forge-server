@@ -1,6 +1,5 @@
 package com.bolyartech.forge.server.misc
 
-import com.bolyartech.forge.server.misc.*
 import java.util.*
 import java.util.concurrent.ConcurrentHashMap
 import java.util.concurrent.ExecutorService
@@ -44,12 +43,12 @@ class AsyncTaskManagerImpl @Inject constructor(
         }
     }
 
-    override fun execute(task: AsyncTask, ttl: Int): AsyncTaskData {
+    override fun execute(task: AsyncTask, ttlMillis: Int): AsyncTaskData {
         val ret = AsyncTaskData(
             idSequence.incrementAndGet(),
             AsyncTaskData.State.NEW,
             timeProvider.getWallClockTime(),
-            ttl,
+            ttlMillis,
             null,
             UUID.randomUUID().toString()
         )
