@@ -147,7 +147,7 @@ class RouteRegisterImpl(isPathInfoEnabled: Boolean, maxPathSegments: Int) : Rout
 
         endpointsStartsWith.forEach {
             if (it.route.getPath() == route.getPath()) {
-                throw RouteRegisterExceptionAlreadyRegistered(route.getPath())
+                throw RouteRegisterExceptionAlreadyRegistered(route.getPath(), route.getHttpMethod())
             }
         }
 
@@ -163,7 +163,7 @@ class RouteRegisterImpl(isPathInfoEnabled: Boolean, maxPathSegments: Int) : Rout
         moduleName: String,
         route: Route
     ) {
-        val warn = endpoints.containsKey(route.getPath())
+        val alreadyAdded = endpoints.containsKey(route.getPath())
         val wildcard = if (route is RouteRuntimeResolved) {
             "*"
         } else {
@@ -171,10 +171,10 @@ class RouteRegisterImpl(isPathInfoEnabled: Boolean, maxPathSegments: Int) : Rout
         }
 
         endpoints[route.getPath()] = RouteRegister.Registration(moduleName, route)
-        if (!warn) {
+        if (!alreadyAdded) {
             logger.info("Registered route ${route.getHttpMethod()} ${route.getPath()}$wildcard (${route.getHandler()::class.simpleName})")
         } else {
-            throw RouteRegisterExceptionAlreadyRegistered(route.getPath())
+            throw RouteRegisterExceptionAlreadyRegistered(route.getPath(), route.getHttpMethod())
         }
     }
 
@@ -419,4 +419,4 @@ class RouteRegisterImpl(isPathInfoEnabled: Boolean, maxPathSegments: Int) : Rout
 
 sealed class RouteRegisterException(message: String) : Exception(message)
 class RouteRegisterExceptionBadPathFormat(msg: String) : RouteRegisterException("Bad path format. $msg")
-class RouteRegisterExceptionAlreadyRegistered(path: String) : RouteRegisterException("Path already registered. $path")
+class RouteRegisterExceptionAlreadyRegistered(path: String, method: HttpMethod) : RouteRegisterException("Path already registered: $method: $path")
