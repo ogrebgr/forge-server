@@ -1,17 +1,18 @@
 plugins {
     id 'java-library'
-    id 'org.jetbrains.kotlin.jvm' version '1.9.0'
+    id 'org.jetbrains.kotlin.jvm' version '1.9.23'
+    id "signing"
+//    id 'io.github.gradle-nexus.publish-plugin' version '2.0.0'
 }
 
 ext {
-    forge_server_version = '21.3.1'
+    forge_server_version = '21.3.3'
 }
 
 group 'com.bolyartech.forge.server'
 version forge_server_version
 
 apply plugin: 'maven-publish'
-apply plugin: 'signing'
 
 repositories {
     mavenCentral()
@@ -23,10 +24,10 @@ dependencies {
     api 'javax.inject:javax.inject:1'
     api  group: 'com.zaxxer', name: 'HikariCP', version: '5.0.1'
     implementation 'org.slf4j:slf4j-api:2.0.5'
-    implementation 'ch.qos.logback:logback-classic:1.4.12'
+    implementation 'ch.qos.logback:logback-classic:1.5.19'
     implementation group: 'com.google.guava', name: 'guava', version: '33.0.0-jre'
     implementation group: 'commons-cli', name: 'commons-cli', version: '1.4'
-    api group: 'org.apache.velocity', name: 'velocity-engine-core', version: '2.3'
+    api group: 'org.apache.velocity', name: 'velocity-engine-core', version: '2.4.1'
     api group: 'org.apache.velocity.tools', name: 'velocity-tools-generic', version: '3.1'
 
     testImplementation 'org.jetbrains.kotlin:kotlin-test'
@@ -36,12 +37,10 @@ test {
     useJUnitPlatform()
 }
 
-kotlin {
-    jvmToolchain(11)
+
+tasks.withType(Javadoc).all {
+    enabled = false
 }
-//tasks.withType(Javadoc).all {
-//    enabled = false
-//}
 
 task javadocJar(type: Jar) {
     classifier = 'javadoc'
@@ -57,10 +56,6 @@ artifacts {
     archives javadocJar, sourcesJar
 }
 
-
-signing {
-    sign configurations.archives
-}
 
 javadoc.options.addStringOption('Xdoclint:none', '-quiet')
 
@@ -103,24 +98,25 @@ publishing {
             }
         }
     }
-
-    repositories {
-        maven {
-            name = "ossrh"
-            url = "https://s01.oss.sonatype.org/service/local/staging/deploy/maven2/"
-            credentials {
-                username = findProperty('ossrhUsername')
-                password = findProperty('ossrhPassword')
-            }
-        }
-    }
 }
-
-
+//nexusPublishing {
+//    repositories {
+//        sonatype {
+//            stagingProfileId.set("com.bolyartech")
+//            nexusUrl.set(uri("https://ossrh-staging-api.central.sonatype.com/service/local/"))
+//            snapshotRepositoryUrl.set(uri("https://central.sonatype.com/repository/maven-snapshots/"))
+//            username = findProperty('ossrhUsername')
+//            password = findProperty('ossrhPassword')
+//        }
+//    }
+//}
 
 signing {
     sign publishing.publications.mavenJava
 }
 
-archivesBaseName = "forge-server"
+
+kotlin {
+    jvmToolchain(17)
+}
 

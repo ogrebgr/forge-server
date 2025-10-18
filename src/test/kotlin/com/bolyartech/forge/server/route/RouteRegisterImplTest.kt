@@ -2,7 +2,6 @@ package com.bolyartech.forge.server.route
 
 import com.bolyartech.forge.server.HttpMethod
 import com.bolyartech.forge.server.handler.RouteHandler
-import com.bolyartech.forge.server.handler.WebPage
 import com.bolyartech.forge.server.response.Response
 import org.junit.jupiter.api.Test
 
