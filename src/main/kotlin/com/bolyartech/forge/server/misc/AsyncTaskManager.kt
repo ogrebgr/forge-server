@@ -108,7 +108,7 @@ class AsyncTaskManagerImpl @Inject constructor(
         return Runnable {
             val it = map.iterator()
             val now = timeProvider.getWallClockTime()
-            while(it.hasNext()) {
+            while (it.hasNext()) {
                 val item = it.next()
                 if (item.value.ts.plusNanos(TimeUnit.MILLISECONDS.toNanos(item.value.ttl.toLong())).isBefore(now)) {
                     map.remove(item.value.id)

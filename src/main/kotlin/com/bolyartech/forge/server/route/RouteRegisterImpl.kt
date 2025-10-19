@@ -419,4 +419,5 @@ class RouteRegisterImpl(isPathInfoEnabled: Boolean, maxPathSegments: Int) : Rout
 
 sealed class RouteRegisterException(message: String) : Exception(message)
 class RouteRegisterExceptionBadPathFormat(msg: String) : RouteRegisterException("Bad path format. $msg")
-class RouteRegisterExceptionAlreadyRegistered(path: String, method: HttpMethod) : RouteRegisterException("Path already registered: $method: $path")
+class RouteRegisterExceptionAlreadyRegistered(path: String, method: HttpMethod) :
+    RouteRegisterException("Path already registered: $method: $path")

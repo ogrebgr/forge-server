@@ -16,7 +16,7 @@ private const val HEX_CHARS = "0123456789abcdef"
 fun String.hexStringToByteArray(): ByteArray {
 
     val result = ByteArray(length / 2)
-    val tmp = this.toLowerCase()
+    val tmp = this.lowercase()
     for (i in 0 until length step 2) {
         val firstIndex = HEX_CHARS.indexOf(tmp[i])
         val secondIndex = HEX_CHARS.indexOf(tmp[i + 1])

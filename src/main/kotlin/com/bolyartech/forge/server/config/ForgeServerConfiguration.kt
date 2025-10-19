@@ -21,7 +21,7 @@ data class ForgeServerConfiguration(
 
         fun extractIntValue(prop: Properties, propertyName: String, default: Int? = null): Int {
             val tmp = prop.getProperty(propertyName) ?: run {
-                if (default != null ) {
+                if (default != null) {
                     return default
                 } else {
                     throw ForgeConfigurationException("$propertyName is missing/empty")

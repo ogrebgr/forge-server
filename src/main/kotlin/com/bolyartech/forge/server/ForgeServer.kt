@@ -17,7 +17,6 @@ import java.io.File
 import java.nio.file.FileSystem
 import java.nio.file.FileSystems
 import java.nio.file.Path
-import java.util.*
 import javax.sql.DataSource
 import kotlin.io.path.exists
 import kotlin.io.path.pathString
@@ -40,7 +39,7 @@ interface ForgeServer {
 
     fun testDbConnection()
 
-    fun getInstrumentationReader() : WebServerInstrumentationReader
+    fun getInstrumentationReader(): WebServerInstrumentationReader
 
     data class ConfigurationPack(
         val configurationDirectory: Path,
@@ -119,7 +118,7 @@ abstract class AbstractForgeServer() : ForgeServer {
 
     private var webServer: WebServer? = null
 
-    private lateinit var shutdownHook : Thread
+    private lateinit var shutdownHook: Thread
 
 
     @Override

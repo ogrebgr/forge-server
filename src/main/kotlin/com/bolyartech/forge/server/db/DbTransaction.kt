@@ -108,7 +108,8 @@ fun simpleTrans(
 fun executeInTrans(
     dbc: Connection,
     logger: Logger,
-    f: () -> Unit) {
+    f: () -> Unit
+) {
     try {
         dbc.autoCommit = false
 
@@ -124,14 +125,15 @@ fun executeInTrans(
     }
 }
 
-fun <T>executeInTrans(
+fun <T> executeInTrans(
     dbc: Connection,
     logger: Logger,
-    f: () -> T) : T {
+    f: () -> T
+): T {
     try {
         dbc.autoCommit = false
 
-        val ret : T = f()
+        val ret: T = f()
 
         dbc.commit()
         return ret
