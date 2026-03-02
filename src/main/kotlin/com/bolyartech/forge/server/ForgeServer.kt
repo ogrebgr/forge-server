@@ -166,6 +166,7 @@ abstract class AbstractForgeServer() : ForgeServer {
     @Override
     override fun shutdown() {
         require(isStarted)
+        logger.info("Shutting down forge server...")
 
         isStarted = false
         isShutdown = true
@@ -177,6 +178,7 @@ abstract class AbstractForgeServer() : ForgeServer {
         override fun run() {
             synchronized(this@AbstractForgeServer) {
                 webServer?.stop()
+                logger.info("Forge server shut down successfully.")
                 onShutdown()
             }
         }
