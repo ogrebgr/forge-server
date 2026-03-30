@@ -8,6 +8,7 @@
     2.6. wait to get published
     2.7. git tag -a vVersion -m "vVersion release"
     2.8. git push origin --tags
+    2.9. in build.gradle comment back plugin gradle-nexus.publish-plugin and nexusPublishing
 3. for forge-server-jetty
     3.1. In settings.gradle comment the includes()
     3.2. In gradle.build/dependencies comment api project(':forge-server')
