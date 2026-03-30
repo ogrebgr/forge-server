@@ -72,6 +72,8 @@ abstract class AbstractResponseBuilder constructor(private val statusCode: Int) 
             throw HeaderAlreadyExistException(header.header)
         }
 
+        headers[header.header] = header
+
         return this
     }
 
