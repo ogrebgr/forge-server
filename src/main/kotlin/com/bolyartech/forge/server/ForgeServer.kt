@@ -23,14 +23,16 @@ import kotlin.io.path.pathString
 
 
 interface ForgeServer {
+    /**
+     * @return `true` if Forge server is started successfully, `false` otherwise.
+     */
     @Throws(ForgeConfigurationException::class)
-    fun start(configurationPack: ConfigurationPack, fileSystem: FileSystem)
+    fun start(configurationPack: ConfigurationPack, fileSystem: FileSystem): Boolean
     fun shutdown()
 
     fun onStart()
     fun onBeforeWebServerStart()
     fun onAfterWebServerStart(webServerStopper: WebServerStopper)
-    fun onShutdown()
 
     fun createWebServer(
         forgeConfig: ConfigurationPack,
@@ -118,15 +120,12 @@ abstract class AbstractForgeServer() : ForgeServer {
 
     private var webServer: WebServer? = null
 
-    private lateinit var shutdownHook: Thread
-
 
     @Override
-    override fun start(configurationPack: ForgeServer.ConfigurationPack, fileSystem: FileSystem) {
+    override fun start(configurationPack: ForgeServer.ConfigurationPack, fileSystem: FileSystem): Boolean {
         require(!isStarted)
         require(!isShutdown)
-        shutdownHook = Thread(ShutDownHookRunnable())
-        Runtime.getRuntime().addShutdownHook(shutdownHook)
+
         isStarted = true
 
         onStart()
@@ -138,7 +137,7 @@ abstract class AbstractForgeServer() : ForgeServer {
             val ulDir = this.fileSystem!!.getPath(config!!.forgeServerConfiguration.uploadsDirectory)
             if (!ulDir.exists()) {
                 logger.error("Uploads dir specified in forge.conf (${ulDir.pathString}) does not exists. Leave blank if not used.")
-                return
+                return false
             }
         }
 
@@ -146,16 +145,21 @@ abstract class AbstractForgeServer() : ForgeServer {
             val dlDir = this.fileSystem!!.getPath(config!!.forgeServerConfiguration.downloadsDirectory)
             if (!dlDir.exists()) {
                 logger.error("Downloads dir specified in forge.conf (${dlDir.pathString}) does not exists. Leave blank if not used.")
-                return
+                return false
             }
         }
 
         onBeforeWebServerStart()
         webServer = createWebServer(config!!, fileSystem)
         testDbConnection()
-        webServer!!.start()
+        if (!webServer!!.start()) {
+            logger.warn("Web server failed to start, so we abort Forge server start.")
+            return false
+        }
 
         onAfterWebServerStart(webServer!!)
+
+        return true
     }
 
     override fun getInstrumentationReader(): WebServerInstrumentationReader {
@@ -171,27 +175,9 @@ abstract class AbstractForgeServer() : ForgeServer {
         isStarted = false
         isShutdown = true
 
-        NormalShutDownRunnable().run()
-    }
+        webServer?.stop()
 
-    inner class ShutDownHookRunnable : Runnable {
-        override fun run() {
-            synchronized(this@AbstractForgeServer) {
-                webServer?.stop()
-                logger.info("Forge server shut down successfully.")
-                onShutdown()
-            }
-        }
-    }
-
-    inner class NormalShutDownRunnable : Runnable {
-        override fun run() {
-            synchronized(this@AbstractForgeServer) {
-                Runtime.getRuntime().removeShutdownHook(shutdownHook)
-                webServer?.stop()
-                onShutdown()
-            }
-        }
+        logger.info("Forge server shut down successfully.")
     }
 }
 
@@ -204,8 +190,5 @@ abstract class AbstractForgeServerAdapter : AbstractForgeServer() {
     }
 
     override fun onAfterWebServerStart(webServerStopper: WebServerStopper) {
-    }
-
-    override fun onShutdown() {
     }
 }

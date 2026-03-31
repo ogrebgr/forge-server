@@ -6,7 +6,10 @@ interface WebServerStopper {
 }
 
 interface WebServer : WebServerStopper {
-    fun start()
+    /**
+     * @return `true` if server is started successfully, `false` otherwise.
+     */
+    fun start(): Boolean
     fun getInstrumentation(): WebServerInstrumentationReader
 }
 
