@@ -1,12 +1,12 @@
 plugins {
     id 'java-library'
-    id 'org.jetbrains.kotlin.jvm' version '1.9.23'
+    id 'org.jetbrains.kotlin.jvm' version '2.2.20'
     id "signing"
 //    id 'io.github.gradle-nexus.publish-plugin' version '2.0.0'
 }
 
 ext {
-    forge_server_version = '22.1.2'
+    forge_server_version = '23.0.0'
 }
 
 group 'com.bolyartech.forge.server'
@@ -41,13 +41,13 @@ tasks.withType(Javadoc).all {
     enabled = false
 }
 
-task javadocJar(type: Jar) {
-    classifier = 'javadoc'
+tasks.register('javadocJar', Jar) {
+    archiveClassifier = 'javadoc'
     from javadoc
 }
 
-task sourcesJar(type: Jar) {
-    classifier = 'sources'
+tasks.register('sourcesJar', Jar) {
+    archiveClassifier = 'sources'
     from sourceSets.main.allSource
 }
 
@@ -98,7 +98,7 @@ publishing {
         }
     }
 }
-
+//
 //nexusPublishing {
 //    repositories {
 //        sonatype {
