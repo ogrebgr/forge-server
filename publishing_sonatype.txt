@@ -19,6 +19,7 @@
     3.7. in https://central.sonatype.com/publishing/deployments manually publish
     3.8. git tag -a vVersion -m "vVersion release"
     3.9. git push origin --tags
+    3.10. in build.gradle comment back plugin gradle-nexus.publish-plugin and nexusPublishing
 
 
 
