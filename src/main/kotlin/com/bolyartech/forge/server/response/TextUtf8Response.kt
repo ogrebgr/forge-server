@@ -3,10 +3,7 @@ package com.bolyartech.forge.server.response
 import com.bolyartech.forge.HttpResponseCodes
 import jakarta.servlet.http.Cookie
 
-/**
- * HTML str response
- */
-open class HtmlResponse(
+open class TextUtf8Response(
     str: String,
     cookiesToSet: List<Cookie> = emptyList(),
     headersToAdd: List<HttpHeader> = emptyList(),
@@ -14,9 +11,8 @@ open class HtmlResponse(
     statusCode: Int = HttpResponseCodes.OK.code,
 ) : AbstractStringResponse(str, cookiesToSet, headersToAdd, enableGzipSupport, statusCode) {
     companion object {
-        private const val CONTENT_TYPE = "text/html;charset=UTF-8"
+        private const val CONTENT_TYPE = "text/plain;charset=UTF-8"
     }
-
 
     override fun getContentType(): String {
         return CONTENT_TYPE

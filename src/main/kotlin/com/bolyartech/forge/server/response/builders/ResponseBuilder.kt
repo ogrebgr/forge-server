@@ -24,10 +24,10 @@ interface ResponseBuilder {
 }
 
 
-abstract class AbstractResponseBuilder constructor(private val statusCode: Int) : ResponseBuilder {
+abstract class AbstractResponseBuilder(private val statusCode: Int) : ResponseBuilder {
     private var enableGzipSupport = true
-    private val cookies: MutableMap<String, Cookie> = mutableMapOf<String, Cookie>()
-    private val headers: MutableMap<String, HttpHeader> = mutableMapOf<String, HttpHeader>()
+    private val cookies: MutableMap<String, Cookie> = mutableMapOf()
+    private val headers: MutableMap<String, HttpHeader> = mutableMapOf()
 
     override fun getStatusCode(): Int {
         return statusCode

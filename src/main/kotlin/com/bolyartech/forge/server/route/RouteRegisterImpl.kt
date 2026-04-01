@@ -251,7 +251,7 @@ class RouteRegisterImpl(isPathInfoEnabled: Boolean, maxPathSegments: Int) : Rout
         }
     }
 
-    override fun getRegistration(@Nonnull route: Route): RouteRegister.Registration? {
+    override fun getRegistration(route: Route): RouteRegister.Registration? {
         return when (route.getHttpMethod()) {
             HttpMethod.GET -> {
                 when (route) {

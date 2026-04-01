@@ -1,6 +1,8 @@
 package com.bolyartech.forge.server.config
 
 import org.slf4j.LoggerFactory
+import java.net.MalformedURLException
+import java.net.URL
 import java.nio.file.Files
 import java.nio.file.Path
 import java.util.*
@@ -11,7 +13,10 @@ import kotlin.io.path.pathString
 class ForgeServerConfigurationLoaderFile(private val configDirPath: Path) : ForgeServerConfigurationLoader {
     companion object {
         const val FORGE_CONF_FILENAME = "forge.conf"
+
         private const val PROP_SERVER_NAMES = "server_names"
+        private const val PROP_DEPLOYMENT = "deployment"
+        private const val PROP_DEPLOYMENT_URL = "deployment_url"
         private const val PROP_LOG_PREFIX = "log_prefix"
         private const val PROP_STATIC_FILES_DIR = "static_files_dir"
         private const val PROP_PATH_INFO_ENABLED = "path_info_enabled"
@@ -42,6 +47,26 @@ class ForgeServerConfigurationLoaderFile(private val configDirPath: Path) : Forg
 
         val staticDir = prop.getProperty(PROP_STATIC_FILES_DIR)
             ?: throw ForgeConfigurationException("Missing $PROP_STATIC_FILES_DIR in forge.conf")
+
+
+        val deployment = when (val deploymentRaw = ForgeServerConfiguration.extractStringValue(prop, PROP_DEPLOYMENT)) {
+            ForgeServerConfiguration.Deployment.DEVELOPMENT.deploymentName -> ForgeServerConfiguration.Deployment.DEVELOPMENT
+            ForgeServerConfiguration.Deployment.TESTING.deploymentName -> ForgeServerConfiguration.Deployment.TESTING
+            ForgeServerConfiguration.Deployment.STAGING.deploymentName -> ForgeServerConfiguration.Deployment.STAGING
+            ForgeServerConfiguration.Deployment.PRODUCTION.deploymentName -> ForgeServerConfiguration.Deployment.PRODUCTION
+            else -> {
+                throw ForgeConfigurationException("Invalid value for $PROP_DEPLOYMENT -> $deploymentRaw")
+            }
+        }
+
+        val deploymentUrl = ForgeServerConfiguration.extractStringValueOptional(prop, PROP_DEPLOYMENT_URL)
+        if (deploymentUrl == null) {
+            try {
+                URL(deploymentUrl)
+            } catch (e: MalformedURLException) {
+                throw ForgeConfigurationException("Invalid URL IN $PROP_DEPLOYMENT_URL: $deploymentUrl")
+            }
+        }
 
 
         val isPathInfoEnabledRaw =
@@ -83,6 +108,8 @@ class ForgeServerConfigurationLoaderFile(private val configDirPath: Path) : Forg
 
         return ForgeServerConfiguration(
             serverNames,
+            deployment,
+            deploymentUrl,
             logPrefix,
             staticDir,
             isPathInfoEnabled,
@@ -95,7 +122,7 @@ class ForgeServerConfigurationLoaderFile(private val configDirPath: Path) : Forg
         )
     }
 
-    private fun normalizePath(@Nonnull path: String): String {
+    private fun normalizePath(path: String): String {
         var pathTmp = path.lowercase(Locale.getDefault())
 
         if (path.length > 1) {

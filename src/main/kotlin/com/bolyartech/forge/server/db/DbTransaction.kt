@@ -4,35 +4,11 @@ import org.slf4j.Logger
 import java.sql.Connection
 import java.sql.SQLException
 
-@Deprecated("Db retryes by itself")
-@Throws(DbTransactionRetryFailedException::class)
-fun <T> transSerializableRetry(dbc: Connection, maxRetries: Int = 5, initialBackoff: Long = 100L, f: () -> T): T {
-    return transIsolationRetry(dbc, TransactionIsolationLevel.TRANSACTION_SERIALIZABLE, maxRetries, initialBackoff, f)
-}
-
-@Deprecated("Db retryes by itself")
-@Throws(DbTransactionRetryFailedException::class)
-fun <T> transRetry(dbc: Connection, maxRetries: Int = 5, initialBackoff: Long = 100L, f: () -> T): T {
-    return transIsolationRetry(dbc, TransactionIsolationLevel.TRANSACTION_READ_COMMITTED, maxRetries, initialBackoff, f)
-}
-
-@Deprecated("Db retryes by itself")
-@Throws(DbTransactionRetryFailedException::class)
-fun <T> transReadCommittedRetry(dbc: Connection, maxRetries: Int = 5, initialBackoff: Long = 100L, f: () -> T): T {
-    return transIsolationRetry(dbc, TransactionIsolationLevel.TRANSACTION_READ_COMMITTED, maxRetries, initialBackoff, f)
-}
-
-@Deprecated("Db retryes by itself")
-@Throws(DbTransactionRetryFailedException::class)
-fun <T> transRepeatableReadRetry(dbc: Connection, maxRetries: Int = 5, initialBackoff: Long = 100L, f: () -> T): T {
-    return transIsolationRetry(dbc, TransactionIsolationLevel.TRANSACTION_REPEATABLE_READ, maxRetries, initialBackoff, f)
-}
-
 
 /**
  * @throws DbTransactionRetryFailedException when after retrying maxRetries without success have given up
  */
-@Deprecated("Db retryes by itself")
+@Deprecated("Db retries by itself")
 @Throws(DbTransactionRetryFailedException::class)
 fun <T> transIsolationRetry(
     dbc: Connection,

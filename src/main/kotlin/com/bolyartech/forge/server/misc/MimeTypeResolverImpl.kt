@@ -1,7 +1,7 @@
 package com.bolyartech.forge.server.misc
 
 class MimeTypeResolverImpl : MimeTypeResolver {
-    private val FALLBACK_MIME = "application/octet-stream"
+    private val fallbackMime = "application/octet-stream"
 
     private val extToMime: Map<String, String> = object : HashMap<String, String>() {
         init {
@@ -72,7 +72,7 @@ class MimeTypeResolverImpl : MimeTypeResolver {
 
     override fun resolveForFilename(fileName: String): String? {
         val fileExtension = fileName.replace("^.*\\.(.*)$".toRegex(), "$1").trim { it <= ' ' }
-        var ret: String? = FALLBACK_MIME
+        var ret: String? = fallbackMime
         if (fileExtension.isNotEmpty()) {
             val mime = extToMime[fileExtension]
             if (mime != null) {

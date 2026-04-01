@@ -11,13 +11,13 @@ private const val HEX_CHARS = "0123456789abcdef"
 
 /**
  * Converts hex string to ByteArray
- * @throws IllegalArgumentException if the string contains non hex characters
+ * @throws IllegalArgumentException if the string contains non-hex characters
  */
 fun String.hexStringToByteArray(): ByteArray {
 
     val result = ByteArray(length / 2)
     val tmp = this.lowercase()
-    for (i in 0 until length step 2) {
+    for (i in indices step 2) {
         val firstIndex = HEX_CHARS.indexOf(tmp[i])
         val secondIndex = HEX_CHARS.indexOf(tmp[i + 1])
 
@@ -26,7 +26,7 @@ fun String.hexStringToByteArray(): ByteArray {
         }
 
         val octet = firstIndex.shl(4).or(secondIndex)
-        result.set(i.shr(1), octet.toByte())
+        result[i.shr(1)] = octet.toByte()
     }
 
     return result

@@ -17,7 +17,7 @@ interface RequestContext {
     fun getSession(): Session
 
     /**
-     * Returns the value of a query parameter as a String, or null if the parameter does not exist. Alias of [.getFromGet]
+     * Returns the value of a query parameter as a String, or null if the parameter does not exist.
      *
      * @param parameterName Parameter name
      * @return Parameter value
@@ -176,7 +176,7 @@ interface RequestContext {
      *
      * @return server data
      */
-    fun getServerData(): RequestContext.ServerData
+    fun getServerData(): ServerData
 
     /**
      * Return body of the request
@@ -205,6 +205,124 @@ interface RequestContext {
      * @return
      */
     fun getHeaders(): Map<String, String>
+
+    /**
+     * Extracts long parameter's value from POST parameters
+     *
+     * @param parameterName Parameter name
+     * @return extracted value
+     * @throws MissingParameterValueException if there is no value for this parameter
+     * @throws InvalidParameterValueException if the value is present but cannot be parsed as long
+     */
+    @Throws(MissingParameterValueException::class, InvalidParameterValueException::class)
+    fun extractLongFromPost(parameterName: String): Long {
+        return extractLongHelper(parameterName, getFromPost(parameterName))
+    }
+
+    /**
+     * Extracts long parameter's value from query parameters
+     *
+     * @param parameterName Parameter name
+     * @return extracted value
+     * @throws MissingParameterValueException if there is no value for this parameter
+     * @throws InvalidParameterValueException if the value is present but cannot be parsed as long
+     */
+    @Throws(InvalidParameterValueException::class, MissingParameterValueException::class)
+    fun extractLongFromQuery(parameterName: String): Long {
+        return extractLongHelper(parameterName, getFromQuery(parameterName))
+    }
+
+    @Throws(MissingParameterValueException::class, InvalidParameterValueException::class)
+    private fun extractLongHelper(
+        parameterName: String,
+        value: String?
+    ): Long {
+        if (value == null) {
+            throw MissingParameterValueException(parameterName)
+        }
+        return try {
+            value.toLong()
+        } catch (e: NumberFormatException) {
+            throw InvalidParameterValueException(parameterName)
+        }
+    }
+
+    /**
+     * Extracts integer parameter's value from POST parameters
+     *
+     * @param parameterName Parameter name
+     * @return extracted value
+     * @throws MissingParameterValueException if there is no value for this parameter
+     * @throws InvalidParameterValueException if the value is present but cannot be parsed as int
+     */
+    @Throws(MissingParameterValueException::class, InvalidParameterValueException::class)
+    fun extractIntFromPost(parameterName: String): Int {
+        return extractIntHelper(parameterName, getFromPost(parameterName))
+    }
+
+    /**
+     * Extracts integer parameter's value from GET parameters
+     *
+     * @param parameterName Parameter name
+     * @return extracted value
+     * @throws MissingParameterValueException if there is no value for this parameter
+     * @throws InvalidParameterValueException if the value is present but cannot be parsed as int
+     */
+    @Throws(InvalidParameterValueException::class, MissingParameterValueException::class)
+    fun extractIntFromQuery(parameterName: String): Int {
+        return extractIntHelper(parameterName, getFromQuery(parameterName))
+    }
+
+    @Throws(MissingParameterValueException::class, InvalidParameterValueException::class)
+    private fun extractIntHelper(
+        parameterName: String,
+        value: String?
+    ): Int {
+        if (value == null) {
+            throw MissingParameterValueException(parameterName)
+        }
+        return try {
+            value.toInt()
+        } catch (e: NumberFormatException) {
+            throw InvalidParameterValueException(parameterName)
+        }
+    }
+
+    /**
+     * Extracts integer parameter's value from POST parameters or `null`
+     *
+     * @param parameterName Parameter name
+     * @return extracted value or `null`
+     * @throws InvalidParameterValueException if the value cannot be parsed as int
+     */
+    @Throws(InvalidParameterValueException::class)
+    fun optIntFromPost(parameterName: String): Int? {
+        return optIntHelper(parameterName, getFromPost(parameterName))
+    }
+
+    /**
+     * Extracts integer parameter's value from query parameters or `null`
+     *
+     * @param parameterName Parameter name
+     * @return extracted value or `null`
+     * @throws InvalidParameterValueException if the value cannot be parsed as int
+     */
+    @Throws(InvalidParameterValueException::class)
+    fun optIntFromQuery(ctx: RequestContext, parameterName: String): Int? {
+        return optIntHelper(parameterName, ctx.getFromQuery(parameterName))
+    }
+
+    @Throws(InvalidParameterValueException::class)
+    private fun optIntHelper(parameterName: String, value: String?): Int? {
+        return if (value == null) {
+            null
+        } else try {
+            value.toInt()
+        } catch (e: NumberFormatException) {
+            throw InvalidParameterValueException(parameterName)
+        }
+    }
+
     data class ServerData(
         val serverAddress: String,
         val serverName: String,

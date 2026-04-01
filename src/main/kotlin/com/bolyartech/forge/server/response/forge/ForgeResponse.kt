@@ -9,7 +9,7 @@ import jakarta.servlet.http.HttpServletResponse
  * Forge response
  *
  *
- * Forge responses are used by the Forge framework. They provide response result code in a 'X-Forge-Result-Code'
+ * Forge responses are used by the Forge framework. They provide response result code in an 'X-Forge-Result-Code'
  * header and the result payload/data (if any) in the response body (usually as JSON).
  *
  *
@@ -39,7 +39,7 @@ open class ForgeResponse(
 
 
     override fun toServletResponse(resp: HttpServletResponse): Long {
-        resp.setHeader(FORGE_RESULT_CODE_HEADER, Integer.toString(forgeResultCode))
+        resp.setHeader(FORGE_RESULT_CODE_HEADER, forgeResultCode.toString())
         return super.toServletResponse(resp)
     }
 

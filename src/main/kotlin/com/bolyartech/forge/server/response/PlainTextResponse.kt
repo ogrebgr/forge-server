@@ -1,14 +1,14 @@
 package com.bolyartech.forge.server.response
 
+import com.bolyartech.forge.HttpResponseCodes
 import jakarta.servlet.http.Cookie
-import jakarta.servlet.http.HttpServletResponse
 
 class PlainTextResponse(
     str: String,
     cookiesToSet: List<Cookie> = emptyList(),
     headersToAdd: List<HttpHeader> = emptyList(),
     enableGzipSupport: Boolean = true,
-    private val statusCode: Int = HttpServletResponse.SC_OK,
+    statusCode: Int = HttpResponseCodes.OK.code,
 ) : AbstractStringResponse(str, cookiesToSet, headersToAdd, enableGzipSupport, statusCode) {
 
     companion object {

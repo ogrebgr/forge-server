@@ -55,7 +55,7 @@ class RequestContextImpl(private val httpReq: HttpServletRequest, private val ro
         }
 
         val list = queryParams[parameterName]
-        return if (list != null && list.size > 0) {
+        return if (list != null && list.isNotEmpty()) {
             list[0]
         } else {
             null
@@ -80,7 +80,7 @@ class RequestContextImpl(private val httpReq: HttpServletRequest, private val ro
             }
         }
         val list: List<String>? = postParams[parameterName]
-        return if (list != null && list.size > 0) {
+        return if (list != null && list.isNotEmpty()) {
             list[0]
         } else {
             null
@@ -191,7 +191,7 @@ class RequestContextImpl(private val httpReq: HttpServletRequest, private val ro
     }
 
     override fun isMethod(method: HttpMethod): Boolean {
-        return httpReq.method.lowercase(Locale.getDefault()) == method.methodName.lowercase()
+        return httpReq.method.equals(method.methodName, ignoreCase = true)
     }
 
     override fun getServerData(): ServerData {
@@ -243,7 +243,7 @@ class RequestContextImpl(private val httpReq: HttpServletRequest, private val ro
         val ret: MutableList<Cookie> = mutableListOf()
         val cs = httpReq.cookies
         if (cs != null) {
-            ret.addAll(Arrays.asList(*cs))
+            ret.addAll(listOf(*cs))
         }
         return ret
     }
@@ -289,7 +289,7 @@ class RequestContextImpl(private val httpReq: HttpServletRequest, private val ro
             return
         }
 
-        if (httpReq.method.lowercase().equals(HttpMethod.POST.methodName.lowercase())) {
+        if (httpReq.method.lowercase() == HttpMethod.POST.methodName.lowercase()) {
             val contentType = httpReq.getHeader(HEADER_CONTENT_TYPE)
             if (contentType != null) {
                 if (contentType.lowercase(Locale.getDefault()).contains(CONTENT_TYPE_FORM_ENCODED.lowercase(Locale.getDefault()))) {

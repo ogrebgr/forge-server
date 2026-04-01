@@ -3,11 +3,7 @@ package com.bolyartech.forge.server.misc
 import org.apache.velocity.app.VelocityEngine
 import java.util.*
 
-@Deprecated(
-    "Name of the class is lacking information about the type of resource loader. Functionality moved to VelocityTemplateEngineClassLoaderFactory",
-    replaceWith = ReplaceWith("VelocityTemplateEngineClassLoaderFactory")
-)
-class VelocityTemplateEngineFactory @JvmOverloads constructor(
+class VelocityTemplateEngineClassLoaderFactory @JvmOverloads constructor(
     templatePathPrefix: String,
     additionalSettings: Map<String, String> = HashMap()
 ) : TemplateEngineFactory {

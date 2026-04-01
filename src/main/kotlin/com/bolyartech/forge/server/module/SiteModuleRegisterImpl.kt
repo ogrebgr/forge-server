@@ -7,7 +7,7 @@ import javax.inject.Inject
 
 class SiteModuleRegisterImpl @Inject constructor(private val routeRegister: RouteRegister) : SiteModuleRegister {
 
-    private val modules: MutableList<SiteModule> = mutableListOf<SiteModule>()
+    private val modules = mutableListOf<SiteModule>()
 
 
     override fun registerModule(mod: SiteModule) {
@@ -25,7 +25,7 @@ class SiteModuleRegisterImpl @Inject constructor(private val routeRegister: Rout
     override fun isModuleRegistered(mod: SiteModule): Boolean {
         var ret = false
         for (m in modules) {
-            if (m.getSystemName().lowercase() == mod.getSystemName().lowercase()) {
+            if (m.getSystemName().equals(mod.getSystemName(), ignoreCase = true)) {
                 ret = true
                 break
             }

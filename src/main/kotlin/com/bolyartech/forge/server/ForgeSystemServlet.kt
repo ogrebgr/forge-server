@@ -1,5 +1,6 @@
 package com.bolyartech.forge.server
 
+import com.bolyartech.forge.HttpResponseCodes
 import com.bolyartech.forge.server.handler.RouteHandler
 import com.bolyartech.forge.server.handler.StaticResourceNotFoundException
 import com.bolyartech.forge.server.module.SiteModule
@@ -51,7 +52,7 @@ class ForgeSystemServlet @Inject constructor(
     private fun processRequest(req: HttpServletRequest, httpResp: HttpServletResponse) {
         if (serverNames.isNotEmpty()) {
             if (req.serverName !in serverNames) {
-                notFound(req, httpResp)
+                notForThisServer(httpResp)
                 return
             }
         }
@@ -84,6 +85,14 @@ class ForgeSystemServlet @Inject constructor(
         } catch (e: IllegalArgumentException) {
             notFound(req, httpResp)
         }
+    }
+
+    private fun notForThisServer(httpResp: HttpServletResponse) {
+        httpResp.status = HttpResponseCodes.ERRC_MISDIRECTED_REQUEST.code
+        val pw = httpResp.writer
+        pw.print(HttpResponseCodes.ERRC_MISDIRECTED_REQUEST.code.toString() + " Misdirected request")
+        pw.flush()
+        pw.close()
     }
 
     @Throws(IOException::class)

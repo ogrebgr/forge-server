@@ -21,13 +21,13 @@ repositories {
 dependencies {
     api 'jakarta.servlet:jakarta.servlet-api:5.0.0'
     api 'javax.inject:javax.inject:1'
-    api  group: 'com.zaxxer', name: 'HikariCP', version: '5.0.1'
+    api "com.zaxxer:HikariCP:5.0.1"
     implementation 'org.slf4j:slf4j-api:2.0.5'
-    implementation 'ch.qos.logback:logback-classic:1.5.19'
-    implementation group: 'com.google.guava', name: 'guava', version: '33.0.0-jre'
-    implementation group: 'commons-cli', name: 'commons-cli', version: '1.4'
-    api group: 'org.apache.velocity', name: 'velocity-engine-core', version: '2.4.1'
-    api group: 'org.apache.velocity.tools', name: 'velocity-tools-generic', version: '3.1'
+    implementation 'ch.qos.logback:logback-classic:1.5.32'
+    implementation "com.google.guava:guava:33.0.0-jre"
+    implementation "commons-cli:commons-cli:1.4"
+    api "org.apache.velocity:velocity-engine-core:2.4.1"
+    api "org.apache.velocity.tools:velocity-tools-generic:3.1"
 
     testImplementation 'org.jetbrains.kotlin:kotlin-test'
 }
@@ -37,7 +37,7 @@ test {
 }
 
 
-tasks.withType(Javadoc).all {
+tasks.withType(Javadoc).configureEach {
     enabled = false
 }
 
@@ -77,7 +77,7 @@ publishing {
                 scm {
                     connection = 'scm:git:https://github.com/ogrebgr/forge-server.git'
                     developerConnection = 'scm:git:https://github.com/ogrebgr/forge-server.git'
-                    url  = 'https://github.com/ogrebgr/forge-server'
+                    url = 'https://github.com/ogrebgr/forge-server'
                 }
 
                 licenses {

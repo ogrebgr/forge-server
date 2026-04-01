@@ -91,13 +91,13 @@ abstract class AbstractRoute(private val httpMethod: HttpMethod, val routeHandle
                 getHttpMethod(),
                 httpReq.pathInfo,
                 httpReq.protocol,
-                httpResp.getStatus(),
+                httpResp.status,
                 contentLength,
                 ref,
                 ua
             )
-        } catch (e: Exception) {
-            val status = if (e.cause is StaticResourceNotFoundException) {
+        } catch (t: Throwable) {
+            val status = if (t.cause is StaticResourceNotFoundException) {
                 HttpServletResponse.SC_NOT_FOUND
             } else {
                 HttpServletResponse.SC_INTERNAL_SERVER_ERROR
@@ -121,7 +121,7 @@ abstract class AbstractRoute(private val httpMethod: HttpMethod, val routeHandle
                 ua
             )
 
-            throw ResponseException(e)
+            throw ResponseException(t)
         }
     }
 

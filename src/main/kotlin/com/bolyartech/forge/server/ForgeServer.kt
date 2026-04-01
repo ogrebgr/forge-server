@@ -20,6 +20,7 @@ import java.nio.file.Path
 import javax.sql.DataSource
 import kotlin.io.path.exists
 import kotlin.io.path.pathString
+import kotlin.system.exitProcess
 
 
 interface ForgeServer {
@@ -73,9 +74,7 @@ interface ForgeServer {
         fun loadConfigurationPack(fs: FileSystem, args: Array<String>): ConfigurationPack {
             val filesystem = FileSystems.getDefault()
             val configDir = detectConfigurationDirectory(filesystem, args)
-            if (configDir == null) {
-                throw ForgeConfigurationException("Cannot detect the configuration directory. Exiting.")
-            }
+                ?: throw ForgeConfigurationException("Cannot detect the configuration directory. Exiting.")
 
             val forgeConf = ForgeServerConfigurationLoaderFile(configDir).load()
             val dbConf = HikariCpDbConfigurationLoaderFile(configDir).load()
@@ -83,7 +82,13 @@ interface ForgeServer {
             return ConfigurationPack(configDir, forgeConf, dbConf)
         }
 
-        fun initLog(logger: Logger, configDir: String, logFilenamePrefix: String = "", serverNameSuffix: String = "") {
+        fun initLog(
+            logger: Logger,
+            configDir: String,
+            logFilenamePrefix: String = "",
+            serverNameSuffix: String = "",
+            logbackXmlFile: String? = null
+        ) {
             val context = LoggerFactory.getILoggerFactory() as LoggerContext
             val jc = JoranConfigurator()
             jc.context = context
@@ -91,8 +96,14 @@ interface ForgeServer {
 
             context.putProperty("application-name", logFilenamePrefix + serverNameSuffix)
 
-            val f = File(configDir, "logback.xml")
+            val logbackXmlFileFinal = logbackXmlFile ?: "logback.xml"
+
+            val f = File(configDir, logbackXmlFileFinal)
+
+            println()
             println("Will try logback config: " + f.absolutePath)
+            println()
+
             if (f.exists()) {
                 val logbackConfigFilePath = f.absolutePath
                 try {
@@ -105,17 +116,41 @@ interface ForgeServer {
                 println("!!! No logback configuration file found. Using default configuration.")
             }
         }
+
+        fun initLogger(
+            logger: Logger,
+            configDir: Path,
+            variantSuffix: String,
+            logLinePrefix: String = "",
+            serverNameSuffix: String = ""
+        ) {
+            val variantSuffixFinal = variantSuffix.lowercase()
+            val f = File(configDir.pathString, "logback-$variantSuffixFinal.xml")
+            val logbackXmlFile = if (f.exists()) {
+                if (!f.isFile) {
+                    logger.error("logback configuration file is not a file: ${f.absolutePath}")
+                    exitProcess(1)
+                }
+
+                f.name
+            } else {
+                "logback.xml"
+            }
+
+
+            initLog(logger, configDir.pathString, logLinePrefix, serverNameSuffix, logbackXmlFile)
+        }
     }
 }
 
 
-abstract class AbstractForgeServer() : ForgeServer {
+abstract class AbstractForgeServer : ForgeServer {
     private val logger = LoggerFactory.getLogger(this::class.java)
 
     private var isStarted = false
     private var isShutdown = false
 
-    private var config: ForgeServer.ConfigurationPack? = null
+    private lateinit var config: ForgeServer.ConfigurationPack
     private var fileSystem: FileSystem? = null
 
     private var webServer: WebServer? = null
@@ -126,23 +161,23 @@ abstract class AbstractForgeServer() : ForgeServer {
         require(!isStarted)
         require(!isShutdown)
 
-        isStarted = true
+        logger.debug("+++ Forge server starting...")
 
         onStart()
 
         config = configurationPack
         this.fileSystem = fileSystem
 
-        if (config!!.forgeServerConfiguration.uploadsDirectory.isNotEmpty()) {
-            val ulDir = this.fileSystem!!.getPath(config!!.forgeServerConfiguration.uploadsDirectory)
+        if (config.forgeServerConfiguration.uploadsDirectory.isNotEmpty()) {
+            val ulDir = this.fileSystem!!.getPath(config.forgeServerConfiguration.uploadsDirectory)
             if (!ulDir.exists()) {
                 logger.error("Uploads dir specified in forge.conf (${ulDir.pathString}) does not exists. Leave blank if not used.")
                 return false
             }
         }
 
-        if (config!!.forgeServerConfiguration.downloadsDirectory.isNotEmpty()) {
-            val dlDir = this.fileSystem!!.getPath(config!!.forgeServerConfiguration.downloadsDirectory)
+        if (config.forgeServerConfiguration.downloadsDirectory.isNotEmpty()) {
+            val dlDir = this.fileSystem!!.getPath(config.forgeServerConfiguration.downloadsDirectory)
             if (!dlDir.exists()) {
                 logger.error("Downloads dir specified in forge.conf (${dlDir.pathString}) does not exists. Leave blank if not used.")
                 return false
@@ -150,7 +185,7 @@ abstract class AbstractForgeServer() : ForgeServer {
         }
 
         onBeforeWebServerStart()
-        webServer = createWebServer(config!!, fileSystem)
+        webServer = createWebServer(config, fileSystem)
         testDbConnection()
         if (!webServer!!.start()) {
             logger.warn("Web server failed to start, so we abort Forge server start.")
@@ -158,6 +193,11 @@ abstract class AbstractForgeServer() : ForgeServer {
         }
 
         onAfterWebServerStart(webServer!!)
+
+        isStarted = true
+
+        logger.debug("+++ Forge server started OK")
+        logger.info("Deployment: ${config.forgeServerConfiguration.deployment}")
 
         return true
     }
@@ -170,14 +210,14 @@ abstract class AbstractForgeServer() : ForgeServer {
     @Override
     override fun shutdown() {
         require(isStarted)
-        logger.info("Shutting down forge server...")
+        logger.debug("--- Shutting down forge server...")
 
         isStarted = false
         isShutdown = true
 
         webServer?.stop()
 
-        logger.info("Forge server shut down successfully.")
+        logger.debug("--- Forge server shut down successfully.")
     }
 }
 

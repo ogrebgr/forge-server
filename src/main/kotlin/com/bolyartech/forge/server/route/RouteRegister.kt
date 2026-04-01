@@ -27,7 +27,7 @@ interface RouteRegister {
      * @param route Route object
      * @return Registration of the route
      */
-    fun getRegistration(route: Route): RouteRegister.Registration?
+    fun getRegistration(route: Route): Registration?
 
     /**
      * Matches Route against HTTP method and URL path

@@ -10,11 +10,11 @@ import java.text.MessageFormat
 import java.util.zip.GZIPOutputStream
 
 /**
- * Response for uploading file (from server point of view, from user POV it is download)
+ * Response for uploading file (from server point of view, from user's POV it is download)
  */
 class FileUploadResponse(
     filePath: String,
-    private val cookiesToSet: List<Cookie> = emptyList(),
+    cookiesToSet: List<Cookie> = emptyList(),
     headersToAdd: List<HttpHeader> = emptyList(),
     private val enableGzip: Boolean = true
 ) : AbstractResponse(cookiesToSet, headersToAdd) {
@@ -36,8 +36,7 @@ class FileUploadResponse(
         val `is`: InputStream
         return try {
             `is` = BufferedInputStream(FileInputStream(file))
-            val out: OutputStream
-            out = if (enableGzip && file.length() > MIN_SIZE_FOR_GZIP) {
+            val out: OutputStream = if (enableGzip && file.length() > MIN_SIZE_FOR_GZIP) {
                 resp.setHeader(HttpHeaders.CONTENT_ENCODING, HttpHeaders.CONTENT_ENCODING_GZIP)
                 CountingOutputStream(GZIPOutputStream(resp.outputStream, true))
             } else {

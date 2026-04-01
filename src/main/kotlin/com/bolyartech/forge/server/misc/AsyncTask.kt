@@ -27,7 +27,7 @@ data class AsyncTaskData(
         ENDED_ERROR(400);
 
         companion object {
-            private val MAP: Map<Int, State> = State.values().associateBy { it.id }
+            private val MAP: Map<Int, State> = entries.associateBy { it.id }
 
             @Throws(java.lang.IllegalArgumentException::class)
             fun fromInt(i: Int): State {

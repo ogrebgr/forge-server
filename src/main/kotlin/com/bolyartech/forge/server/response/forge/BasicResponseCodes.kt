@@ -31,7 +31,7 @@ class BasicResponseCodes {
         }
 
         companion object {
-            private val MAP: Map<Int, Errors> = Errors.values().associateBy { it._code }
+            private val MAP: Map<Int, Errors> = entries.associateBy { it._code }
 
             @Throws(java.lang.IllegalArgumentException::class)
             fun fromInt(i: Int): Errors {

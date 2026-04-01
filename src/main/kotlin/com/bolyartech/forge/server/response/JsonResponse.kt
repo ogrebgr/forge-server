@@ -11,7 +11,7 @@ open class JsonResponse(
     cookiesToSet: List<Cookie> = emptyList(),
     headersToAdd: List<HttpHeader> = emptyList(),
     enableGzipSupport: Boolean = true,
-    private val statusCode: Int = HttpServletResponse.SC_OK,
+    statusCode: Int = HttpServletResponse.SC_OK,
 ) : AbstractStringResponse(str, cookiesToSet, headersToAdd, enableGzipSupport, statusCode) {
 
     override fun getContentType(): String {

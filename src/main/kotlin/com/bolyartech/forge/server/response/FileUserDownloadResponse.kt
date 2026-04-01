@@ -1,5 +1,6 @@
 package com.bolyartech.forge.server.response
 
+import com.bolyartech.forge.HttpResponseCodes
 import com.bolyartech.forge.server.misc.MimeTypeResolver
 import com.google.common.io.ByteStreams
 import jakarta.servlet.http.HttpServletResponse
@@ -9,7 +10,11 @@ import java.time.ZoneId
 import java.time.ZonedDateTime
 import java.time.format.DateTimeFormatter
 
-class FileUserDownloadResponse constructor(
+/**
+ * Response for downloading file (from server point of view, from user's POV it is uploading)
+ */
+
+class FileUserDownloadResponse(
     private val mimeTypeResolver: MimeTypeResolver,
     private val file: File,
     private val originalFilename: String
@@ -19,6 +24,7 @@ class FileUserDownloadResponse constructor(
     override fun toServletResponse(resp: HttpServletResponse): Long {
         var cl = 0L
         try {
+            resp.status = HttpResponseCodes.CREATED.code
             resp.contentType = mimeTypeResolver.resolveForFilename(file.name)
             val ts = ZonedDateTime.ofInstant(Instant.ofEpochMilli(file.lastModified()), ZoneId.of("UTC"))
             val lm = DateTimeFormatter.RFC_1123_DATE_TIME.format(ts)

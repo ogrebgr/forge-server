@@ -4,10 +4,9 @@ import org.apache.velocity.VelocityContext
 import org.apache.velocity.app.VelocityEngine
 import java.io.StringWriter
 
-class VelocityTemplateEngine(private val velocityEngine: VelocityEngine, templatePathPrefix: String) :
+class VelocityTemplateEngine(private val velocityEngine: VelocityEngine, private val templatePathPrefix: String) :
     TemplateEngine {
     private val velocityContext: VelocityContext = VelocityContext()
-    private val templatePathPrefix: String
     override fun assign(varName: String, `object`: Any) {
         velocityContext.put(varName, `object`)
     }
@@ -33,9 +32,5 @@ class VelocityTemplateEngine(private val velocityEngine: VelocityEngine, templat
 
     override fun isAssigned(varName: String): Boolean {
         return velocityContext.get(varName) != null
-    }
-
-    init {
-        this.templatePathPrefix = templatePathPrefix
     }
 }

@@ -5,16 +5,26 @@ import java.util.*
 
 data class ForgeServerConfiguration(
     val serverNames: List<String>,
+    val deployment: Deployment,
+    val deploymentUrl: String?,
     val logPrefix: String,
     val staticFilesDir: String,
     val isPathInfoEnabled: Boolean,
     val maxSlashesInPathInfo: Int,
     val uploadsDirectory: String,
     val downloadsDirectory: String,
+
     val accessControlAllowOrigin: String?,
     val accessControlAllowMethods: String?,
     val accessControlAllowHeaders: String?
 ) {
+    enum class Deployment(val deploymentName: String) {
+        DEVELOPMENT("development"),
+        TESTING("testing"),
+        STAGING("staging"),
+        PRODUCTION("production");
+    }
+
     companion object {
         const val DEFAULT_IS_PATH_INFO_ENABLED = true
         const val DEFAULT_MAX_SLASHES_IN_PATH_INFO = 10
@@ -53,16 +63,27 @@ data class ForgeServerConfiguration(
             return tmp
         }
 
-        fun extractStringValue(prop: Properties, propertyName: String, default: Int? = null): String {
+        fun extractStringValue(prop: Properties, propertyName: String): String {
             val tmp = prop.getProperty(propertyName) ?: throw ForgeConfigurationException("$propertyName is missing/empty")
 
             return tmp
         }
 
-        fun extractBooleanValue(prop: Properties, propertyName: String, default: Int? = null): Boolean {
+        fun extractStringValueOptional(prop: Properties, propertyName: String): String? {
+            return prop.getProperty(propertyName)
+        }
+
+        fun extractBooleanValue(prop: Properties, propertyName: String): Boolean {
             val tmp = prop.getProperty(propertyName) ?: throw ForgeConfigurationException("$propertyName is missing/empty")
 
             return tmp.toBoolean()
+        }
+
+        fun extractHumanBoolean(prop: Properties, key: String): Boolean {
+            val str = extractStringValue(prop, key)
+            val tmp = str.trim().lowercase()
+            return tmp == "1" || tmp.lowercase(Locale.getDefault()) == "yes" ||
+                    tmp.lowercase(Locale.getDefault()) == "y" || tmp.lowercase(Locale.getDefault()) == "true"
         }
     }
 

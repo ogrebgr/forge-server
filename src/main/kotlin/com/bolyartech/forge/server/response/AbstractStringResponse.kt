@@ -1,5 +1,6 @@
 package com.bolyartech.forge.server.response
 
+import com.bolyartech.forge.HttpResponseCodes
 import com.bolyartech.forge.server.response.StringResponse.Companion.MIN_SIZE_FOR_GZIP
 import com.google.common.io.ByteStreams
 import com.google.common.io.CountingOutputStream
@@ -16,10 +17,10 @@ import java.util.zip.GZIPOutputStream
  */
 abstract class AbstractStringResponse(
     private val str: String,
-    private val cookiesToSet: List<Cookie> = emptyList(),
-    private val headersToAdd: List<HttpHeader> = emptyList(),
+    cookiesToSet: List<Cookie> = emptyList(),
+    headersToAdd: List<HttpHeader> = emptyList(),
     private val enableGzipSupport: Boolean = true,
-    private val statusCode: Int = HttpServletResponse.SC_OK,
+    private val statusCode: Int = HttpResponseCodes.OK.code,
 ) : AbstractResponse(cookiesToSet, headersToAdd), StringResponse {
 
     override fun toServletResponse(resp: HttpServletResponse): Long {
@@ -28,14 +29,15 @@ abstract class AbstractStringResponse(
         resp.contentType = getContentType()
         var cl: Long = 0
         return try {
-            val out: OutputStream = if (enableGzipSupport && str.toByteArray().size > MIN_SIZE_FOR_GZIP) {
+            val ba = str.toByteArray(charset("UTF-8"))
+            val out: OutputStream = if (enableGzipSupport && ba.size > MIN_SIZE_FOR_GZIP) {
                 resp.setHeader(HttpHeaders.CONTENT_ENCODING, HttpHeaders.CONTENT_ENCODING_GZIP)
                 CountingOutputStream(GZIPOutputStream(resp.outputStream, true))
             } else {
-                resp.setContentLength(str.toByteArray().size)
+                resp.setContentLength(ba.size)
                 resp.outputStream
             }
-            val `is`: InputStream = ByteArrayInputStream(str.toByteArray(charset("UTF-8")))
+            val `is`: InputStream = ByteArrayInputStream(ba)
             cl = ByteStreams.copy(`is`, out)
             if (enableGzipSupport && cl > MIN_SIZE_FOR_GZIP) {
                 cl = (out as CountingOutputStream).count

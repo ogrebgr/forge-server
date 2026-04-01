@@ -10,7 +10,7 @@ import java.io.File
 /**
  * Handler for static files like HTML and CSS files
  */
-class StaticFileHandler constructor(
+class StaticFileHandler(
     sourceDir: String,
     private val mimeTypeResolver: MimeTypeResolver,
     private val enableGzip: Boolean = true,
@@ -41,7 +41,7 @@ class StaticFileHandler constructor(
             val actualEnableGzip = enableGzip && isSupportingGzip(ctx)
             StaticFileResponse(mimeTypeResolver, file, actualEnableGzip)
         } else {
-            if (file.isDirectory && directoryIndexes.size > 0) {
+            if (file.isDirectory && directoryIndexes.isNotEmpty()) {
                 for (f in directoryIndexes) {
                     val tmp = File(file, f)
                     if (tmp.exists() && tmp.isFile) {
@@ -82,7 +82,7 @@ class StaticFileHandler constructor(
     override fun willingToHandle(urlPath: String): Boolean {
         val file = File(sourceDirFinal + urlPath)
         return if (urlPath.endsWith("/")) {
-            if (file.isDirectory && directoryIndexes.size > 0) {
+            if (file.isDirectory && directoryIndexes.isNotEmpty()) {
                 for (f in directoryIndexes) {
                     val tmp = File(file, f)
                     if (tmp.exists() && tmp.isFile) {

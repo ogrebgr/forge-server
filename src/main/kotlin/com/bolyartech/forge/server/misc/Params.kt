@@ -8,6 +8,7 @@ import java.util.*
 /**
  * Utility class for GET/POST/PI parameters
  */
+@Deprecated("Use the methods in RequestContext like ctx.extractIntParam()")
 @Suppress("unused")
 class Params private constructor() {
     companion object {
@@ -101,21 +102,21 @@ class Params private constructor() {
         }
 
         @Throws(InvalidParameterValueException::class)
-        fun optIntFromPost(ctx: RequestContext, parameterName: String): Optional<Int> {
+        fun optIntFromPost(ctx: RequestContext, parameterName: String): Int? {
             return optIntHelper(parameterName, ctx.getFromPost(parameterName))
         }
 
         @Throws(InvalidParameterValueException::class)
-        fun optIntFromGet(ctx: RequestContext, parameterName: String): Optional<Int> {
+        fun optIntFromGet(ctx: RequestContext, parameterName: String): Int? {
             return optIntHelper(parameterName, ctx.getFromQuery(parameterName))
         }
 
         @Throws(InvalidParameterValueException::class)
-        private fun optIntHelper(parameterName: String, value: String?): Optional<Int> {
+        private fun optIntHelper(parameterName: String, value: String?): Int? {
             return if (value == null) {
-                Optional.empty()
+                null
             } else try {
-                Optional.of(value.toInt())
+                value.toInt()
             } catch (e: NumberFormatException) {
                 throw InvalidParameterValueException(parameterName)
             }

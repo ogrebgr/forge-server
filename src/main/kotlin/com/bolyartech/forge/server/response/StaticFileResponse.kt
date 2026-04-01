@@ -76,7 +76,7 @@ class StaticFileResponse : AbstractResponse {
             }
         } catch (e: FileNotFoundException) {
             // ignore
-            cl
+            0
         }
     }
 }
