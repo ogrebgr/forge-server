@@ -143,6 +143,10 @@ open class RouteExact(httpMethod: HttpMethod, private val path: String, routeHan
     }
 }
 
+/**
+ * "Wildcard" route. Use it for paths that "start with", for example `/eshop/` will match
+ * all requests which have path starting with `/eshop/` like `/eshop/page1'
+ */
 open class RouteStartsWith(httpMethod: HttpMethod, path: String, routeHandler: RouteHandler) :
     RouteExact(httpMethod, path, routeHandler) {
 
@@ -152,6 +156,10 @@ open class RouteStartsWith(httpMethod: HttpMethod, path: String, routeHandler: R
 }
 
 
+/**
+ * Used for content which is unknown if it exists until requested. For example directory for static files which may
+ * change (added/deleted) during time
+ */
 open class RouteRuntimeResolved(
     httpMethod: HttpMethod,
     private val pathPatternPrefix: String,

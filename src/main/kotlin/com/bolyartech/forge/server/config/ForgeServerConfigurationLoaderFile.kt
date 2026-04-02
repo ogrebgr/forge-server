@@ -1,12 +1,12 @@
 package com.bolyartech.forge.server.config
 
+import com.bolyartech.forge.server.config.ForgeServerConfiguration.Companion.extractDirectory
 import org.slf4j.LoggerFactory
 import java.net.MalformedURLException
 import java.net.URL
 import java.nio.file.Files
 import java.nio.file.Path
 import java.util.*
-import javax.annotation.Nonnull
 import kotlin.io.path.exists
 import kotlin.io.path.pathString
 
@@ -19,8 +19,6 @@ class ForgeServerConfigurationLoaderFile(private val configDirPath: Path) : Forg
         private const val PROP_DEPLOYMENT_URL = "deployment_url"
         private const val PROP_LOG_PREFIX = "log_prefix"
         private const val PROP_STATIC_FILES_DIR = "static_files_dir"
-        private const val PROP_PATH_INFO_ENABLED = "path_info_enabled"
-        private const val PROP_MAX_SLASHES_IN_PATH_INFO = "max_slashes_in_path_info"
         private const val PROP_UPLOADS_DIR = "uploads_dir"
         private const val PROP_DOWNLOADS_DIR = "downloads_dir"
         private const val PROP_ACCESS_CONTROL_ALLOW_ORIGIN = "access_control_allow_origin"
@@ -42,12 +40,9 @@ class ForgeServerConfigurationLoaderFile(private val configDirPath: Path) : Forg
             prop.load(it)
         }
 
-        val logPrefix =
-            prop.getProperty(PROP_LOG_PREFIX) ?: throw ForgeConfigurationException("Missing $PROP_LOG_PREFIX in forge.conf")
+        val logPrefix = ForgeServerConfiguration.extractStringValue(prop, PROP_LOG_PREFIX)
 
-        val staticDir = prop.getProperty(PROP_STATIC_FILES_DIR)
-            ?: throw ForgeConfigurationException("Missing $PROP_STATIC_FILES_DIR in forge.conf")
-
+        val staticDir = extractDirectory(prop, PROP_STATIC_FILES_DIR, false)
 
         val deployment = when (val deploymentRaw = ForgeServerConfiguration.extractStringValue(prop, PROP_DEPLOYMENT)) {
             ForgeServerConfiguration.Deployment.DEVELOPMENT.deploymentName -> ForgeServerConfiguration.Deployment.DEVELOPMENT
@@ -63,31 +58,9 @@ class ForgeServerConfigurationLoaderFile(private val configDirPath: Path) : Forg
         if (deploymentUrl == null) {
             try {
                 URL(deploymentUrl)
-            } catch (e: MalformedURLException) {
+            } catch (_: MalformedURLException) {
                 throw ForgeConfigurationException("Invalid URL IN $PROP_DEPLOYMENT_URL: $deploymentUrl")
             }
-        }
-
-
-        val isPathInfoEnabledRaw =
-            prop.getProperty(PROP_PATH_INFO_ENABLED)
-        var isPathInfoEnabled: Boolean = ForgeServerConfiguration.DEFAULT_IS_PATH_INFO_ENABLED
-        if (isPathInfoEnabledRaw != null) {
-            val tmp = isPathInfoEnabledRaw.trim { it <= ' ' }.lowercase(Locale.getDefault())
-            isPathInfoEnabled = tmp == "true" || tmp == "1"
-        }
-
-        val maxSlashesRaw =
-            prop.getProperty(PROP_MAX_SLASHES_IN_PATH_INFO)
-
-        var maxSlashes: Int = ForgeServerConfiguration.DEFAULT_MAX_SLASHES_IN_PATH_INFO
-        try {
-            maxSlashes = maxSlashesRaw.toInt()
-        } catch (e: NumberFormatException) {
-            logger.error(
-                "Invalid value for {}. Must be integer",
-                PROP_MAX_SLASHES_IN_PATH_INFO
-            )
         }
 
         val uploadsDir = prop.getProperty(PROP_UPLOADS_DIR)
@@ -112,8 +85,6 @@ class ForgeServerConfigurationLoaderFile(private val configDirPath: Path) : Forg
             deploymentUrl,
             logPrefix,
             staticDir,
-            isPathInfoEnabled,
-            maxSlashes,
             normalizePath(uploadsDir),
             normalizePath(downloadsDir),
             accessControlAllowOrigin,

@@ -289,7 +289,7 @@ class RequestContextImpl(private val httpReq: HttpServletRequest, private val ro
             return
         }
 
-        if (httpReq.method.lowercase() == HttpMethod.POST.methodName.lowercase()) {
+        if (httpReq.method.equals(HttpMethod.POST.methodName, ignoreCase = true)) {
             val contentType = httpReq.getHeader(HEADER_CONTENT_TYPE)
             if (contentType != null) {
                 if (contentType.lowercase(Locale.getDefault()).contains(CONTENT_TYPE_FORM_ENCODED.lowercase(Locale.getDefault()))) {
@@ -316,7 +316,7 @@ class RequestContextImpl(private val httpReq: HttpServletRequest, private val ro
     private fun extractPiParameters() {
         //protection against directory traversal. Jetty never sends '..' here but other containers may do so...
         check(!pathInfoParams.contains("..")) { "Path info contains '..'" }
-        val piRaw = pathInfoString!!.split("/".toRegex()).dropLastWhile { it.isEmpty() }.toTypedArray()
+        val piRaw = pathInfoString.split("/".toRegex()).dropLastWhile { it.isEmpty() }.toTypedArray()
         for (s in piRaw) {
             if (s.trim { it <= ' ' }.isNotEmpty()) {
                 pathInfoParams.add(s)

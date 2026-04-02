@@ -9,8 +9,6 @@ data class ForgeServerConfiguration(
     val deploymentUrl: String?,
     val logPrefix: String,
     val staticFilesDir: String,
-    val isPathInfoEnabled: Boolean,
-    val maxSlashesInPathInfo: Int,
     val uploadsDirectory: String,
     val downloadsDirectory: String,
 
@@ -85,6 +83,28 @@ data class ForgeServerConfiguration(
             return tmp == "1" || tmp.lowercase(Locale.getDefault()) == "yes" ||
                     tmp.lowercase(Locale.getDefault()) == "y" || tmp.lowercase(Locale.getDefault()) == "true"
         }
+
+        fun extractDirectory(prop: Properties, key: String, checkWritable: Boolean = false): String {
+            val dir = prop.getProperty(key)
+            if (dir.isNullOrEmpty()) {
+                throw ForgeConfigurationException("$key is not set in the configuration file")
+            }
+
+            val tmp = File(dir)
+            if (!tmp.exists()) {
+                throw ForgeConfigurationException("$key dir $dir does not exist")
+            }
+
+            if (!tmp.isDirectory) {
+                throw ForgeConfigurationException("$key dir $dir is not directory")
+            }
+
+            if (checkWritable && !tmp.canWrite()) {
+                throw ForgeConfigurationException("$key dir $dir is not writable")
+            }
+
+            return dir
+        }
     }
 
     init {
@@ -98,10 +118,6 @@ data class ForgeServerConfiguration(
 
         if (staticFilesDir.endsWith(File.separator)) {
             throw IllegalArgumentException("staticFilesDir must NOT end with ${File.separator}")
-        }
-
-        if (maxSlashesInPathInfo < 0) {
-            throw IllegalArgumentException("maxSlashesInPathInfo cannot be negative")
         }
     }
 }

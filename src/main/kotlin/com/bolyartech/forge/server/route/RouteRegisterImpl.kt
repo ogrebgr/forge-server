@@ -2,10 +2,9 @@ package com.bolyartech.forge.server.route
 
 import com.bolyartech.forge.server.HttpMethod
 import org.slf4j.LoggerFactory
-import javax.annotation.Nonnull
 
 
-class RouteRegisterImpl(isPathInfoEnabled: Boolean, maxPathSegments: Int) : RouteRegister {
+class RouteRegisterImpl() : RouteRegister {
     private val logger = LoggerFactory.getLogger(this::class.java)
 
     private val endpointsGetExact: MutableMap<String, RouteRegister.Registration> = mutableMapOf()
