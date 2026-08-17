@@ -2,7 +2,7 @@ package com.bolyartech.forge.server.response.builders
 
 import com.bolyartech.forge.server.response.HtmlResponse
 
-@Deprecated("This class is wrongly using HtmlResponse which contains content type text/html", ReplaceWith("TextUtf9ResponseBuilder"))
+@Deprecated("This class is wrongly using HtmlResponse which contains content type text/html", ReplaceWith("TextUtf8ResponseBuilder"))
 open class StringResponseBuilder(code: Int) :
     AbstractResponseBuilder(code) {
 
