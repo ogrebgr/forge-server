@@ -122,6 +122,11 @@ fun <T> executeInTrans(
     }
 }
 
+/**
+ * Executes a transaction and commits it if the function returns normally.
+ * If the function throws an exception, the transaction is rolled back.
+ * Please note that using `return@executeInTrans` in the middle of the block will commit the transaction.
+ */
 fun executeInTrans(
     dbc: Connection,
     f: () -> Unit
@@ -140,6 +145,11 @@ fun executeInTrans(
     }
 }
 
+/**
+ * Executes a transaction and commits it if the function returns normally.
+ * If the function throws an exception, the transaction is rolled back.
+ * Please note that using `return@executeInTrans` in the middle of the block will commit the transaction.
+ */
 fun <T> executeInTrans(
     dbc: Connection,
     f: () -> T
@@ -168,4 +178,35 @@ enum class TransactionIsolationLevel(val code: Int) {
     TRANSACTION_READ_COMMITTED(2),
     TRANSACTION_REPEATABLE_READ(3),
     TRANSACTION_SERIALIZABLE(8);
+}
+
+
+sealed interface TransResult<out T> {
+    data class Commit<T>(val value: T) : TransResult<T>
+    data class Rollback<T>(val value: T) : TransResult<T>
+}
+
+/**
+ * Executes a transaction and commits it if the block returns `TransResult.Commit`.
+ * If `TransResult.Rollback` is returned, the transaction is rolled back.
+ * More robust transaction execution that forces the user to explicitly return success or failure.
+ * This prevents the user from using return@executeInTrans and accidentally commiting the transaction when he actually wants to rollback.
+ */
+fun <T> executeInTransR(dbc: Connection, f: () -> TransResult<T>): T {
+    try {
+        dbc.autoCommit = false
+        return when (val r = f()) {
+            is TransResult.Commit -> {
+                dbc.commit(); r.value
+            }
+
+            is TransResult.Rollback -> {
+                dbc.rollback(); r.value
+            }
+        }
+    } catch (e: Exception) {
+        dbc.rollback(); throw e
+    } finally {
+        dbc.autoCommit = true
+    }
 }
